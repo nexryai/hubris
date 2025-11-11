@@ -6,20 +6,18 @@ import TiptapCodeBlock from '~/components/tiptap/TiptapCodeBlock.vue'
 import { shikiParser } from './shiki-parser'
 
 export const TiptapPluginCodeBlockShiki = CodeBlock.extend({
-  addOptions() {
-    return {
-      ...this.parent?.(),
-      defaultLanguage: null,
-    }
-  },
+    addOptions() {
+        return {
+            ...this.parent?.(),
+            defaultLanguage: null,
+        }
+    },
 
-  addProseMirrorPlugins() {
-    return [
-      createHighlightPlugin({ parser: shikiParser, nodeTypes: ['codeBlock'] }),
-    ]
-  },
+    addProseMirrorPlugins() {
+        return [createHighlightPlugin({ parser: shikiParser, nodeTypes: ['codeBlock'] })]
+    },
 
-  addNodeView() {
-    return VueNodeViewRenderer(TiptapCodeBlock)
-  },
+    addNodeView() {
+        return VueNodeViewRenderer(TiptapCodeBlock)
+    },
 })

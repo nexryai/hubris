@@ -5,10 +5,10 @@ import { oldFontSizeMap } from '~/constants/options'
  * Injecting scripts before renders
  */
 export default defineNuxtPlugin(() => {
-  useHead({
-    script: [
-      {
-        innerHTML: `
+    useHead({
+        script: [
+            {
+                innerHTML: `
 ;(function() {
   const handle = localStorage.getItem('${STORAGE_KEY_CURRENT_USER_HANDLE}') || '[anonymous]'
   const allSettings = JSON.parse(localStorage.getItem('${STORAGE_KEY_SETTINGS}') || '{}')
@@ -31,8 +31,10 @@ export default defineNuxtPlugin(() => {
   if (settings.themeColors) {
     Object.entries(settings.themeColors).map(i => html.style.setProperty(i[0], i[1]))
   }
-})()`.trim().replace(/\s*\n\s*/g, ';'),
-      },
-    ],
-  })
+})()`
+                    .trim()
+                    .replace(/\s*\n\s*/g, ';'),
+            },
+        ],
+    })
 })

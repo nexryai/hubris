@@ -3,5 +3,5 @@ const paginator = useMastoClient().v1.accounts.$select(currentUser.value!.accoun
 </script>
 
 <template>
-  <TimelinePaginator :paginator="paginator" />
+    <TimelinePaginator :paginator="paginator" />
 </template>

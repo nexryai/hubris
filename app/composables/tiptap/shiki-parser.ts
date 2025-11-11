@@ -5,20 +5,20 @@ import { createParser } from 'prosemirror-highlight/shiki'
 let parser: Parser | undefined
 
 export const shikiParser: Parser = (options) => {
-  const lang = options.language ?? 'text'
+    const lang = options.language ?? 'text'
 
-  // Register the language if it's not yet registered
-  const { highlighter, promise } = useHighlighter(lang as BuiltinLanguage)
+    // Register the language if it's not yet registered
+    const { highlighter, promise } = useHighlighter(lang as BuiltinLanguage)
 
-  // If the highlighter or the language is not available, return a promise that
-  // will resolve when it's ready. When the promise resolves, the editor will
-  // re-parse the code block.
-  if (!highlighter)
-    return promise ?? []
+    // If the highlighter or the language is not available, return a promise that
+    // will resolve when it's ready. When the promise resolves, the editor will
+    // re-parse the code block.
+    if (!highlighter)
+        return promise ?? []
 
-  if (!parser)
-    // @ts-expect-error will be fixed when shiki upgrades
-    parser = createParser(highlighter)
+    if (!parser)
+        // @ts-expect-error will be fixed when shiki upgrades
+        parser = createParser(highlighter)
 
-  return parser(options)
+    return parser(options)
 }

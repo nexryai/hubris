@@ -11,14 +11,14 @@ const paginator = account ? useMastoClient().v1.accounts.$select(account.id).fol
 const isSelf = useSelfAccount(account)
 
 if (account) {
-  useHydratedHead({
-    title: () => `${t('account.following')} | ${getDisplayName(account)} (@${account.acct})`,
-  })
+    useHydratedHead({
+        title: () => `${t('account.following')} | ${getDisplayName(account)} (@${account.acct})`,
+    })
 }
 </script>
 
 <template>
-  <template v-if="paginator">
-    <AccountPaginator :paginator="paginator" :relationship-context="isSelf ? 'following' : undefined" context="following" :account="account" />
-  </template>
+    <template v-if="paginator">
+        <AccountPaginator :paginator="paginator" :relationship-context="isSelf ? 'following' : undefined" context="following" :account="account" />
+    </template>
 </template>

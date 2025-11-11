@@ -4,7 +4,7 @@ import type { ConfirmDialogChoice, ConfirmDialogOptions } from '#shared/types'
 const { extraOptionType } = defineProps<ConfirmDialogOptions>()
 
 const emit = defineEmits<{
-  (evt: 'choice', choice: ConfirmDialogChoice): void
+    (evt: 'choice', choice: ConfirmDialogChoice): void
 }>()
 
 const hasDuration = ref(false)
@@ -14,43 +14,43 @@ const shouldMuteNotifications = ref(true)
 const isMute = computed(() => extraOptionType === 'mute')
 
 function handleChoice(choice: ConfirmDialogChoice['choice']) {
-  const dialogChoice = {
-    choice,
-    ...isMute.value && {
-      extraOptions: {
-        mute: {
-          duration: hasDuration.value ? duration.value : 0,
-          notifications: shouldMuteNotifications.value,
-        },
-      },
-    },
-  }
+    const dialogChoice = {
+        choice,
+        ...(isMute.value && {
+            extraOptions: {
+                mute: {
+                    duration: hasDuration.value ? duration.value : 0,
+                    notifications: shouldMuteNotifications.value,
+                },
+            },
+        }),
+    }
 
-  emit('choice', dialogChoice)
+    emit('choice', dialogChoice)
 }
 </script>
 
 <template>
-  <div flex="~ col" gap-6>
-    <div font-bold text-lg>
-      {{ title }}
-    </div>
-    <div v-if="description">
-      {{ description }}
-    </div>
-    <div v-if="isMute" flex-col flex gap-4>
-      <CommonCheckbox v-model="hasDuration" :label="$t('confirm.mute_account.specify_duration')" prepend-checkbox checked-icon-color="text-primary" />
-      <ModalDurationPicker v-if="hasDuration" v-model="duration" v-model:is-valid="isValidDuration" />
-      <CommonCheckbox v-model="shouldMuteNotifications" :label="$t('confirm.mute_account.notifications')" prepend-checkbox checked-icon-color="text-primary" />
-    </div>
+    <div flex="~ col" gap-6>
+        <div font-bold text-lg>
+            {{ title }}
+        </div>
+        <div v-if="description">
+            {{ description }}
+        </div>
+        <div v-if="isMute" flex-col flex gap-4>
+            <CommonCheckbox v-model="hasDuration" :label="$t('confirm.mute_account.specify_duration')" prepend-checkbox checked-icon-color="text-primary" />
+            <ModalDurationPicker v-if="hasDuration" v-model="duration" v-model:is-valid="isValidDuration" />
+            <CommonCheckbox v-model="shouldMuteNotifications" :label="$t('confirm.mute_account.notifications')" prepend-checkbox checked-icon-color="text-primary" />
+        </div>
 
-    <div flex justify-end gap-2>
-      <button btn-text @click="handleChoice('cancel')">
-        {{ cancel || $t('confirm.common.cancel') }}
-      </button>
-      <button btn-solid :disabled="!isValidDuration" @click="handleChoice('confirm')">
-        {{ confirm || $t('confirm.common.confirm') }}
-      </button>
+        <div flex justify-end gap-2>
+            <button btn-text @click="handleChoice('cancel')">
+                {{ cancel || $t('confirm.common.cancel') }}
+            </button>
+            <button btn-solid :disabled="!isValidDuration" @click="handleChoice('confirm')">
+                {{ confirm || $t('confirm.common.confirm') }}
+            </button>
+        </div>
     </div>
-  </div>
 </template>

@@ -29,41 +29,35 @@ export const isPreview = isPR || process.env.CONTEXT === 'deploy-preview' || pro
 
 const git = Git()
 export async function getGitInfo() {
-  let branch
-  try {
-    branch = gitBranch || await git.revparse(['--abbrev-ref', 'HEAD'])
-  }
-  catch {
-    branch = 'unknown'
-  }
+    let branch
+    try {
+        branch = gitBranch || (await git.revparse(['--abbrev-ref', 'HEAD']))
+    }
+    catch {
+        branch = 'unknown'
+    }
 
-  let commit
-  try {
-    commit = await git.revparse(['HEAD'])
-  }
-  catch {
-    commit = 'unknown'
-  }
+    let commit
+    try {
+        commit = await git.revparse(['HEAD'])
+    }
+    catch {
+        commit = 'unknown'
+    }
 
-  let shortCommit
-  try {
-    shortCommit = await git.revparse(['--short=7', 'HEAD'])
-  }
-  catch {
-    shortCommit = 'unknown'
-  }
+    let shortCommit
+    try {
+        shortCommit = await git.revparse(['--short=7', 'HEAD'])
+    }
+    catch {
+        shortCommit = 'unknown'
+    }
 
-  return { branch, commit, shortCommit }
+    return { branch, commit, shortCommit }
 }
 
 export async function getEnv() {
-  const { commit, shortCommit, branch } = await getGitInfo()
-  const env = isDevelopment
-    ? 'dev'
-    : isPreview
-      ? 'preview'
-      : branch === 'main'
-        ? 'canary'
-        : 'release'
-  return { commit, shortCommit, branch, env } as const
+    const { commit, shortCommit, branch } = await getGitInfo()
+    const env = isDevelopment ? 'dev' : isPreview ? 'preview' : branch === 'main' ? 'canary' : 'release'
+    return { commit, shortCommit, branch, env } as const
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  name: 'list',
+    name: 'list',
 })
 
 const params = useRoute().params
@@ -13,5 +13,5 @@ const stream = useStreaming(client => client.list.subscribe({ list: listId.value
 </script>
 
 <template>
-  <TimelinePaginator v-bind="{ paginator, stream }" :preprocess="reorderedTimeline" context="home" />
+    <TimelinePaginator v-bind="{ paginator, stream }" :preprocess="reorderedTimeline" context="home" />
 </template>

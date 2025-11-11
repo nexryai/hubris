@@ -19,120 +19,112 @@ import { TiptapPluginCodeBlockShiki } from './tiptap/shiki'
 import { TiptapEmojiSuggestion, TiptapHashtagSuggestion, TiptapMentionSuggestion } from './tiptap/suggestion'
 
 export interface UseTiptapOptions {
-  content: Ref<string>
-  placeholder: Ref<string | undefined>
-  onSubmit: () => void
-  onFocus: () => void
-  onPaste: (event: ClipboardEvent) => void
-  autofocus: boolean
+    content: Ref<string>
+    placeholder: Ref<string | undefined>
+    onSubmit: () => void
+    onFocus: () => void
+    onPaste: (event: ClipboardEvent) => void
+    autofocus: boolean
 }
 
 export function useTiptap(options: UseTiptapOptions) {
-  if (import.meta.server)
-    return { editor: ref<Editor | undefined>() }
+    if (import.meta.server)
+        return { editor: ref<Editor | undefined>() }
 
-  const {
-    autofocus,
-    content,
-    placeholder,
-  } = options
+    const { autofocus, content, placeholder } = options
 
-  const editor = useEditor({
-    content: content.value,
-    extensions: [
-      Document,
-      Paragraph,
-      HardBreak,
-      Bold,
-      Italic,
-      Code,
-      Text,
-      TiptapPluginEmoji,
-      TiptapPluginCustomEmoji.configure({
-        inline: true,
-        HTMLAttributes: {
-          class: 'custom-emoji',
-        },
-      }),
-      Mention.configure({
-        renderHTML({ options, node }) {
-          return ['span', { 'data-type': 'mention', 'data-id': node.attrs.id }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
-        },
-        suggestion: TiptapMentionSuggestion,
-      }),
-      Mention
-        .extend({ name: 'hashtag' })
-        .configure({
-          renderHTML({ options, node }) {
-            return ['span', { 'data-type': 'hashtag', 'data-id': node.attrs.id }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
-          },
-          suggestion: TiptapHashtagSuggestion,
-        }),
-      Mention
-        .extend({ name: 'emoji' })
-        .configure({
-          suggestion: TiptapEmojiSuggestion,
-        }),
-      Placeholder.configure({
-        placeholder: () => placeholder.value!,
-      }),
-      TiptapPluginCodeBlockShiki,
-      History.configure({
-        depth: 10,
-      }),
-      Extension.create({
-        name: 'api',
-        addKeyboardShortcuts() {
-          return {
-            'Mod-Enter': () => {
-              options.onSubmit()
-              return true
-            },
-          }
-        },
-        onFocus() {
-          options.onFocus()
-        },
-        addProseMirrorPlugins() {
-          return [
-            new Plugin({
-              props: {
-                handleDOMEvents: {
-                  paste(view, event) {
-                    options.onPaste(event)
-                  },
+    const editor = useEditor({
+        content: content.value,
+        extensions: [
+            Document,
+            Paragraph,
+            HardBreak,
+            Bold,
+            Italic,
+            Code,
+            Text,
+            TiptapPluginEmoji,
+            TiptapPluginCustomEmoji.configure({
+                inline: true,
+                HTMLAttributes: {
+                    class: 'custom-emoji',
                 },
-              },
             }),
-          ]
+            Mention.configure({
+                renderHTML({ options, node }) {
+                    return ['span', { 'data-type': 'mention', 'data-id': node.attrs.id }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
+                },
+                suggestion: TiptapMentionSuggestion,
+            }),
+            Mention.extend({ name: 'hashtag' }).configure({
+                renderHTML({ options, node }) {
+                    return ['span', { 'data-type': 'hashtag', 'data-id': node.attrs.id }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
+                },
+                suggestion: TiptapHashtagSuggestion,
+            }),
+            Mention.extend({ name: 'emoji' }).configure({
+                suggestion: TiptapEmojiSuggestion,
+            }),
+            Placeholder.configure({
+                placeholder: () => placeholder.value!,
+            }),
+            TiptapPluginCodeBlockShiki,
+            History.configure({
+                depth: 10,
+            }),
+            Extension.create({
+                name: 'api',
+                addKeyboardShortcuts() {
+                    return {
+                        'Mod-Enter': () => {
+                            options.onSubmit()
+                            return true
+                        },
+                    }
+                },
+                onFocus() {
+                    options.onFocus()
+                },
+                addProseMirrorPlugins() {
+                    return [
+                        new Plugin({
+                            props: {
+                                handleDOMEvents: {
+                                    paste(view, event) {
+                                        options.onPaste(event)
+                                    },
+                                },
+                            },
+                        }),
+                    ]
+                },
+            }),
+        ],
+        onUpdate({ editor }) {
+            content.value = editor.getHTML()
         },
-      }),
-    ],
-    onUpdate({ editor }) {
-      content.value = editor.getHTML()
-    },
-    editorProps: {
-      attributes: {
-        class: 'content-editor content-rich',
-      },
-    },
-    parseOptions: {
-      preserveWhitespace: 'full',
-    },
-    autofocus,
-    editable: true,
-  })
+        editorProps: {
+            attributes: {
+                class: 'content-editor content-rich',
+            },
+        },
+        parseOptions: {
+            preserveWhitespace: 'full',
+        },
+        autofocus,
+        editable: true,
+    })
 
-  watch(content, (value) => {
-    if (editor.value?.getHTML() === value)
-      return
-    editor.value?.commands.setContent(value || '', false)
-  })
-  watch(placeholder, () => {
-    editor.value?.view.dispatch(editor.value?.state.tr)
-  })
+    watch(content, (value) => {
+        if (editor.value?.getHTML() === value)
+            return
+        editor.value?.commands.setContent(value || '', false)
+    })
+    watch(placeholder, () => {
+        editor.value?.view.dispatch(editor.value?.state.tr)
+    })
 
-  return {
-    editor,
-  }
+    return {
+        editor,
+    }
 }

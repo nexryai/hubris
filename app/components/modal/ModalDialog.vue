@@ -2,33 +2,33 @@
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 
 defineOptions({
-  inheritAttrs: false,
+    inheritAttrs: false,
 })
 
 const {
-  zIndex = 100,
-  closeByMask = true,
-  useVIf = true,
-  keepAlive = false,
-  focusFirstElement = true,
+    zIndex = 100,
+    closeByMask = true,
+    useVIf = true,
+    keepAlive = false,
+    focusFirstElement = true,
 } = defineProps<{
-  // level of depth
-  zIndex?: number
-  // whether to allow close dialog by clicking mask layer
-  closeByMask?: boolean
-  // use v-if, destroy all the internal elements after closed
-  useVIf?: boolean
-  // keep the dialog opened even when in other views
-  keepAlive?: boolean
-  // The aria-labelledby id for the dialog.
-  dialogLabelledBy?: string
-  // Whether to focus on the first element when the modal opens.
-  focusFirstElement?: boolean
+    // level of depth
+    zIndex?: number
+    // whether to allow close dialog by clicking mask layer
+    closeByMask?: boolean
+    // use v-if, destroy all the internal elements after closed
+    useVIf?: boolean
+    // keep the dialog opened even when in other views
+    keepAlive?: boolean
+    // The aria-labelledby id for the dialog.
+    dialogLabelledBy?: string
+    // Whether to focus on the first element when the modal opens.
+    focusFirstElement?: boolean
 }>()
 
 const emit = defineEmits<{
-  /** v-model dialog visibility */
-  (event: 'close'): void
+    /** v-model dialog visibility */
+    (event: 'close'): void
 }>()
 
 const visible = defineModel<boolean>({ required: true })
@@ -42,126 +42,122 @@ const elDialogMain = ref<HTMLDivElement>()
 const elDialogRoot = ref<HTMLDivElement>()
 
 const { activate } = useFocusTrap(elDialogRoot, {
-  immediate: false,
-  allowOutsideClick: true,
-  clickOutsideDeactivates: true,
-  escapeDeactivates: true,
-  preventScroll: true,
-  returnFocusOnDeactivate: true,
-  initialFocus: focusFirstElement ? undefined : false,
+    immediate: false,
+    allowOutsideClick: true,
+    clickOutsideDeactivates: true,
+    escapeDeactivates: true,
+    preventScroll: true,
+    returnFocusOnDeactivate: true,
+    initialFocus: focusFirstElement ? undefined : false,
 })
 
 defineExpose({
-  elDialogRoot,
-  elDialogMain,
+    elDialogRoot,
+    elDialogMain,
 })
 
 /** close the dialog */
 function close() {
-  if (!visible.value)
-    return
-  visible.value = false
-  emit('close')
+    if (!visible.value)
+        return
+    visible.value = false
+    emit('close')
 }
 
 function clickMask() {
-  if (closeByMask)
-    close()
+    if (closeByMask)
+        close()
 }
 
 const routePath = ref(route.path)
 watch(visible, (value) => {
-  if (value)
-    routePath.value = route.path
+    if (value)
+        routePath.value = route.path
 })
 
 const notInCurrentPage = computed(() => deactivated.value || routePath.value !== route.path)
 watch(notInCurrentPage, (value) => {
-  if (keepAlive)
-    return
-  if (value)
-    close()
+    if (keepAlive)
+        return
+    if (value)
+        close()
 })
 
 // controls the state of v-if.
 // when useVIf is toggled, v-if has the same state as modelValue, otherwise v-if is true
 const isVIf = computed(() => {
-  return useVIf
-    ? visible.value
-    : true
+    return useVIf ? visible.value : true
 })
 
 // controls the state of v-show.
 // when useVIf is toggled, v-show is true, otherwise it has the same state as modelValue
 const isVShow = computed(() => {
-  return !useVIf
-    ? visible.value
-    : true
+    return !useVIf ? visible.value : true
 })
 
 function bindTypeToAny($attrs: any) {
-  return $attrs as any
+    return $attrs as any
 }
 
 function trapFocusDialog() {
-  if (isVShow.value)
-    nextTick().then(() => activate())
+    if (isVShow.value)
+        nextTick().then(() => activate())
 }
 
 useEventListener('keydown', (e: KeyboardEvent) => {
-  if (!visible.value)
-    return
-  if (e.key === 'Escape') {
-    close()
-    e.preventDefault()
-  }
+    if (!visible.value)
+        return
+    if (e.key === 'Escape') {
+        close()
+        e.preventDefault()
+    }
 })
 </script>
 
 <template>
-  <Teleport to="body">
-    <!-- Dialog component -->
-    <Transition name="dialog-visible" @transitionend="trapFocusDialog">
-      <div
-        v-if="isVIf"
-        v-show="isVShow"
-        ref="elDialogRoot"
-        aria-modal="true"
-        :aria-labelledby="dialogLabelledBy"
-        :style="{
-          'z-index': zIndex,
-        }"
-        fixed inset-0 of-y-auto scrollbar-hide overscroll-none
-      >
-        <!-- The style `scrollbar-hide overscroll-none overflow-y-scroll` and `h="[calc(100%+0.5px)]"` is used to implement scroll locking, -->
-        <!-- corresponding to issue: #106, so please don't remove it. -->
-
-        <!-- Mask layer: blur -->
-        <div
-          class="dialog-mask"
-          :class="{
-            'backdrop-blur-sm': !getPreferences(userSettings, 'optimizeForLowPerformanceDevice'),
-          }"
-          absolute inset-0 z-0 bg-transparent opacity-100 backdrop-filter touch-none
-        />
-        <!-- Mask layer: dimming -->
-        <div class="dialog-mask" absolute inset-0 z-0 bg-black opacity-48 touch-none h="[calc(100%+0.5px)]" @click="clickMask" />
-        <!-- Dialog container -->
-        <div class="p-safe-area" absolute inset-0 z-1 pointer-events-none opacity-100 flex>
-          <div flex-1 flex items-center justify-center p-4>
-            <!-- We use `class` here to make v-bind being able to be override them -->
+    <Teleport to="body">
+        <!-- Dialog component -->
+        <Transition name="dialog-visible" @transitionend="trapFocusDialog">
             <div
-              ref="elDialogMain"
-              class="dialog-main rounded shadow-lg pointer-events-auto isolate bg-base border-base border-1px border-solid w-full max-h-full of-y-auto overscroll-contain touch-pan-y touch-pan-x"
-              v-bind="bindTypeToAny($attrs)"
+                v-if="isVIf"
+                v-show="isVShow"
+                ref="elDialogRoot"
+                aria-modal="true"
+                :aria-labelledby="dialogLabelledBy"
+                :style="{
+                    'z-index': zIndex,
+                }"
+                fixed inset-0 of-y-auto scrollbar-hide overscroll-none
             >
-              <slot />
+                <!-- The style `scrollbar-hide overscroll-none overflow-y-scroll` and `h="[calc(100%+0.5px)]"` is used to implement scroll locking, -->
+                <!-- corresponding to issue: #106, so please don't remove it. -->
+
+                <!-- Mask layer: blur -->
+                <div
+                    class="dialog-mask"
+                    :class="{
+                        'backdrop-blur-sm': !getPreferences(userSettings, 'optimizeForLowPerformanceDevice'),
+                    }"
+                    absolute inset-0 z-0 bg-transparent opacity-100 backdrop-filter touch-none
+                />
+                <!-- Mask layer: dimming -->
+                <div class="dialog-mask" absolute inset-0 z-0 bg-black opacity-48 touch-none h="[calc(100%+0.5px)]" @click="clickMask" />
+                <!-- Dialog container -->
+                <div class="p-safe-area" absolute inset-0 z-1 pointer-events-none opacity-100 flex>
+                    <div flex-1 flex items-center justify-center p-4>
+                        <!-- We use `class` here to make v-bind being able to be override them -->
+                        <div
+                            ref="elDialogMain"
+                            class="dialog-main rounded shadow-lg pointer-events-auto isolate bg-base border-base border-1px border-solid w-full max-h-full of-y-auto overscroll-contain touch-pan-y touch-pan-x"
+                            v-bind="bindTypeToAny($attrs)"
+                        >
+                            <slot />
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+        </Transition>
+    </Teleport>
 </template>
 
 <style lang="postcss" scoped>

@@ -3,44 +3,44 @@ import type { DraftItem } from '#shared/types'
 import type { mastodon } from 'masto'
 
 const {
-  draftKey,
-  initial = getDefaultDraftItem,
-  expanded = false,
+    draftKey,
+    initial = getDefaultDraftItem,
+    expanded = false,
 } = defineProps<{
-  draftKey: string
-  initial?: () => DraftItem
-  placeholder?: string
-  inReplyToId?: string
-  inReplyToVisibility?: mastodon.v1.StatusVisibility
-  expanded?: boolean
-  dialogLabelledBy?: string
+    draftKey: string
+    initial?: () => DraftItem
+    placeholder?: string
+    inReplyToId?: string
+    inReplyToVisibility?: mastodon.v1.StatusVisibility
+    expanded?: boolean
+    dialogLabelledBy?: string
 }>()
 
 const threadComposer = useThreadComposer(draftKey, initial)
 const threadItems = computed(() => threadComposer.threadItems.value)
 
 onDeactivated(() => {
-  clearEmptyDrafts()
+    clearEmptyDrafts()
 })
 
 function isFirstItem(index: number) {
-  return index === 0
+    return index === 0
 }
 </script>
 
 <template>
-  <template v-if="isHydrated && currentUser">
-    <PublishWidget
-      v-for="(_, index) in threadItems" :key="`${draftKey}-${index}`"
-      v-bind="$attrs"
-      :thread-composer="threadComposer"
-      :draft-key="draftKey"
-      :draft-item-index="index"
-      :expanded="isFirstItem(index) ? expanded : true"
-      :placeholder="placeholder"
-      :dialog-labelled-by="dialogLabelledBy"
-      :in-reply-to-id="isFirstItem(index) ? inReplyToId : undefined"
-      :in-reply-to-visibility="inReplyToVisibility"
-    />
-  </template>
+    <template v-if="isHydrated && currentUser">
+        <PublishWidget
+            v-for="(_, index) in threadItems" :key="`${draftKey}-${index}`"
+            v-bind="$attrs"
+            :thread-composer="threadComposer"
+            :draft-key="draftKey"
+            :draft-item-index="index"
+            :expanded="isFirstItem(index) ? expanded : true"
+            :placeholder="placeholder"
+            :dialog-labelled-by="dialogLabelledBy"
+            :in-reply-to-id="isFirstItem(index) ? inReplyToId : undefined"
+            :in-reply-to-visibility="inReplyToVisibility"
+        />
+    </template>
 </template>

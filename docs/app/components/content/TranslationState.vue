@@ -13,192 +13,187 @@ const localeTab = ref<Tab>('missing')
 const copied = ref(false)
 
 const currentLocale = computed(() => {
-  if (hidden.value || !locale.value)
-    return undefined
+    if (hidden.value || !locale.value)
+        return undefined
 
-  return localesStatuses as Record<string, any>
+    return localesStatuses as Record<string, any>
 })
 
 const localeTitle = computed(() => {
-  if (hidden.value || !locale.value)
-    return undefined
+    if (hidden.value || !locale.value)
+        return undefined
 
-  return localeTab.value === 'missing'
-    ? `Missing keys in ${locale.value.file}`
-    : `Outdated keys in ${locale.value.file}`
+    return localeTab.value === 'missing' ? `Missing keys in ${locale.value.file}` : `Outdated keys in ${locale.value.file}`
 })
 
 const missingEntries = computed<string[]>(() => {
-  if (hidden.value || !currentLocale.value || localeTab.value !== 'missing')
-    return []
+    if (hidden.value || !currentLocale.value || localeTab.value !== 'missing')
+        return []
 
-  return localesStatuses[locale.value]!.missing
+    return localesStatuses[locale.value]!.missing
 })
 
 const outdatedEntries = computed<string[]>(() => {
-  if (hidden.value || !currentLocale.value || localeTab.value !== 'outdated')
-    return []
+    if (hidden.value || !currentLocale.value || localeTab.value !== 'outdated')
+        return []
 
-  return localesStatuses[locale.value]!.outdated
+    return localesStatuses[locale.value]!.outdated
 })
 
 function showDetail(key: string, tab: Tab = 'missing', fromTab = false) {
-  if (key === locale.value && tab === localeTab.value) {
-    if (fromTab)
-      return
+    if (key === locale.value && tab === localeTab.value) {
+        if (fromTab)
+            return
 
-    nextTick().then(() => hidden.value = !hidden.value)
+        nextTick().then(() => (hidden.value = !hidden.value))
 
-    return
-  }
+        return
+    }
 
-  locale.value = key
-  localeTab.value = tab
-  nextTick().then(() => hidden.value = false)
+    locale.value = key
+    localeTab.value = tab
+    nextTick().then(() => (hidden.value = false))
 }
 
 async function copyToClipboard() {
-  try {
-    await navigator.clipboard.writeText([
-      `# ${localeTitle.value}`,
-      (localeTab.value === 'missing' ? missingEntries.value : outdatedEntries.value).join('\n'),
-    ].join('\n'))
-    copied.value = true
-    setTimeout(() => copied.value = false, 750)
-  }
-  catch {}
+    try {
+        await navigator.clipboard.writeText([`# ${localeTitle.value}`, (localeTab.value === 'missing' ? missingEntries.value : outdatedEntries.value).join('\n')].join('\n'))
+        copied.value = true
+        setTimeout(() => (copied.value = false), 750)
+    }
+    catch {}
 }
 </script>
 
 <template>
-  <div>
-    <table class="w-full">
-      <caption>
-        <div>You can see the detail (missing and outdated keys) by clicking on the corresponding row.</div>
-        <div>
-          If you want to send a PR, click on <strong>Edit</strong> link on the corresponding translation file, it will open the translation file in GitHub
-        </div>
-      </caption>
-      <thead>
-        <tr>
-          <th>Language</th>
-          <th title="Keys correctly translated">
-            Translated
-          </th>
-          <th title="Keys missing from source which need translation for the language">
-            Missing
-          </th>
-          <th title="Keys which could be safely removed">
-            Outdated
-          </th>
-          <th>Total</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-for="({ title, useFile, translated, missing, outdated, total, isSource }, key) in localesStatuses" :key="key">
-          <tr
-            v-if="totalReference > 0"
-            :class="[{ expandable: !isSource }]"
-            :title="!isSource ? 'Click to show detail' : undefined"
-            @click="!isSource && showDetail(key, 'missing')"
-          >
-            <td :class="[{ expandable: !isSource }]">
-              <div>
-                <ToggleIcon v-if="!isSource" :up="hidden || key !== locale" />
-                {{ title }}
-              </div>
-            </td>
-            <template v-if="isSource">
-              <td colspan="4" class="source-text">
+    <div>
+        <table class="w-full">
+            <caption>
+                <div>You can see the detail (missing and outdated keys) by clicking on the corresponding row.</div>
                 <div>
-                  {{ total }} keys as source
+                    If you want to send a PR, click on <strong>Edit</strong> link on the corresponding translation file, it will open the translation file in GitHub
                 </div>
-              </td>
-              <td>
-                <NuxtLink
-                  :href="`https://github.com/elk-zone/elk/tree/main/locales/${useFile}`"
-                  target="_blank"
-                  class="edit-in-github"
-                  title="Edit Translation File (opens in new window)"
-                  @click.stop
-                >
-                  Edit
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413Q19.825 21 19 21Zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4Z" />
-                  </svg>
-                </NuxtLink>
-              </td>
-            </template>
-            <template v-else>
-              <td>
-                <strong>{{ `${translated?.length ?? 0}` }}</strong> {{ `(${(100 * (translated?.length ?? 0) / totalReference).toFixed(1)}%)` }}
-              </td>
-              <td>
-                <strong>{{ `${missing?.length ?? 0}` }}</strong> {{ `(${(100 * (missing?.length ?? 0) / totalReference).toFixed(1)}%)` }}
-              </td>
-              <td>
-                <strong>{{ `${outdated?.length ?? 0}` }}</strong> {{ `(${(100 * (outdated?.length ?? 0) / totalReference).toFixed(1)}%)` }}
-              </td>
-              <td><strong>{{ `${total}` }}</strong></td>
-              <td>
-                <NuxtLink
-                  :href="`https://github.com/elk-zone/elk/tree/main/locales/${useFile}`"
-                  target="_blank"
-                  class="edit-in-github"
-                  title="Edit Translation File (opens in new window)"
-                  @click.stop
-                >
-                  Edit
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413Q19.825 21 19 21Zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4Z" />
-                  </svg>
-                </NuxtLink>
-              </td>
-            </template>
-          </tr>
-          <template v-if="key === locale && !hidden">
-            <tr>
-              <td colspan="6">
-                <div class="detail">
-                  <header>
-                    <h2 class="tabs">
-                      <button
-                        :class="localeTab === 'missing' ? 'current' : null"
-                        @click="showDetail(key, 'missing', true)"
-                      >
-                        Missing keys
-                      </button>
-                      <button
-                        :class="localeTab === 'outdated' ? 'current' : null"
-                        @click="showDetail(key, 'outdated', true)"
-                      >
-                        Outdated keys
-                      </button>
-                    </h2>
-                  </header>
-                  <ul v-if="localeTab === 'missing'">
-                    <li v-for="entry in missingEntries" :key="entry">
-                      <pre>{{ entry }}</pre>
-                    </li>
-                  </ul>
-                  <ul v-else>
-                    <li v-for="entry in outdatedEntries" :key="entry">
-                      <pre>{{ entry }}</pre>
-                    </li>
-                  </ul>
-                  <button @click="copyToClipboard()">
-                    <ClipboardIcon :copy="!copied" />
-                    Copy to clipboard
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </template>
-        </template>
-      </tbody>
-    </table>
-  </div>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th title="Keys correctly translated">
+                        Translated
+                    </th>
+                    <th title="Keys missing from source which need translation for the language">
+                        Missing
+                    </th>
+                    <th title="Keys which could be safely removed">
+                        Outdated
+                    </th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="({ title, useFile, translated, missing, outdated, total, isSource }, key) in localesStatuses" :key="key">
+                    <tr
+                        v-if="totalReference > 0"
+                        :class="[{ expandable: !isSource }]"
+                        :title="!isSource ? 'Click to show detail' : undefined"
+                        @click="!isSource && showDetail(key, 'missing')"
+                    >
+                        <td :class="[{ expandable: !isSource }]">
+                            <div>
+                                <ToggleIcon v-if="!isSource" :up="hidden || key !== locale" />
+                                {{ title }}
+                            </div>
+                        </td>
+                        <template v-if="isSource">
+                            <td colspan="4" class="source-text">
+                                <div>
+                                    {{ total }} keys as source
+                                </div>
+                            </td>
+                            <td>
+                                <NuxtLink
+                                    :href="`https://github.com/elk-zone/elk/tree/main/locales/${useFile}`"
+                                    target="_blank"
+                                    class="edit-in-github"
+                                    title="Edit Translation File (opens in new window)"
+                                    @click.stop
+                                >
+                                    Edit
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413Q19.825 21 19 21Zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4Z" />
+                                    </svg>
+                                </NuxtLink>
+                            </td>
+                        </template>
+                        <template v-else>
+                            <td>
+                                <strong>{{ `${translated?.length ?? 0}` }}</strong> {{ `(${(100 * (translated?.length ?? 0) / totalReference).toFixed(1)}%)` }}
+                            </td>
+                            <td>
+                                <strong>{{ `${missing?.length ?? 0}` }}</strong> {{ `(${(100 * (missing?.length ?? 0) / totalReference).toFixed(1)}%)` }}
+                            </td>
+                            <td>
+                                <strong>{{ `${outdated?.length ?? 0}` }}</strong> {{ `(${(100 * (outdated?.length ?? 0) / totalReference).toFixed(1)}%)` }}
+                            </td>
+                            <td><strong>{{ `${total}` }}</strong></td>
+                            <td>
+                                <NuxtLink
+                                    :href="`https://github.com/elk-zone/elk/tree/main/locales/${useFile}`"
+                                    target="_blank"
+                                    class="edit-in-github"
+                                    title="Edit Translation File (opens in new window)"
+                                    @click.stop
+                                >
+                                    Edit
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h7v2H5v14h14v-7h2v7q0 .825-.587 1.413Q19.825 21 19 21Zm4.7-5.3l-1.4-1.4L17.6 5H14V3h7v7h-2V6.4Z" />
+                                    </svg>
+                                </NuxtLink>
+                            </td>
+                        </template>
+                    </tr>
+                    <template v-if="key === locale && !hidden">
+                        <tr>
+                            <td colspan="6">
+                                <div class="detail">
+                                    <header>
+                                        <h2 class="tabs">
+                                            <button
+                                                :class="localeTab === 'missing' ? 'current' : null"
+                                                @click="showDetail(key, 'missing', true)"
+                                            >
+                                                Missing keys
+                                            </button>
+                                            <button
+                                                :class="localeTab === 'outdated' ? 'current' : null"
+                                                @click="showDetail(key, 'outdated', true)"
+                                            >
+                                                Outdated keys
+                                            </button>
+                                        </h2>
+                                    </header>
+                                    <ul v-if="localeTab === 'missing'">
+                                        <li v-for="entry in missingEntries" :key="entry">
+                                            <pre>{{ entry }}</pre>
+                                        </li>
+                                    </ul>
+                                    <ul v-else>
+                                        <li v-for="entry in outdatedEntries" :key="entry">
+                                            <pre>{{ entry }}</pre>
+                                        </li>
+                                    </ul>
+                                    <button @click="copyToClipboard()">
+                                        <ClipboardIcon :copy="!copied" />
+                                        Copy to clipboard
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </template>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <style scoped>

@@ -142,25 +142,25 @@ Additionally, Elk will use [compact notation for numbers](https://developer.mozi
 You can run this code in your browser console to see how it works:
 ```ts
 [1, 12, 123, 1234, 12345, 123456, 1234567].forEach((n) => {
-  const acc = {}
+    const acc = {}
 
-  Array.from(['en-US', 'en-GB', 'de-DE', 'zh-CN', 'ja-JP', 'es-ES', 'fr-FR', 'cs-CZ', 'ar-EG']).forEach((l) => {
-    const nf = new Intl.NumberFormat(l, {
-      style: 'decimal',
-      maximumFractionDigits: 0,
+    Array.from(['en-US', 'en-GB', 'de-DE', 'zh-CN', 'ja-JP', 'es-ES', 'fr-FR', 'cs-CZ', 'ar-EG']).forEach((l) => {
+        const nf = new Intl.NumberFormat(l, {
+            style: 'decimal',
+            maximumFractionDigits: 0,
+        })
+        const nf2 = new Intl.NumberFormat(l, {
+            notation: 'compact',
+            compactDisplay: 'short',
+            maximumFractionDigits: 1,
+        })
+        acc[l] = {
+            number: n,
+            format: nf.format(n),
+            compact: nf2.format(n),
+        }
     })
-    const nf2 = new Intl.NumberFormat(l, {
-      notation: 'compact',
-      compactDisplay: 'short',
-      maximumFractionDigits: 1,
-    })
-    acc[l] = {
-      number: n,
-      format: nf.format(n),
-      compact: nf2.format(n),
-    }
-  })
-  console.table(acc)
+    console.table(acc)
 })
 ```
 

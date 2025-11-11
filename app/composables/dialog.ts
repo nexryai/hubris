@@ -33,123 +33,126 @@ export const lastPublishDialogStatus = ref<mastodon.v1.Status | null>(null)
 export const favouritedBoostedByStatusId = ref<string | null>(null)
 
 export function openSigninDialog() {
-  isSigninDialogOpen.value = true
+    isSigninDialogOpen.value = true
 }
 
 export async function openConfirmDialog(label: ConfirmDialogOptions | string): Promise<ConfirmDialogChoice> {
-  confirmDialogLabel.value = typeof label === 'string' ? { title: label } : label
-  confirmDialogChoice.value = undefined
-  isConfirmDialogOpen.value = true
+    confirmDialogLabel.value = typeof label === 'string' ? { title: label } : label
+    confirmDialogChoice.value = undefined
+    isConfirmDialogOpen.value = true
 
-  await until(isConfirmDialogOpen).toBe(false)
+    await until(isConfirmDialogOpen).toBe(false)
 
-  return confirmDialogChoice.value!
+    return confirmDialogChoice.value!
 }
 
 export async function openPublishDialog(draftKey = 'dialog', draft?: DraftItem, overwrite = false): Promise<void> {
-  dialogDraftKey.value = draftKey
+    dialogDraftKey.value = draftKey
 
-  if (draft) {
-    if (overwrite && !isEmptyDraft(currentUserDrafts.value[draftKey])) {
-      // TODO overwrite warning
-      // TODO don't overwrite, have a draft list
-      if (import.meta.dev) {
-        // eslint-disable-next-line no-alert
-        const result = confirm('[DEV] Are you sure you overwrite draft content?')
-        if (!result)
-          return
-      }
+    if (draft) {
+        if (overwrite && !isEmptyDraft(currentUserDrafts.value[draftKey])) {
+            // TODO overwrite warning
+            // TODO don't overwrite, have a draft list
+            if (import.meta.dev) {
+                // eslint-disable-next-line no-alert
+                const result = confirm('[DEV] Are you sure you overwrite draft content?')
+                if (!result)
+                    return
+            }
+        }
+
+        if (overwrite || !currentUserDrafts.value[draftKey])
+            currentUserDrafts.value[draftKey] = [draft]
     }
+    isPublishDialogOpen.value = true
 
-    if (overwrite || !currentUserDrafts.value[draftKey])
-      currentUserDrafts.value[draftKey] = [draft]
-  }
-  isPublishDialogOpen.value = true
-
-  await until(isPublishDialogOpen).toBe(false)
+    await until(isPublishDialogOpen).toBe(false)
 }
 
 export async function openFavoridedBoostedByDialog(statusId: string) {
-  isFavouritedBoostedByDialogOpen.value = true
-  favouritedBoostedByStatusId.value = statusId
+    isFavouritedBoostedByDialogOpen.value = true
+    favouritedBoostedByStatusId.value = statusId
 }
 
 function restoreMediaPreviewFromState() {
-  mediaPreviewList.value = JSON.parse(history.state?.mediaPreviewList ?? '[]')
-  mediaPreviewIndex.value = history.state?.mediaPreviewIndex ?? 0
-  isMediaPreviewOpen.value = history.state?.mediaPreview ?? false
+    mediaPreviewList.value = JSON.parse(history.state?.mediaPreviewList ?? '[]')
+    mediaPreviewIndex.value = history.state?.mediaPreviewIndex ?? 0
+    isMediaPreviewOpen.value = history.state?.mediaPreview ?? false
 }
 
 if (import.meta.client) {
-  window.addEventListener('popstate', restoreMediaPreviewFromState)
+    window.addEventListener('popstate', restoreMediaPreviewFromState)
 
-  restoreMediaPreviewFromState()
+    restoreMediaPreviewFromState()
 }
 
 export function openMediaPreview(attachments: mastodon.v1.MediaAttachment[], index = 0) {
-  mediaPreviewList.value = attachments
-  mediaPreviewIndex.value = index
-  isMediaPreviewOpen.value = true
+    mediaPreviewList.value = attachments
+    mediaPreviewIndex.value = index
+    isMediaPreviewOpen.value = true
 
-  history.pushState({
-    ...history.state,
-    mediaPreview: true,
-    mediaPreviewList: JSON.stringify(attachments),
-    mediaPreviewIndex: index,
-  }, '')
+    history.pushState(
+        {
+            ...history.state,
+            mediaPreview: true,
+            mediaPreviewList: JSON.stringify(attachments),
+            mediaPreviewIndex: index,
+        },
+        '',
+    )
 }
 
 export async function openErrorDialog(data: ErrorDialogData) {
-  errorDialogData.value = data
-  isErrorDialogOpen.value = true
+    errorDialogData.value = data
+    isErrorDialogOpen.value = true
 
-  await until(isErrorDialogOpen).toBe(false)
+    await until(isErrorDialogOpen).toBe(false)
 }
 
 export function closeErrorDialog() {
-  isErrorDialogOpen.value = false
+    isErrorDialogOpen.value = false
 }
 
 export function closeMediaPreview() {
-  history.back()
+    history.back()
 }
 
 export function openEditHistoryDialog(edit: mastodon.v1.StatusEdit) {
-  statusEdit.value = edit
-  isEditHistoryDialogOpen.value = true
+    statusEdit.value = edit
+    isEditHistoryDialogOpen.value = true
 }
 
 export function openPreviewHelp() {
-  isPreviewHelpOpen.value = true
+    isPreviewHelpOpen.value = true
 }
 
 export function closePreviewHelp() {
-  isPreviewHelpOpen.value = false
+    isPreviewHelpOpen.value = false
 }
 
 export function openCommandPanel(isCommandMode = false) {
-  commandPanelInput.value = isCommandMode ? '> ' : ''
-  isCommandPanelOpen.value = true
+    commandPanelInput.value = isCommandMode ? '> ' : ''
+    isCommandPanelOpen.value = true
 }
 
 export function closeCommandPanel() {
-  isCommandPanelOpen.value = false
+    isCommandPanelOpen.value = false
 }
 
 export function toggleKeyboardShortcuts() {
-  isKeyboardShortcutsDialogOpen.value = !isKeyboardShortcutsDialogOpen.value
+    isKeyboardShortcutsDialogOpen.value = !isKeyboardShortcutsDialogOpen.value
 }
 
 export function closeKeyboardShortcuts() {
-  isKeyboardShortcutsDialogOpen.value = false
+    isKeyboardShortcutsDialogOpen.value = false
 }
 
 export function openReportDialog(account: mastodon.v1.Account, status?: mastodon.v1.Status) {
-  reportAccount.value = account
-  reportStatus.value = status
-  isReportDialogOpen.value = true
+    reportAccount.value = account
+    reportStatus.value = status
+    isReportDialogOpen.value = true
 }
 
 export function closeReportDialog() {
-  isReportDialogOpen.value = false
+    isReportDialogOpen.value = false
 }

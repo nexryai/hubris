@@ -10,15 +10,15 @@ const account = await fetchAccountByHandle(handle.value)
 const paginator = useMastoClient().v1.accounts.$select(account.id).statuses.list({ onlyMedia: true, excludeReplies: false })
 
 if (account) {
-  useHydratedHead({
-    title: () => `${t('tab.media')} | ${getDisplayName(account)} (@${account.acct})`,
-  })
+    useHydratedHead({
+        title: () => `${t('tab.media')} | ${getDisplayName(account)} (@${account.acct})`,
+    })
 }
 </script>
 
 <template>
-  <div>
-    <AccountTabs />
-    <TimelinePaginator :paginator="paginator" :preprocess="reorderedTimeline" context="account" :account="account" />
-  </div>
+    <div>
+        <AccountTabs />
+        <TimelinePaginator :paginator="paginator" :preprocess="reorderedTimeline" context="account" :account="account" />
+    </div>
 </template>
