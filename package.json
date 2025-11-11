@@ -28,7 +28,7 @@
         "cleanup-translations": "node scripts/cleanup-translations.ts",
         "prepare-translation-status": "node scripts/prepare-translation-status.ts",
         "generate-pwa-icons": "node scripts/generate-pwa-icons.ts",
-        "postinstall": "simple-git-hooks && nuxt prepare",
+        "postinstall": "nuxt prepare",
         "release": "bumpp && node scripts/release.ts"
     },
     "dependencies": {

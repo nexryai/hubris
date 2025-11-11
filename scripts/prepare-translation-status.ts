@@ -1,10 +1,20 @@
-import type { LocaleEntry } from "../docs/types";
 import type { ElkTranslationStatus } from "../shared/types/translation-status";
 import { Buffer } from "node:buffer";
 import { readFile, writeFile } from "node:fs/promises";
 import { flatten } from "flat";
 import { createResolver } from "nuxt/kit";
 import { countryLocaleVariants, currentLocales } from "../config/i18n.ts";
+
+interface LocaleEntry {
+    title: string;
+    file: string;
+    useFile: string;
+    translated: string[];
+    missing: string[];
+    outdated: string[];
+    total: number;
+    isSource?: boolean;
+}
 
 export const localeData: [code: string, file: string[], title: string][] = currentLocales.map((l: any) => [l.code, l.files ? l.files : [l.file!], l.name ?? l.code]);
 
@@ -102,8 +112,6 @@ async function prepareTranslationStatus() {
         });
 
     const resolver = createResolver(import.meta.url);
-
-    await writeFile(resolver.resolve("../docs/translation-status.json"), JSON.stringify(sorted, null, 2), { encoding: "utf-8" });
 
     const translationStatus: ElkTranslationStatus = {
         total,
