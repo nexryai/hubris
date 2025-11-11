@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${t('settings.preferences.label')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.preferences.label")} | ${t("nav.settings")}`,
+});
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 </script>
 
 <template>

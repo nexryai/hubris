@@ -1,10 +1,10 @@
 export interface ElkTranslationStatus {
-    total: number
+    total: number;
     locales: Record<
         string,
         {
-            percentage: string
-            total: number
+            percentage: string;
+            total: number;
         }
-    >
+    >;
 }

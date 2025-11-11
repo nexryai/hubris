@@ -1,17 +1,17 @@
-import type { DraftItem } from '#shared/types'
-import type { mastodon } from 'masto'
+import type { DraftItem } from "#shared/types";
+import type { mastodon } from "masto";
 
-const maxThreadLength = 99
+const maxThreadLength = 99;
 
 export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
-    const { draftItems } = useDraft(draftKey, initial)
+    const { draftItems } = useDraft(draftKey, initial);
 
     /**
      * Whether the thread is active (has more than one item)
      */
-    const threadIsActive = computed<boolean>(() => draftItems.value.length > 1)
+    const threadIsActive = computed<boolean>(() => draftItems.value.length > 1);
 
-    const threadIsSending = ref(false)
+    const threadIsSending = ref(false);
 
     /**
      * Add an item to the thread
@@ -20,10 +20,10 @@ export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
         if (draftItems.value.length >= maxThreadLength) {
             // TODO handle with error message that tells the user what's wrong
             // For now just fail silently without breaking anything
-            return
+            return;
         }
 
-        const lastItem = draftItems.value[draftItems.value.length - 1]
+        const lastItem = draftItems.value[draftItems.value.length - 1];
         draftItems.value.push(
             getDefaultDraftItem({
                 language: lastItem.params.language,
@@ -31,7 +31,7 @@ export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
                 spoilerText: lastItem.params.spoilerText,
                 visibility: lastItem.params.visibility,
             }),
-        )
+        );
     }
 
     /**
@@ -39,22 +39,21 @@ export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
      * @param index index of the draft to remove from the thread
      */
     function removeThreadItem(index: number) {
-        draftItems.value.splice(index, 1)
+        draftItems.value.splice(index, 1);
     }
 
     /**
      * Publish all items in the thread in order
      */
     async function publishThread() {
-        const allFailedMessages: Array<string> = []
-        const isAReplyThread = Boolean(draftItems.value[0].params.inReplyToId)
-        threadIsSending.value = true
+        const allFailedMessages: Array<string> = [];
+        const isAReplyThread = Boolean(draftItems.value[0].params.inReplyToId);
+        threadIsSending.value = true;
 
-        let lastPublishedStatus: mastodon.v1.Status | null = null
-        let amountPublished = 0
+        let lastPublishedStatus: mastodon.v1.Status | null = null;
+        let amountPublished = 0;
         for (const draftItem of draftItems.value) {
-            if (lastPublishedStatus)
-                draftItem.params.inReplyToId = lastPublishedStatus.id
+            if (lastPublishedStatus) draftItem.params.inReplyToId = lastPublishedStatus.id;
 
             const { publishDraft, failedMessages } = usePublish({
                 draftItem: ref(draftItem),
@@ -62,32 +61,29 @@ export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
                 isUploading: ref(false),
                 initialDraft: () => draftItem,
                 isPartOfThread: true,
-            })
+            });
 
-            const status = await publishDraft()
+            const status = await publishDraft();
             if (status) {
-                lastPublishedStatus = status
-                amountPublished++
-            }
-            else {
-                allFailedMessages.push(...failedMessages.value)
+                lastPublishedStatus = status;
+                amountPublished++;
+            } else {
+                allFailedMessages.push(...failedMessages.value);
                 // Stop publishing if one fails
-                break
+                break;
             }
         }
         // Remove all published items from the thread
-        draftItems.value.splice(0, amountPublished)
-        threadIsSending.value = false
+        draftItems.value.splice(0, amountPublished);
+        threadIsSending.value = false;
 
         // If we have errors, return them
-        if (allFailedMessages.length > 0)
-            return allFailedMessages
+        if (allFailedMessages.length > 0) return allFailedMessages;
 
         // If the thread was a reply and all items were published, jump to it
-        if (isAReplyThread && lastPublishedStatus && draftItems.value.length === 0)
-            navigateToStatus({ status: lastPublishedStatus })
+        if (isAReplyThread && lastPublishedStatus && draftItems.value.length === 0) navigateToStatus({ status: lastPublishedStatus });
 
-        return lastPublishedStatus
+        return lastPublishedStatus;
     }
 
     return {
@@ -97,5 +93,5 @@ export function useThreadComposer(draftKey: string, initial?: () => DraftItem) {
         removeThreadItem,
         publishThread,
         threadIsSending,
-    }
+    };
 }

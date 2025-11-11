@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineProps<{
-    paginator: mastodon.Paginator<mastodon.v1.Tag[], mastodon.DefaultPaginationParams>
-}>()
+    paginator: mastodon.Paginator<mastodon.v1.Tag[], mastodon.DefaultPaginationParams>;
+}>();
 </script>
 
 <template>

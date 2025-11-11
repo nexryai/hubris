@@ -1,33 +1,33 @@
 <script setup lang="ts">
 const { text, description, icon, to, command, external, target } = defineProps<{
-    text?: string
-    content?: string
-    description?: string
-    icon?: string
-    to?: string | Record<string, string>
-    command?: boolean
-    disabled?: boolean
-    external?: true
-    large?: true
-    match?: boolean
-    target?: string
-}>()
+    text?: string;
+    content?: string;
+    description?: string;
+    icon?: string;
+    to?: string | Record<string, string>;
+    command?: boolean;
+    disabled?: boolean;
+    external?: true;
+    large?: true;
+    match?: boolean;
+    target?: string;
+}>();
 
-const router = useRouter()
-const scrollOnClick = computed(() => to && !(target === '_blank' || external))
+const router = useRouter();
+const scrollOnClick = computed(() => to && !(target === "_blank" || external));
 
 useCommand({
-    scope: 'Settings',
+    scope: "Settings",
 
-    name: () => text ?? (to ? (typeof to === 'string' ? to : to.name) : ''),
+    name: () => text ?? (to ? (typeof to === "string" ? to : to.name) : ""),
     description: () => description,
-    icon: () => icon || '',
+    icon: () => icon || "",
     visible: () => command && to,
 
     onActivate() {
-        router.push(to!)
+        router.push(to!);
     },
-})
+});
 </script>
 
 <template>

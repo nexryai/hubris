@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { details, command, ...props } = defineProps<{
-    status: mastodon.v1.Status
-    details?: boolean
-    command?: boolean
-}>()
+    status: mastodon.v1.Status;
+    details?: boolean;
+    command?: boolean;
+}>();
 
-const focusEditor = inject<typeof noop>('focus-editor', noop)
+const focusEditor = inject<typeof noop>("focus-editor", noop);
 
-const userSettings = useUserSettings()
-const useStarFavoriteIcon = usePreferences('useStarFavoriteIcon')
+const userSettings = useUserSettings();
+const useStarFavoriteIcon = usePreferences("useStarFavoriteIcon");
 
-const { status, isLoading, canReblog, toggleBookmark, toggleFavourite, toggleReblog } = useStatusActions({ status: props.status })
+const { status, isLoading, canReblog, toggleBookmark, toggleFavourite, toggleReblog } = useStatusActions({ status: props.status });
 
 function reply() {
-    if (!checkLogin())
-        return
-    if (details)
-        focusEditor()
-    else navigateToStatus({ status: status.value, focusReply: true })
+    if (!checkLogin()) return;
+    if (details) focusEditor();
+    else navigateToStatus({ status: status.value, focusReply: true });
 }
 </script>
 

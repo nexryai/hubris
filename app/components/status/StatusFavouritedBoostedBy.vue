@@ -1,37 +1,37 @@
 <script setup lang="ts">
-import { favouritedBoostedByStatusId } from '~/composables/dialog'
+import { favouritedBoostedByStatusId } from "~/composables/dialog";
 
-const type = ref<'favourited-by' | 'boosted-by'>('favourited-by')
+const type = ref<"favourited-by" | "boosted-by">("favourited-by");
 
-const { client } = useMasto()
+const { client } = useMasto();
 
 function load() {
-    return client.value.v1.statuses.$select(favouritedBoostedByStatusId.value!)[type.value === 'favourited-by' ? 'favouritedBy' : 'rebloggedBy'].list()
+    return client.value.v1.statuses.$select(favouritedBoostedByStatusId.value!)[type.value === "favourited-by" ? "favouritedBy" : "rebloggedBy"].list();
 }
 
-const paginator = computed(() => load())
+const paginator = computed(() => load());
 
 function showFavouritedBy() {
-    type.value = 'favourited-by'
+    type.value = "favourited-by";
 }
 
 function showRebloggedBy() {
-    type.value = 'boosted-by'
+    type.value = "boosted-by";
 }
 
-const { t } = useI18n()
+const { t } = useI18n();
 const tabs = [
     {
-        name: 'favourited-by',
-        display: t('status.favourited_by'),
+        name: "favourited-by",
+        display: t("status.favourited_by"),
         onClick: showFavouritedBy,
     },
     {
-        name: 'boosted-by',
-        display: t('status.boosted_by'),
+        name: "boosted-by",
+        display: t("status.boosted_by"),
         onClick: showRebloggedBy,
     },
-]
+];
 </script>
 
 <template>

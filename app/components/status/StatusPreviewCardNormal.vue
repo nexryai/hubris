@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { card, smallPictureOnly } = defineProps<{
-    card: mastodon.v1.PreviewCard
+    card: mastodon.v1.PreviewCard;
     /** For the preview image, only the small image mode is displayed */
-    smallPictureOnly?: boolean
+    smallPictureOnly?: boolean;
     /** When it is root card in the list, not appear as a child card */
-    root?: boolean
-}>()
+    root?: boolean;
+}>();
 
 // mastodon's default max og image width
-const ogImageWidth = 400
+const ogImageWidth = 400;
 
-const alt = computed(() => `${card.title} - ${card.title}`)
-const isSquare = computed(() => smallPictureOnly || card.width === card.height || Number(card.width || 0) < ogImageWidth || Number(card.height || 0) < ogImageWidth / 2)
-const providerName = computed(() => (card.providerName ? card.providerName : new URL(card.url).hostname))
+const alt = computed(() => `${card.title} - ${card.title}`);
+const isSquare = computed(() => smallPictureOnly || card.width === card.height || Number(card.width || 0) < ogImageWidth || Number(card.height || 0) < ogImageWidth / 2);
+const providerName = computed(() => (card.providerName ? card.providerName : new URL(card.url).hostname));
 
 // TODO: handle card.type: 'photo' | 'video' | 'rich';
 const cardTypeIconMap: Record<mastodon.v1.PreviewCardType, string> = {
-    link: 'i-ri:profile-line',
-    photo: 'i-ri:image-line',
-    video: 'i-ri:play-line',
-    rich: 'i-ri:profile-line',
-}
+    link: "i-ri:profile-line",
+    photo: "i-ri:image-line",
+    video: "i-ri:play-line",
+    rich: "i-ri:profile-line",
+};
 
-const userSettings = useUserSettings()
-const shouldLoadAttachment = ref(!getPreferences(userSettings.value, 'enableDataSaving'))
+const userSettings = useUserSettings();
+const shouldLoadAttachment = ref(!getPreferences(userSettings.value, "enableDataSaving"));
 
 function loadAttachment() {
-    shouldLoadAttachment.value = true
+    shouldLoadAttachment.value = true;
 }
 </script>
 

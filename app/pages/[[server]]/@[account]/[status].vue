@@ -1,59 +1,55 @@
 <script setup lang="ts">
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance } from "vue";
 // @ts-expect-error missing types
-import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
 
 definePageMeta({
-    name: 'status',
-    key: route => route.path,
+    name: "status",
+    key: (route) => route.path,
     // GoToSocial
-    alias: ['/:server?/@:account/statuses/:status'],
-})
+    alias: ["/:server?/@:account/statuses/:status"],
+});
 
-const route = useRoute()
-const id = computed(() => route.params.status as string)
-const main = ref<ComponentPublicInstance | null>(null)
+const route = useRoute();
+const id = computed(() => route.params.status as string);
+const main = ref<ComponentPublicInstance | null>(null);
 
-const { data: status, pending, refresh: refreshStatus } = useAsyncData(`status:${id.value}`, () => fetchStatus(id.value, true), { watch: [isHydrated], immediate: isHydrated.value, default: () => shallowRef() })
-const { client } = useMasto()
-const { data: context, pending: pendingContext, refresh: refreshContext } = useAsyncData(`context:${id.value}`, async () => client.value.v1.statuses.$select(id.value).context.fetch(), { watch: [isHydrated], immediate: isHydrated.value, lazy: true, default: () => shallowRef() })
+const { data: status, pending, refresh: refreshStatus } = useAsyncData(`status:${id.value}`, () => fetchStatus(id.value, true), { watch: [isHydrated], immediate: isHydrated.value, default: () => shallowRef() });
+const { client } = useMasto();
+const { data: context, pending: pendingContext, refresh: refreshContext } = useAsyncData(`context:${id.value}`, async () => client.value.v1.statuses.$select(id.value).context.fetch(), { watch: [isHydrated], immediate: isHydrated.value, lazy: true, default: () => shallowRef() });
 
-if (pendingContext)
-    watchOnce(pendingContext, scrollTo)
+if (pendingContext) watchOnce(pendingContext, scrollTo);
 
-if (pending)
-    watchOnce(pending, scrollTo)
+if (pending) watchOnce(pending, scrollTo);
 
 async function scrollTo() {
-    await nextTick()
+    await nextTick();
 
-    const statusElement = unrefElement(main)
-    if (!statusElement)
-        return
+    const statusElement = unrefElement(main);
+    if (!statusElement) return;
 
-    statusElement.scrollIntoView(true)
+    statusElement.scrollIntoView(true);
 }
 
-const publishWidget = ref()
+const publishWidget = ref();
 function focusEditor() {
-    return publishWidget.value?.focusEditor?.()
+    return publishWidget.value?.focusEditor?.();
 }
 
-provide('focus-editor', focusEditor)
+provide("focus-editor", focusEditor);
 
 watch(publishWidget, () => {
-    if (window.history.state.focusReply)
-        focusEditor()
-})
+    if (window.history.state.focusReply) focusEditor();
+});
 
-const replyDraft = computed(() => (status.value ? getReplyDraft(status.value) : null))
+const replyDraft = computed(() => (status.value ? getReplyDraft(status.value) : null));
 
 onReactivated(() => {
     // Silently update data when reentering the page
     // The user will see the previous content first, and any changes will be updated to the UI when the request is completed
-    refreshStatus()
-    refreshContext()
-})
+    refreshStatus();
+    refreshContext();
+});
 </script>
 
 <template>

@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import type { NuxtError } from '#app'
+import type { NuxtError } from "#app";
 
 // prevent reactive update when clearing error
 const { error } = defineProps<{
-    error: Partial<NuxtError>
-}>()
+    error: Partial<NuxtError>;
+}>();
 
 // add more custom status codes messages here
 const errorCodes: Record<number, string> = {
-    404: 'Page not found',
-}
+    404: "Page not found",
+};
 
-if (import.meta.dev)
-    console.error(error)
+if (import.meta.dev) console.error(error);
 
-const defaultMessage = 'Something went wrong'
+const defaultMessage = "Something went wrong";
 
-const message = error.message ?? errorCodes[error.statusCode!] ?? defaultMessage
+const message = error.message ?? errorCodes[error.statusCode!] ?? defaultMessage;
 
-const state = ref<'error' | 'reloading'>('error')
+const state = ref<"error" | "reloading">("error");
 async function reload() {
-    state.value = 'reloading'
+    state.value = "reloading";
     try {
-        clearError({ redirect: currentUser.value ? '/home' : `/${currentServer.value}/public/local` })
-    }
-    catch (err) {
-        console.error(err)
-        state.value = 'error'
+        clearError({ redirect: currentUser.value ? "/home" : `/${currentServer.value}/public/local` });
+    } catch (err) {
+        console.error(err);
+        state.value = "error";
     }
 }
 </script>

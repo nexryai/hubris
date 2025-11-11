@@ -1,74 +1,71 @@
 <script setup lang="ts">
-import type { FileWithHandle } from 'browser-fs-access'
-import { fileOpen } from 'browser-fs-access'
+import type { FileWithHandle } from "browser-fs-access";
+import { fileOpen } from "browser-fs-access";
 
 const {
     original,
-    allowedFileTypes = ['image/jpeg', 'image/png'],
+    allowedFileTypes = ["image/jpeg", "image/png"],
     allowedFileSize = 1024 * 1024 * 5, // 5 MB
 } = defineProps<{
     /** The image src before change */
-    original?: string
+    original?: string;
     /** Allowed file types */
-    allowedFileTypes?: string[]
+    allowedFileTypes?: string[];
     /** Allowed file size */
-    allowedFileSize?: number
-    imgClass?: string
-    loading?: boolean
-}>()
+    allowedFileSize?: number;
+    imgClass?: string;
+    loading?: boolean;
+}>();
 
 const emit = defineEmits<{
-    (event: 'pick', value: FileWithHandle): void
-    (event: 'error', code: number, message: string): void
-}>()
+    (event: "pick", value: FileWithHandle): void;
+    (event: "error", code: number, message: string): void;
+}>();
 
-const file = defineModel<FileWithHandle | null>()
+const file = defineModel<FileWithHandle | null>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const defaultImage = computed(() => original || '')
+const defaultImage = computed(() => original || "");
 /** Preview of selected images */
-const previewImage = ref('')
+const previewImage = ref("");
 /** The current images on display */
-const imageSrc = computed<string>(() => previewImage.value || defaultImage.value)
+const imageSrc = computed<string>(() => previewImage.value || defaultImage.value);
 
 async function pickImage() {
-    if (import.meta.server)
-        return
+    if (import.meta.server) return;
     const image = await fileOpen({
-        description: 'Image',
+        description: "Image",
         mimeTypes: allowedFileTypes,
-    })
+    });
 
     if (!allowedFileTypes.includes(image.type)) {
-        emit('error', 1, t('error.unsupported_file_format'))
-        return
-    }
-    else if (image.size > allowedFileSize) {
-        emit('error', 2, t('error.file_size_cannot_exceed_n_mb', [5]))
-        return
+        emit("error", 1, t("error.unsupported_file_format"));
+        return;
+    } else if (image.size > allowedFileSize) {
+        emit("error", 2, t("error.file_size_cannot_exceed_n_mb", [5]));
+        return;
     }
 
-    file.value = image
-    emit('pick', file.value)
+    file.value = image;
+    emit("pick", file.value);
 }
 
 watch(file, (image, _, onCleanup) => {
-    let expired = false
-    onCleanup(() => (expired = true))
+    let expired = false;
+    onCleanup(() => (expired = true));
 
     if (!image) {
-        previewImage.value = ''
-        return
+        previewImage.value = "";
+        return;
     }
-    const reader = new FileReader()
-    reader.readAsDataURL(image)
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
     reader.onload = (evt) => {
-        if (expired)
-            return
-        previewImage.value = evt.target?.result as string
-    }
-})
+        if (expired) return;
+        previewImage.value = evt.target?.result as string;
+    };
+});
 </script>
 
 <template>

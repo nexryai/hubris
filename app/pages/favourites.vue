@@ -1,14 +1,14 @@
 <script setup lang="ts">
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
-const useStarFavoriteIcon = usePreferences('useStarFavoriteIcon')
+const { t } = useI18n();
+const useStarFavoriteIcon = usePreferences("useStarFavoriteIcon");
 
 useHydratedHead({
-    title: () => t('nav.favourites'),
-})
+    title: () => t("nav.favourites"),
+});
 </script>
 
 <template>

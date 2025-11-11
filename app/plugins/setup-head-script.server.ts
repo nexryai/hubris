@@ -1,5 +1,5 @@
-import { STORAGE_KEY_CURRENT_USER_HANDLE, STORAGE_KEY_SETTINGS } from '~/constants'
-import { oldFontSizeMap } from '~/constants/options'
+import { STORAGE_KEY_CURRENT_USER_HANDLE, STORAGE_KEY_SETTINGS } from "~/constants";
+import { oldFontSizeMap } from "~/constants/options";
 
 /**
  * Injecting scripts before renders
@@ -16,7 +16,7 @@ export default defineNuxtPlugin(() => {
   if (!settings) { return }
 
   const html = document.documentElement
-  ${import.meta.dev ? 'console.log({ settings })' : ''}
+  ${import.meta.dev ? "console.log({ settings })" : ""}
 
   if (settings.fontSize) {
     const oldFontSizeMap = ${JSON.stringify(oldFontSizeMap)}
@@ -33,8 +33,8 @@ export default defineNuxtPlugin(() => {
   }
 })()`
                     .trim()
-                    .replace(/\s*\n\s*/g, ';'),
+                    .replace(/\s*\n\s*/g, ";"),
             },
         ],
-    })
-})
+    });
+});

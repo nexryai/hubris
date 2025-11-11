@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { GroupedLikeNotifications } from '#shared/types'
+import type { GroupedLikeNotifications } from "#shared/types";
 
 const { group } = defineProps<{
-    group: GroupedLikeNotifications
-}>()
-const useStarFavoriteIcon = usePreferences('useStarFavoriteIcon')
+    group: GroupedLikeNotifications;
+}>();
+const useStarFavoriteIcon = usePreferences("useStarFavoriteIcon");
 
-const reblogs = computed(() => group.likes.filter(i => i.reblog))
-const likes = computed(() => group.likes.filter(i => i.favourite && !i.reblog))
+const reblogs = computed(() => group.likes.filter((i) => i.reblog));
+const likes = computed(() => group.likes.filter((i) => i.favourite && !i.reblog));
 
-const timeAgoOptions = useTimeAgoOptions(true)
-const reblogsTimeAgoCreatedAt = computed(() => reblogs.value[0].reblog?.createdAt)
-const reblogsTimeAgo = useTimeAgo(() => reblogsTimeAgoCreatedAt.value ?? '', timeAgoOptions)
-const likesTimeAgoCreatedAt = computed(() => likes.value[0].favourite?.createdAt)
-const likesTimeAgo = useTimeAgo(() => likesTimeAgoCreatedAt.value ?? '', timeAgoOptions)
+const timeAgoOptions = useTimeAgoOptions(true);
+const reblogsTimeAgoCreatedAt = computed(() => reblogs.value[0].reblog?.createdAt);
+const reblogsTimeAgo = useTimeAgo(() => reblogsTimeAgoCreatedAt.value ?? "", timeAgoOptions);
+const likesTimeAgoCreatedAt = computed(() => likes.value[0].favourite?.createdAt);
+const likesTimeAgo = useTimeAgo(() => likesTimeAgoCreatedAt.value ?? "", timeAgoOptions);
 </script>
 
 <template>

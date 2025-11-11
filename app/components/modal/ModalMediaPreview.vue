@@ -1,39 +1,36 @@
 <script setup lang="ts">
-const emit = defineEmits(['close'])
+const emit = defineEmits(["close"]);
 
-const locked = useScrollLock(document.body)
+const locked = useScrollLock(document.body);
 
 // Use to avoid strange error when directlying assigning to v-model on ModelMediaPreviewCarousel
-const index = mediaPreviewIndex
+const index = mediaPreviewIndex;
 
-const current = computed(() => mediaPreviewList.value[mediaPreviewIndex.value])
-const hasNext = computed(() => index.value < mediaPreviewList.value.length - 1)
-const hasPrev = computed(() => index.value > 0)
+const current = computed(() => mediaPreviewList.value[mediaPreviewIndex.value]);
+const hasNext = computed(() => index.value < mediaPreviewList.value.length - 1);
+const hasPrev = computed(() => index.value > 0);
 
-const keys = useMagicKeys()
+const keys = useMagicKeys();
 
-whenever(keys.arrowLeft, prev)
-whenever(keys.arrowRight, next)
+whenever(keys.arrowLeft, prev);
+whenever(keys.arrowRight, next);
 
 function next() {
-    if (hasNext.value)
-        index.value++
+    if (hasNext.value) index.value++;
 }
 
 function prev() {
-    if (hasPrev.value)
-        index.value--
+    if (hasPrev.value) index.value--;
 }
 
 function onClick(e: MouseEvent) {
-    const path = e.composedPath() as HTMLElement[]
-    const el = path.find(el => ['A', 'BUTTON', 'IMG', 'VIDEO', 'P'].includes(el.tagName?.toUpperCase()))
-    if (!el)
-        emit('close')
+    const path = e.composedPath() as HTMLElement[];
+    const el = path.find((el) => ["A", "BUTTON", "IMG", "VIDEO", "P"].includes(el.tagName?.toUpperCase()));
+    if (!el) emit("close");
 }
 
-onMounted(() => (locked.value = true))
-onUnmounted(() => (locked.value = false))
+onMounted(() => (locked.value = true));
+onUnmounted(() => (locked.value = false));
 </script>
 
 <template>

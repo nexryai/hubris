@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
-    replying?: boolean
-}>()
+    replying?: boolean;
+}>();
 </script>
 
 <template>

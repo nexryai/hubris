@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-}>()
+    status: mastodon.v1.Status;
+}>();
 
 const vnode = computed(() => {
-    if (!status.card?.html)
-        return null
-    const node = sanitizeEmbeddedIframe(status.card?.html)?.children[0]
-    return node ? nodeToVNode(node) : null
-})
-const overlayToggle = ref(true)
-const card = ref(status.card)
+    if (!status.card?.html) return null;
+    const node = sanitizeEmbeddedIframe(status.card?.html)?.children[0];
+    return node ? nodeToVNode(node) : null;
+});
+const overlayToggle = ref(true);
+const card = ref(status.card);
 </script>
 
 <template>

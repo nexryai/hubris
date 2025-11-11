@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { busy, oauth, singleInstanceServer } = useSignIn()
+const { busy, oauth, singleInstanceServer } = useSignIn();
 </script>
 
 <template>

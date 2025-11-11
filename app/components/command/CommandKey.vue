@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const { name } = defineProps<{
-    name: string
-}>()
+    name: string;
+}>();
 
-const isMac = useIsMac()
+const isMac = useIsMac();
 
-const keys = computed(() => name.toLowerCase().split('+'))
+const keys = computed(() => name.toLowerCase().split("+"));
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const mask = useMask()
+const mask = useMask();
 </script>
 
 <template>

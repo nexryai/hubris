@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
-    activeClass: string
-}>()
+    activeClass: string;
+}>();
 </script>
 
 <template>

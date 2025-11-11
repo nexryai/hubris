@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${t('tab.notifications_all')} | ${t('nav.notifications')}`,
-})
+    title: () => `${t("tab.notifications_all")} | ${t("nav.notifications")}`,
+});
 </script>
 
 <template>

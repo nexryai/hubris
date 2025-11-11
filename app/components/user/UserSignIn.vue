@@ -1,98 +1,91 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
+import Fuse from "fuse.js";
 
-const input = ref<HTMLInputElement | undefined>()
-const knownServers = ref<string[]>([])
-const autocompleteIndex = ref(0)
-const autocompleteShow = ref(false)
+const input = ref<HTMLInputElement | undefined>();
+const knownServers = ref<string[]>([]);
+const autocompleteIndex = ref(0);
+const autocompleteShow = ref(false);
 
-const { busy, error, displayError, server, oauth } = useSignIn(input)
+const { busy, error, displayError, server, oauth } = useSignIn(input);
 
-const fuse = shallowRef(new Fuse([] as string[]))
+const fuse = shallowRef(new Fuse([] as string[]));
 
 const filteredServers = computed(() => {
-    if (!server.value)
-        return []
+    if (!server.value) return [];
 
-    const results = fuse.value.search(server.value, { limit: 6 }).map(result => result.item)
-    if (results[0] === server.value)
-        return []
+    const results = fuse.value.search(server.value, { limit: 6 }).map((result) => result.item);
+    if (results[0] === server.value) return [];
 
-    return results
-})
+    return results;
+});
 
 function isValidUrl(str: string) {
     try {
         // eslint-disable-next-line no-new
-        new URL(str)
-        return true
-    }
-    catch {
-        return false
+        new URL(str);
+        return true;
+    } catch {
+        return false;
     }
 }
 
 async function handleInput() {
-    const input = server.value.trim()
-    if (input.startsWith('https://'))
-        server.value = input.replace('https://', '')
+    const input = server.value.trim();
+    if (input.startsWith("https://")) server.value = input.replace("https://", "");
 
-    if (input.length)
-        displayError.value = false
+    if (input.length) displayError.value = false;
 
     if (
-        isValidUrl(`https://${input}`)
-        && input.match(/^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?$/i)
+        isValidUrl(`https://${input}`) &&
+        input.match(/^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?$/i) &&
         // Do not hide the autocomplete if a result has an exact substring match on the input
-        && !filteredServers.value.some(s => s.includes(input))
+        !filteredServers.value.some((s) => s.includes(input))
     ) {
-        autocompleteShow.value = false
-    }
-    else {
-        autocompleteShow.value = true
+        autocompleteShow.value = false;
+    } else {
+        autocompleteShow.value = true;
     }
 }
 
 function toSelector(server: string) {
-    return server.replace(/[^\w-]/g, '-')
+    return server.replace(/[^\w-]/g, "-");
 }
 function move(delta: number) {
     if (filteredServers.value.length === 0) {
-        autocompleteIndex.value = 0
-        return
+        autocompleteIndex.value = 0;
+        return;
     }
-    autocompleteIndex.value = (autocompleteIndex.value + delta + filteredServers.value.length) % filteredServers.value.length
-    document.querySelector(`#${toSelector(filteredServers.value[autocompleteIndex.value])}`)?.scrollIntoView(false)
+    autocompleteIndex.value = (autocompleteIndex.value + delta + filteredServers.value.length) % filteredServers.value.length;
+    document.querySelector(`#${toSelector(filteredServers.value[autocompleteIndex.value])}`)?.scrollIntoView(false);
 }
 
 function onEnter(e: KeyboardEvent) {
     if (autocompleteShow.value === true && filteredServers.value[autocompleteIndex.value]) {
-        server.value = filteredServers.value[autocompleteIndex.value]
-        e.preventDefault()
-        autocompleteShow.value = false
+        server.value = filteredServers.value[autocompleteIndex.value];
+        e.preventDefault();
+        autocompleteShow.value = false;
     }
 }
 
 function escapeAutocomplete(evt: KeyboardEvent) {
-    if (!autocompleteShow.value)
-        return
-    autocompleteShow.value = false
-    evt.stopPropagation()
+    if (!autocompleteShow.value) return;
+    autocompleteShow.value = false;
+    evt.stopPropagation();
 }
 
 function select(index: number) {
-    server.value = filteredServers.value[index]
+    server.value = filteredServers.value[index];
 }
 
 onMounted(async () => {
-    input?.value?.focus()
-    knownServers.value = await (globalThis.$fetch as any)('/api/list-servers')
-    fuse.value = new Fuse(knownServers.value, { shouldSort: true })
-})
+    input?.value?.focus();
+    knownServers.value = await (globalThis.$fetch as any)("/api/list-servers");
+    fuse.value = new Fuse(knownServers.value, { shouldSort: true });
+});
 
 onClickOutside(input, () => {
-    autocompleteShow.value = false
-})
+    autocompleteShow.value = false;
+});
 </script>
 
 <template>

@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 // Add undocumented 'annual_report' type introduced in v4.3
 // ref. https://github.com/mastodon/documentation/issues/1211#:~:text=api/v1/annual_reports
-type NotificationType = mastodon.v1.Notification['type'] | 'annual_report'
-type Notification = Omit<mastodon.v1.Notification, 'type'> & { type: NotificationType }
+type NotificationType = mastodon.v1.Notification["type"] | "annual_report";
+type Notification = Omit<mastodon.v1.Notification, "type"> & { type: NotificationType };
 
 const { notification } = defineProps<{
-    notification: Notification
-}>()
+    notification: Notification;
+}>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 // list of notification types Elk currently implemented
 // type 'favourite' and 'reblog' should always rendered by NotificationGroupedLikes
-const supportedNotificationTypes: NotificationType[] = ['follow', 'admin.sign_up', 'admin.report', 'follow_request', 'update', 'mention', 'poll', 'update', 'status', 'annual_report']
+const supportedNotificationTypes: NotificationType[] = ["follow", "admin.sign_up", "admin.report", "follow_request", "update", "mention", "poll", "update", "status", "annual_report"];
 
 // well-known emoji reactions types Elk does not support yet
-const unsupportedEmojiReactionTypes = ['pleroma:emoji_reaction', 'reaction']
+const unsupportedEmojiReactionTypes = ["pleroma:emoji_reaction", "reaction"];
 
 if (unsupportedEmojiReactionTypes.includes(notification.type) || !supportedNotificationTypes.includes(notification.type)) {
-    console.warn(`[DEV] ${t('notification.missing_type')} '${notification.type}' (notification.id: ${notification.id})`)
+    console.warn(`[DEV] ${t("notification.missing_type")} '${notification.type}' (notification.id: ${notification.id})`);
 }
 
-const timeAgoOptions = useTimeAgoOptions(true)
-const timeAgo = useTimeAgo(() => notification.createdAt, timeAgoOptions)
+const timeAgoOptions = useTimeAgoOptions(true);
+const timeAgo = useTimeAgo(() => notification.createdAt, timeAgoOptions);
 </script>
 
 <template>

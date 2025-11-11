@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { useForm } from 'slimeform'
+import type { mastodon } from "masto";
+import { useForm } from "slimeform";
 
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${t('settings.profile.appearance.title')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.profile.appearance.title")} | ${t("nav.settings")}`,
+});
 
-const { client } = useMasto()
+const { client } = useMasto();
 
-const avatarInput = ref<any>()
-const headerInput = ref<any>()
+const avatarInput = ref<any>();
+const headerInput = ref<any>();
 
-const account = computed(() => currentUser.value?.account)
+const account = computed(() => currentUser.value?.account);
 
 const onlineSrc = computed(() => ({
-    avatar: account.value?.avatar || '',
-    header: account.value?.header || '',
-}))
+    avatar: account.value?.avatar || "",
+    header: account.value?.header || "",
+}));
 
 const { form, reset, submitter, isDirty, isError } = useForm({
     form: () => {
         // For complex types of objects, a deep copy is required to ensure correct comparison of initial and modified values
         const fieldsAttributes = Array.from({ length: maxAccountFieldCount.value }, (_, i) => {
-            const field = { ...(account.value?.fields?.[i] || { name: '', value: '' }) }
+            const field = { ...(account.value?.fields?.[i] || { name: "", value: "" }) };
 
-            field.value = convertMetadata(field.value)
+            field.value = convertMetadata(field.value);
 
-            return field
-        })
+            return field;
+        });
         return {
-            displayName: account.value?.displayName ?? '',
-            note: account.value?.source.note.replaceAll('\r', '') ?? '',
+            displayName: account.value?.displayName ?? "",
+            note: account.value?.source.note.replaceAll("\r", "") ?? "",
 
             avatar: null as null | File,
             header: null as null | File,
@@ -49,58 +49,52 @@ const { form, reset, submitter, isDirty, isError } = useForm({
             // These look more like account and privacy settings than appearance settings
             // discoverable: false,
             // locked: false,
-        }
+        };
     },
-})
+});
 
-const isCanSubmit = computed(() => !isError.value && isDirty.value)
-const failedMessages = ref<string[]>([])
+const isCanSubmit = computed(() => !isError.value && isDirty.value);
+const failedMessages = ref<string[]>([]);
 
 const { submit, submitting } = submitter(async ({ dirtyFields }) => {
-    if (!isCanSubmit.value)
-        return
+    if (!isCanSubmit.value) return;
 
     const res = await client.value.v1.accounts
         .updateCredentials(dirtyFields.value as mastodon.rest.v1.UpdateCredentialsParams)
-        .then(account => ({ account }))
-        .catch((error: Error) => ({ error }))
+        .then((account) => ({ account }))
+        .catch((error: Error) => ({ error }));
 
-    if ('error' in res) {
-        console.error(res.error)
-        failedMessages.value.push(res.error.message)
-        return
+    if ("error" in res) {
+        console.error(res.error);
+        failedMessages.value.push(res.error.message);
+        return;
     }
 
-    const server = currentUser.value!.server
+    const server = currentUser.value!.server;
 
-    if (!res.account.acct.includes('@'))
-        res.account.acct = `${res.account.acct}@${server}`
+    if (!res.account.acct.includes("@")) res.account.acct = `${res.account.acct}@${server}`;
 
-    cacheAccount(res.account, server, true)
-    currentUser.value!.account = res.account
-    reset()
-})
+    cacheAccount(res.account, server, true);
+    currentUser.value!.account = res.account;
+    reset();
+});
 
 async function refreshInfo() {
-    if (!currentUser.value)
-        return
+    if (!currentUser.value) return;
     // Keep the information to be edited up to date
-    await refreshAccountInfo()
-    if (!isDirty)
-        reset()
+    await refreshAccountInfo();
+    if (!isDirty) reset();
 }
 
 useDropZone(avatarInput, (files) => {
-    if (files?.[0])
-        form.avatar = files[0]
-})
+    if (files?.[0]) form.avatar = files[0];
+});
 useDropZone(headerInput, (files) => {
-    if (files?.[0])
-        form.header = files[0]
-})
+    if (files?.[0]) form.header = files[0];
+});
 
-onHydrated(refreshInfo)
-onReactivated(refreshInfo)
+onHydrated(refreshInfo);
+onReactivated(refreshInfo);
 </script>
 
 <template>

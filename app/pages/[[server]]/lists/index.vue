@@ -1,70 +1,67 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const client = useMastoClient()
+const client = useMastoClient();
 
-const paginator = client.v1.lists.list()
+const paginator = client.v1.lists.list();
 
 useHydratedHead({
-    title: () => t('nav.lists'),
-})
+    title: () => t("nav.lists"),
+});
 
-const paginatorRef = ref()
-const inputRef = ref<HTMLInputElement>()
-const actionError = ref<string | undefined>(undefined)
-const busy = ref<boolean>(false)
-const createText = ref('')
-const enableSubmit = computed(() => createText.value.length > 0)
+const paginatorRef = ref();
+const inputRef = ref<HTMLInputElement>();
+const actionError = ref<string | undefined>(undefined);
+const busy = ref<boolean>(false);
+const createText = ref("");
+const enableSubmit = computed(() => createText.value.length > 0);
 
 async function createList() {
-    if (busy.value || !enableSubmit.value)
-        return
+    if (busy.value || !enableSubmit.value) return;
 
-    busy.value = true
-    actionError.value = undefined
-    await nextTick()
+    busy.value = true;
+    actionError.value = undefined;
+    await nextTick();
     try {
         const newEntry = await client.v1.lists.create({
             title: createText.value,
-        })
-        paginatorRef.value?.createEntry(newEntry)
-        createText.value = ''
-    }
-    catch (err) {
-        console.error(err)
-        actionError.value = (err as Error).message
+        });
+        paginatorRef.value?.createEntry(newEntry);
+        createText.value = "";
+    } catch (err) {
+        console.error(err);
+        actionError.value = (err as Error).message;
         nextTick(() => {
-            inputRef.value?.focus()
-        })
-    }
-    finally {
-        busy.value = false
+            inputRef.value?.focus();
+        });
+    } finally {
+        busy.value = false;
     }
 }
 
 function clearError(focusBtn: boolean) {
-    actionError.value = undefined
+    actionError.value = undefined;
     if (focusBtn) {
         nextTick(() => {
-            inputRef.value?.focus()
-        })
+            inputRef.value?.focus();
+        });
     }
 }
 
 function updateEntry(list: mastodon.v1.List) {
-    paginatorRef.value?.updateEntry(list)
+    paginatorRef.value?.updateEntry(list);
 }
 function removeEntry(id: string) {
-    paginatorRef.value?.removeEntry(id)
+    paginatorRef.value?.removeEntry(id);
 }
 
-onDeactivated(() => clearError(false))
+onDeactivated(() => clearError(false));
 </script>
 
 <template>

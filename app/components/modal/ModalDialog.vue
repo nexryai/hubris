@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
+import { useFocusTrap } from "@vueuse/integrations/useFocusTrap";
 
 defineOptions({
     inheritAttrs: false,
-})
+});
 
 const {
     zIndex = 100,
@@ -13,33 +13,33 @@ const {
     focusFirstElement = true,
 } = defineProps<{
     // level of depth
-    zIndex?: number
+    zIndex?: number;
     // whether to allow close dialog by clicking mask layer
-    closeByMask?: boolean
+    closeByMask?: boolean;
     // use v-if, destroy all the internal elements after closed
-    useVIf?: boolean
+    useVIf?: boolean;
     // keep the dialog opened even when in other views
-    keepAlive?: boolean
+    keepAlive?: boolean;
     // The aria-labelledby id for the dialog.
-    dialogLabelledBy?: string
+    dialogLabelledBy?: string;
     // Whether to focus on the first element when the modal opens.
-    focusFirstElement?: boolean
-}>()
+    focusFirstElement?: boolean;
+}>();
 
 const emit = defineEmits<{
     /** v-model dialog visibility */
-    (event: 'close'): void
-}>()
+    (event: "close"): void;
+}>();
 
-const visible = defineModel<boolean>({ required: true })
+const visible = defineModel<boolean>({ required: true });
 
-const deactivated = useDeactivated()
-const route = useRoute()
-const userSettings = useUserSettings()
+const deactivated = useDeactivated();
+const route = useRoute();
+const userSettings = useUserSettings();
 
 /** scrollable HTML element */
-const elDialogMain = ref<HTMLDivElement>()
-const elDialogRoot = ref<HTMLDivElement>()
+const elDialogMain = ref<HTMLDivElement>();
+const elDialogRoot = ref<HTMLDivElement>();
 
 const { activate } = useFocusTrap(elDialogRoot, {
     immediate: false,
@@ -49,69 +49,62 @@ const { activate } = useFocusTrap(elDialogRoot, {
     preventScroll: true,
     returnFocusOnDeactivate: true,
     initialFocus: focusFirstElement ? undefined : false,
-})
+});
 
 defineExpose({
     elDialogRoot,
     elDialogMain,
-})
+});
 
 /** close the dialog */
 function close() {
-    if (!visible.value)
-        return
-    visible.value = false
-    emit('close')
+    if (!visible.value) return;
+    visible.value = false;
+    emit("close");
 }
 
 function clickMask() {
-    if (closeByMask)
-        close()
+    if (closeByMask) close();
 }
 
-const routePath = ref(route.path)
+const routePath = ref(route.path);
 watch(visible, (value) => {
-    if (value)
-        routePath.value = route.path
-})
+    if (value) routePath.value = route.path;
+});
 
-const notInCurrentPage = computed(() => deactivated.value || routePath.value !== route.path)
+const notInCurrentPage = computed(() => deactivated.value || routePath.value !== route.path);
 watch(notInCurrentPage, (value) => {
-    if (keepAlive)
-        return
-    if (value)
-        close()
-})
+    if (keepAlive) return;
+    if (value) close();
+});
 
 // controls the state of v-if.
 // when useVIf is toggled, v-if has the same state as modelValue, otherwise v-if is true
 const isVIf = computed(() => {
-    return useVIf ? visible.value : true
-})
+    return useVIf ? visible.value : true;
+});
 
 // controls the state of v-show.
 // when useVIf is toggled, v-show is true, otherwise it has the same state as modelValue
 const isVShow = computed(() => {
-    return !useVIf ? visible.value : true
-})
+    return !useVIf ? visible.value : true;
+});
 
 function bindTypeToAny($attrs: any) {
-    return $attrs as any
+    return $attrs as any;
 }
 
 function trapFocusDialog() {
-    if (isVShow.value)
-        nextTick().then(() => activate())
+    if (isVShow.value) nextTick().then(() => activate());
 }
 
-useEventListener('keydown', (e: KeyboardEvent) => {
-    if (!visible.value)
-        return
-    if (e.key === 'Escape') {
-        close()
-        e.preventDefault()
+useEventListener("keydown", (e: KeyboardEvent) => {
+    if (!visible.value) return;
+    if (e.key === "Escape") {
+        close();
+        e.preventDefault();
     }
-})
+});
 </script>
 
 <template>

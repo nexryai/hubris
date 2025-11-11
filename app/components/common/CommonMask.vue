@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const { zIndex = 100, background = 'transparent' } = defineProps<{
-    zIndex?: number
-    background?: string
-}>()
+const { zIndex = 100, background = "transparent" } = defineProps<{
+    zIndex?: number;
+    background?: string;
+}>();
 </script>
 
 <template>

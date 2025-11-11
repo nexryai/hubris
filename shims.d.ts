@@ -1,9 +1,9 @@
 declare global {
     namespace NodeJS {
         interface Process {
-            test?: boolean
+            test?: boolean;
         }
     }
 }
 
-export {}
+export {};

@@ -1,51 +1,47 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import type { CommandHandler } from '~/composables/command'
+import type { mastodon } from "masto";
+import type { CommandHandler } from "~/composables/command";
 
 const { items, command } = defineProps<{
-    items: mastodon.v1.Account[]
-    command: CommandHandler<{ id: string }>
-    isPending?: boolean
-}>()
+    items: mastodon.v1.Account[];
+    command: CommandHandler<{ id: string }>;
+    isPending?: boolean;
+}>();
 
-const selectedIndex = ref(0)
+const selectedIndex = ref(0);
 
 watch(
     () => items,
     () => {
-        selectedIndex.value = 0
+        selectedIndex.value = 0;
     },
-)
+);
 
 function onKeyDown(event: KeyboardEvent) {
-    if (items.length === 0)
-        return false
+    if (items.length === 0) return false;
 
-    if (event.key === 'ArrowUp') {
-        selectedIndex.value = (selectedIndex.value + items.length - 1) % items.length
-        return true
-    }
-    else if (event.key === 'ArrowDown') {
-        selectedIndex.value = (selectedIndex.value + 1) % items.length
-        return true
-    }
-    else if (event.key === 'Enter') {
-        selectItem(selectedIndex.value)
-        return true
+    if (event.key === "ArrowUp") {
+        selectedIndex.value = (selectedIndex.value + items.length - 1) % items.length;
+        return true;
+    } else if (event.key === "ArrowDown") {
+        selectedIndex.value = (selectedIndex.value + 1) % items.length;
+        return true;
+    } else if (event.key === "Enter") {
+        selectItem(selectedIndex.value);
+        return true;
     }
 
-    return false
+    return false;
 }
 
 function selectItem(index: number) {
-    const item = items[index]
-    if (item)
-        command({ id: item.acct })
+    const item = items[index];
+    if (item) command({ id: item.acct });
 }
 
 defineExpose({
     onKeyDown,
-})
+});
 </script>
 
 <template>

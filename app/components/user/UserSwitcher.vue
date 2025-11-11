@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import type { UserLogin } from '#shared/types'
+import type { UserLogin } from "#shared/types";
 
 const emit = defineEmits<{
-    (event: 'click'): void
-}>()
+    (event: "click"): void;
+}>();
 
-const all = useUsers()
-const { singleInstanceServer, oauth } = useSignIn()
+const all = useUsers();
+const { singleInstanceServer, oauth } = useSignIn();
 
 const sorted = computed(() => {
-    return [currentUser.value!, ...all.value.filter(account => account.token !== currentUser.value?.token)].filter(Boolean)
-})
+    return [currentUser.value!, ...all.value.filter((account) => account.token !== currentUser.value?.token)].filter(Boolean);
+});
 
-const router = useRouter()
+const router = useRouter();
 function clickUser(user: UserLogin) {
-    if (user.account.id === currentUser.value?.account.id)
-        router.push(getAccountRoute(user.account))
-    else switchUser(user)
+    if (user.account.id === currentUser.value?.account.id) router.push(getAccountRoute(user.account));
+    else switchUser(user);
 }
 function processSignIn() {
-    if (singleInstanceServer)
-        oauth()
-    else openSigninDialog()
+    if (singleInstanceServer) oauth();
+    else openSigninDialog();
 }
 </script>
 

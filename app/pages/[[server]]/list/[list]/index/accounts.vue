@@ -1,72 +1,69 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import AccountSearchResult from '~/components/list/AccountSearchResult.vue'
+import type { mastodon } from "masto";
+import AccountSearchResult from "~/components/list/AccountSearchResult.vue";
 
 definePageMeta({
-    name: 'list-accounts',
-})
+    name: "list-accounts",
+});
 
-const inputRef = ref<HTMLInputElement>()
+const inputRef = ref<HTMLInputElement>();
 defineExpose({
     inputRef,
-})
+});
 
-const params = useRoute().params
-const listId = computed(() => params.list as string)
+const params = useRoute().params;
+const listId = computed(() => params.list as string);
 
-const mastoListAccounts = useMastoClient().v1.lists.$select(listId.value).accounts
-const paginator = mastoListAccounts.list()
+const mastoListAccounts = useMastoClient().v1.lists.$select(listId.value).accounts;
+const paginator = mastoListAccounts.list();
 
 // the limit parameter is set to 1000 while masto.js issue is still open: https://github.com/neet/masto.js/issues/1282
-const accountsInList = ref(await useMastoClient().v1.lists.$select(listId.value).accounts.list({ limit: 1000 }))
+const accountsInList = ref(await useMastoClient().v1.lists.$select(listId.value).accounts.list({ limit: 1000 }));
 
-const paginatorRef = ref()
+const paginatorRef = ref();
 
 // search stuff
-const query = ref('')
-const el = ref<HTMLElement>()
+const query = ref("");
+const el = ref<HTMLElement>();
 const { accounts, loading } = useSearch(query, {
     following: true,
-})
-const { focused } = useFocusWithin(el)
-const index = ref(0)
+});
+const { focused } = useFocusWithin(el);
+const index = ref(0);
 
 function isInCurrentList(userId: string) {
-    return accountsInList.value.map(account => account.id).includes(userId)
+    return accountsInList.value.map((account) => account.id).includes(userId);
 }
 
 const results = computed(() => {
-    if (query.value.length === 0)
-        return []
-    return [...accounts.value]
-})
+    if (query.value.length === 0) return [];
+    return [...accounts.value];
+});
 
 // Reset index when results change
-watch([results, focused], () => (index.value = -1))
+watch([results, focused], () => (index.value = -1));
 
 function addAccount(account: mastodon.v1.Account) {
     try {
-        mastoListAccounts.create({ accountIds: [account.id] })
-        accountsInList.value.push(account)
-        paginatorRef.value?.createEntry(account)
-    }
-    catch (err) {
-        console.error(err)
+        mastoListAccounts.create({ accountIds: [account.id] });
+        accountsInList.value.push(account);
+        paginatorRef.value?.createEntry(account);
+    } catch (err) {
+        console.error(err);
     }
 }
 
 function removeAccount(account: mastodon.v1.Account) {
     try {
-        mastoListAccounts.remove({ accountIds: [account.id] })
-        const accountIdsInList = accountsInList.value.map(account => account.id)
-        const index = accountIdsInList.indexOf(account.id)
+        mastoListAccounts.remove({ accountIds: [account.id] });
+        const accountIdsInList = accountsInList.value.map((account) => account.id);
+        const index = accountIdsInList.indexOf(account.id);
         if (index > -1) {
-            accountsInList.value.splice(index, 1)
-            paginatorRef.value?.removeEntry(account.id)
+            accountsInList.value.splice(index, 1);
+            paginatorRef.value?.removeEntry(account.id);
         }
-    }
-    catch (err) {
-        console.error(err)
+    } catch (err) {
+        console.error(err);
     }
 }
 </script>

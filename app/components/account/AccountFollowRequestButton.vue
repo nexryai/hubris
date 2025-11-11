@@ -1,36 +1,34 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { account, ...props } = defineProps<{
-    account: mastodon.v1.Account
-    relationship?: mastodon.v1.Relationship
-}>()
-const relationship = computed(() => props.relationship || useRelationship(account).value)
-const { client } = useMasto()
+    account: mastodon.v1.Account;
+    relationship?: mastodon.v1.Relationship;
+}>();
+const relationship = computed(() => props.relationship || useRelationship(account).value);
+const { client } = useMasto();
 
 async function authorizeFollowRequest() {
-    relationship.value!.requestedBy = false
-    relationship.value!.followedBy = true
+    relationship.value!.requestedBy = false;
+    relationship.value!.followedBy = true;
     try {
-        const newRel = await client.value.v1.followRequests.$select(account.id).authorize()
-        Object.assign(relationship!, newRel)
-    }
-    catch (err) {
-        console.error(err)
-        relationship.value!.requestedBy = true
-        relationship.value!.followedBy = false
+        const newRel = await client.value.v1.followRequests.$select(account.id).authorize();
+        Object.assign(relationship!, newRel);
+    } catch (err) {
+        console.error(err);
+        relationship.value!.requestedBy = true;
+        relationship.value!.followedBy = false;
     }
 }
 
 async function rejectFollowRequest() {
-    relationship.value!.requestedBy = false
+    relationship.value!.requestedBy = false;
     try {
-        const newRel = await client.value.v1.followRequests.$select(account.id).reject()
-        Object.assign(relationship!, newRel)
-    }
-    catch (err) {
-        console.error(err)
-        relationship.value!.requestedBy = true
+        const newRel = await client.value.v1.followRequests.$select(account.id).reject();
+        Object.assign(relationship!, newRel);
+    } catch (err) {
+        console.error(err);
+        relationship.value!.requestedBy = true;
     }
 }
 </script>

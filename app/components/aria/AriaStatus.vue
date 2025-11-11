@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { AriaLive } from '~/composables/aria'
+import type { AriaLive } from "~/composables/aria";
 
-const { ariaLive = 'polite' } = defineProps<{
-    ariaLive?: AriaLive
-}>()
+const { ariaLive = "polite" } = defineProps<{
+    ariaLive?: AriaLive;
+}>();
 
-const { announceStatus, clearStatus, status } = useAriaStatus()
+const { announceStatus, clearStatus, status } = useAriaStatus();
 
 defineExpose({
     announceStatus,
     clearStatus,
-})
+});
 </script>
 
 <template>

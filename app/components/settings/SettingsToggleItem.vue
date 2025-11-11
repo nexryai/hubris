@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const { disabled = false } = defineProps<{
-    icon?: string
-    text?: string
-    checked: boolean
-    disabled?: boolean
-}>()
+    icon?: string;
+    text?: string;
+    checked: boolean;
+    disabled?: boolean;
+}>();
 </script>
 
 <template>

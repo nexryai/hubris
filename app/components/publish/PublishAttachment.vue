@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { attachment, removable = true } = defineProps<{
-    attachment: mastodon.v1.MediaAttachment
-    alt?: string
-    removable?: boolean
-    dialogLabelledBy?: string
-}>()
+    attachment: mastodon.v1.MediaAttachment;
+    alt?: string;
+    removable?: boolean;
+    dialogLabelledBy?: string;
+}>();
 
 const emit = defineEmits<{
-    (evt: 'remove'): void
-    (evt: 'setDescription', description: string): void
-}>()
+    (evt: "remove"): void;
+    (evt: "setDescription", description: string): void;
+}>();
 
 // from https://github.com/mastodon/mastodon/blob/dfa984/app/models/media_attachment.rb#L40
-const maxDescriptionLength = 1500
+const maxDescriptionLength = 1500;
 
-const isEditDialogOpen = ref(false)
-const description = ref(attachment.description ?? '')
+const isEditDialogOpen = ref(false);
+const description = ref(attachment.description ?? "");
 
 function toggleApply() {
-    isEditDialogOpen.value = false
-    emit('setDescription', description.value)
+    isEditDialogOpen.value = false;
+    emit("setDescription", description.value);
 }
 </script>
 

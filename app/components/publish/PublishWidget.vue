@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { DraftItem } from '#shared/types'
-import type { mastodon } from 'masto'
-import { EditorContent } from '@tiptap/vue-3'
-import stringLength from 'string-length'
+import type { DraftItem } from "#shared/types";
+import type { mastodon } from "masto";
+import { EditorContent } from "@tiptap/vue-3";
+import stringLength from "string-length";
 
 const {
     threadComposer,
@@ -12,270 +12,261 @@ const {
     placeholder,
     initial = getDefaultDraftItem,
 } = defineProps<{
-    draftKey: string
-    draftItemIndex: number
-    initial?: () => DraftItem
-    threadComposer?: ReturnType<typeof useThreadComposer>
-    placeholder?: string
-    inReplyToId?: string
-    inReplyToVisibility?: mastodon.v1.StatusVisibility
-    expanded?: boolean
-    dialogLabelledBy?: string
-}>()
+    draftKey: string;
+    draftItemIndex: number;
+    initial?: () => DraftItem;
+    threadComposer?: ReturnType<typeof useThreadComposer>;
+    placeholder?: string;
+    inReplyToId?: string;
+    inReplyToVisibility?: mastodon.v1.StatusVisibility;
+    expanded?: boolean;
+    dialogLabelledBy?: string;
+}>();
 
 const emit = defineEmits<{
-    (evt: 'published', status: mastodon.v1.Status): void
-}>()
+    (evt: "published", status: mastodon.v1.Status): void;
+}>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const { threadItems, threadIsActive, publishThread, threadIsSending } = threadComposer ?? useThreadComposer(draftKey)
+const { threadItems, threadIsActive, publishThread, threadIsSending } = threadComposer ?? useThreadComposer(draftKey);
 
 const draft = computed({
     get: () => threadItems.value[draftItemIndex],
     set: (updatedDraft: DraftItem) => {
-        threadItems.value[draftItemIndex] = updatedDraft
+        threadItems.value[draftItemIndex] = updatedDraft;
     },
-})
+});
 
-const isFinalItemOfThread = computed(() => draftItemIndex === threadItems.value.length - 1)
+const isFinalItemOfThread = computed(() => draftItemIndex === threadItems.value.length - 1);
 
-const { isExceedingAttachmentLimit, isUploading, failedAttachments, isOverDropZone, uploadAttachments, pickAttachments, setDescription, removeAttachment, dropZoneRef } = useUploadMediaAttachment(draft)
+const { isExceedingAttachmentLimit, isUploading, failedAttachments, isOverDropZone, uploadAttachments, pickAttachments, setDescription, removeAttachment, dropZoneRef } = useUploadMediaAttachment(draft);
 
 const { shouldExpanded, isExpanded, isSending, isPublishDisabled, publishDraft, failedMessages, preferredLanguage, publishSpoilerText } = usePublish({
     draftItem: draft,
     ...{ expanded: toRef(() => expanded), isUploading, initialDraft: initial, isPartOfThread: false },
-})
+});
 
 const { editor } = useTiptap({
     content: computed({
         get: () => draft.value.params.status,
         set: (newVal) => {
-            draft.value.params.status = newVal
-            draft.value.lastUpdated = Date.now()
+            draft.value.params.status = newVal;
+            draft.value.lastUpdated = Date.now();
         },
     }),
-    placeholder: computed(() => ((placeholder ?? draft.value.params.inReplyToId) ? t('placeholder.replying') : t('placeholder.default_1'))),
+    placeholder: computed(() => ((placeholder ?? draft.value.params.inReplyToId) ? t("placeholder.replying") : t("placeholder.default_1"))),
     autofocus: shouldExpanded.value,
     onSubmit: publish,
     onFocus() {
         if (!isExpanded && draft.value.initialText) {
-            editor.value?.chain().insertContent(`${draft.value.initialText} `).focus('end').run()
-            draft.value.initialText = ''
+            editor.value?.chain().insertContent(`${draft.value.initialText} `).focus("end").run();
+            draft.value.initialText = "";
         }
-        isExpanded.value = true
+        isExpanded.value = true;
     },
     onPaste: handlePaste,
-})
+});
 
 function trimPollOptions() {
-    const indexLastNonEmpty = draft.value.params.poll!.options.findLastIndex(option => option.trim().length > 0)
-    const trimmedOptions = draft.value.params.poll!.options.slice(0, indexLastNonEmpty + 1)
+    const indexLastNonEmpty = draft.value.params.poll!.options.findLastIndex((option) => option.trim().length > 0);
+    const trimmedOptions = draft.value.params.poll!.options.slice(0, indexLastNonEmpty + 1);
 
     if (currentInstance.value?.configuration && trimmedOptions.length >= currentInstance.value?.configuration?.polls.maxOptions) {
-        draft.value.params.poll!.options = trimmedOptions
-    }
-    else {
-        draft.value.params.poll!.options = [...trimmedOptions, '']
+        draft.value.params.poll!.options = trimmedOptions;
+    } else {
+        draft.value.params.poll!.options = [...trimmedOptions, ""];
     }
 }
 
 function editPollOptionDraft(event: Event, index: number) {
-    draft.value.params.poll!.options = Object.assign(draft.value.params.poll!.options.slice(), { [index]: (event.target as HTMLInputElement).value })
+    draft.value.params.poll!.options = Object.assign(draft.value.params.poll!.options.slice(), { [index]: (event.target as HTMLInputElement).value });
 
-    trimPollOptions()
+    trimPollOptions();
 }
 
 function deletePollOption(index: number) {
-    const newPollOptions = draft.value.params.poll!.options.slice()
-    newPollOptions.splice(index, 1)
-    draft.value.params.poll!.options = newPollOptions
-    trimPollOptions()
+    const newPollOptions = draft.value.params.poll!.options.slice();
+    newPollOptions.splice(index, 1);
+    draft.value.params.poll!.options = newPollOptions;
+    trimPollOptions();
 }
 
 const expiresInOptions = computed(() => [
     {
         seconds: 1 * 60 * 60,
-        label: t('time_ago_options.hour_future', 1),
+        label: t("time_ago_options.hour_future", 1),
     },
     {
         seconds: 2 * 60 * 60,
-        label: t('time_ago_options.hour_future', 2),
+        label: t("time_ago_options.hour_future", 2),
     },
     {
         seconds: 1 * 24 * 60 * 60,
-        label: t('time_ago_options.day_future', 1),
+        label: t("time_ago_options.day_future", 1),
     },
     {
         seconds: 2 * 24 * 60 * 60,
-        label: t('time_ago_options.day_future', 2),
+        label: t("time_ago_options.day_future", 2),
     },
     {
         seconds: 7 * 24 * 60 * 60,
-        label: t('time_ago_options.day_future', 7),
+        label: t("time_ago_options.day_future", 7),
     },
-])
+]);
 
-const expiresInDefaultOptionIndex = 2
+const expiresInDefaultOptionIndex = 2;
 
 const characterCount = computed(() => {
-    const text = htmlToText(editor.value?.getHTML() || '')
+    const text = htmlToText(editor.value?.getHTML() || "");
 
-    let length = stringLength(text)
+    let length = stringLength(text);
 
     // taken from https://github.com/mastodon/mastodon/blob/07f8b4d1b19f734d04e69daeb4c3421ef9767aac/app/lib/text_formatter.rb
-    const linkRegex = /(https?:\/\/|xmpp:)\S+/g
+    const linkRegex = /(https?:\/\/|xmpp:)\S+/g;
 
     // taken from https://github.com/mastodon/mastodon/blob/af578e/app/javascript/mastodon/features/compose/util/counter.js
-    const countableMentionRegex = /(^|[^/\w])@((\w+)@[a-z0-9.-]+[a-z0-9])/gi
+    const countableMentionRegex = /(^|[^/\w])@((\w+)@[a-z0-9.-]+[a-z0-9])/gi;
 
     // maximum of 23 chars per link
     // https://github.com/elk-zone/elk/issues/1651
-    const maxLength = 23
+    const maxLength = 23;
 
-    for (const [fullMatch] of text.matchAll(linkRegex)) length -= fullMatch.length - Math.min(maxLength, fullMatch.length)
+    for (const [fullMatch] of text.matchAll(linkRegex)) length -= fullMatch.length - Math.min(maxLength, fullMatch.length);
 
-    for (const [fullMatch, before, _handle, username] of text.matchAll(countableMentionRegex)) length -= fullMatch.length - (before + username).length - 1 // - 1 for the @
+    for (const [fullMatch, before, _handle, username] of text.matchAll(countableMentionRegex)) length -= fullMatch.length - (before + username).length - 1; // - 1 for the @
 
     if (draft.value.mentions) {
         // + 1 is needed as mentions always need a space separator at the end
-        length
-            += draft.value.mentions
+        length +=
+            draft.value.mentions
                 .map((mention) => {
-                    const [handle] = mention.split('@')
-                    return `@${handle}`
+                    const [handle] = mention.split("@");
+                    return `@${handle}`;
                 })
-                .join(' ')
-                .length + 1
+                .join(" ").length + 1;
     }
 
-    length += stringLength(publishSpoilerText.value)
+    length += stringLength(publishSpoilerText.value);
 
-    return length
-})
+    return length;
+});
 
 const isExceedingCharacterLimit = computed(() => {
-    return characterCount.value > characterLimit.value
-})
+    return characterCount.value > characterLimit.value;
+});
 
-const postLanguageDisplay = computed(() => languagesNameList.find(i => i.code === (draft.value.params.language || preferredLanguage.value))?.nativeName)
+const postLanguageDisplay = computed(() => languagesNameList.find((i) => i.code === (draft.value.params.language || preferredLanguage.value))?.nativeName);
 
-const isDM = computed(() => draft.value.params.visibility === 'direct')
+const isDM = computed(() => draft.value.params.visibility === "direct");
 
 async function handlePaste(evt: ClipboardEvent) {
-    const files = evt.clipboardData?.files
-    if (!files || files.length === 0)
-        return
+    const files = evt.clipboardData?.files;
+    if (!files || files.length === 0) return;
 
-    evt.preventDefault()
-    await uploadAttachments(Array.from(files))
+    evt.preventDefault();
+    await uploadAttachments(Array.from(files));
 }
 
 function insertEmoji(name: string) {
-    editor.value?.chain().focus().insertEmoji(name).run()
+    editor.value?.chain().focus().insertEmoji(name).run();
 }
 function insertCustomEmoji(image: any) {
-    editor.value?.chain().focus().insertCustomEmoji(image).run()
+    editor.value?.chain().focus().insertCustomEmoji(image).run();
 }
 
 async function toggleSensitive() {
-    draft.value.params.sensitive = !draft.value.params.sensitive
+    draft.value.params.sensitive = !draft.value.params.sensitive;
 }
 
 async function publish() {
-    if (isPublishDisabled.value || isExceedingCharacterLimit.value)
-        return
+    if (isPublishDisabled.value || isExceedingCharacterLimit.value) return;
 
-    const publishResult = await (threadIsActive.value ? publishThread() : publishDraft())
+    const publishResult = await (threadIsActive.value ? publishThread() : publishDraft());
     if (publishResult) {
-        if (Array.isArray(publishResult))
-            failedMessages.value = publishResult
-        else emit('published', publishResult)
+        if (Array.isArray(publishResult)) failedMessages.value = publishResult;
+        else emit("published", publishResult);
     }
 }
 
 useWebShareTarget(async ({ data: { data, action } }: any) => {
-    if (action !== 'compose-with-shared-data')
-        return
+    if (action !== "compose-with-shared-data") return;
 
-    editor.value?.commands.focus('end')
+    editor.value?.commands.focus("end");
 
     for (const text of data.textParts) {
-        for (const line of text.split('\n')) {
+        for (const line of text.split("\n")) {
             editor.value?.commands.insertContent({
-                type: 'paragraph',
-                content: [{ type: 'text', text: line }],
-            })
+                type: "paragraph",
+                content: [{ type: "text", text: line }],
+            });
         }
     }
 
-    if (data.files.length !== 0)
-        await uploadAttachments(data.files)
-})
+    if (data.files.length !== 0) await uploadAttachments(data.files);
+});
 
 defineExpose({
     focusEditor: () => {
-        editor.value?.commands?.focus?.()
+        editor.value?.commands?.focus?.();
     },
-})
+});
 
 function stopQuestionMarkPropagation(e: KeyboardEvent) {
-    if (e.key === '?')
-        e.stopImmediatePropagation()
+    if (e.key === "?") e.stopImmediatePropagation();
 }
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
-const optimizeForLowPerformanceDevice = computed(() => getPreferences(userSettings.value, 'optimizeForLowPerformanceDevice'))
+const optimizeForLowPerformanceDevice = computed(() => getPreferences(userSettings.value, "optimizeForLowPerformanceDevice"));
 
-const languageDetectorInGlobalThis = 'LanguageDetector' in globalThis
-let supportsLanguageDetector = !optimizeForLowPerformanceDevice.value && languageDetectorInGlobalThis && (await (globalThis as any).LanguageDetector.availability()) === 'available'
-let languageDetector: { detect: (arg0: string, option: { signal: AbortSignal }) => any }
+const languageDetectorInGlobalThis = "LanguageDetector" in globalThis;
+let supportsLanguageDetector = !optimizeForLowPerformanceDevice.value && languageDetectorInGlobalThis && (await (globalThis as any).LanguageDetector.availability()) === "available";
+let languageDetector: { detect: (arg0: string, option: { signal: AbortSignal }) => any };
 // If the API is supported, but the model not loaded yet…
 if (languageDetectorInGlobalThis && !supportsLanguageDetector) {
     // …trigger the model download
     (globalThis as any).LanguageDetector.create().then((_languageDetector: { detect: (arg0: string) => any }) => {
-        supportsLanguageDetector = true
-        languageDetector = _languageDetector
-    })
+        supportsLanguageDetector = true;
+        languageDetector = _languageDetector;
+    });
 }
 
 function countLetters(text: string) {
-    const segmenter = new Intl.Segmenter('und', { granularity: 'grapheme' })
-    const letters = [...segmenter.segment(text)]
-    return letters.length
+    const segmenter = new Intl.Segmenter("und", { granularity: "grapheme" });
+    const letters = [...segmenter.segment(text)];
+    return letters.length;
 }
 
-let detectLanguageAbortController = new AbortController()
+let detectLanguageAbortController = new AbortController();
 
 const detectLanguage = useDebounceFn(async () => {
     if (!supportsLanguageDetector) {
-        return
+        return;
     }
     if (!languageDetector) {
         // maybe we dont want to mess with this with abort....
-        languageDetector = await (globalThis as any).LanguageDetector.create()
+        languageDetector = await (globalThis as any).LanguageDetector.create();
     }
     // we stop previously running language detection process
-    detectLanguageAbortController.abort()
-    detectLanguageAbortController = new AbortController()
-    const text = htmlToText(editor.value?.getHTML() || '')
+    detectLanguageAbortController.abort();
+    detectLanguageAbortController = new AbortController();
+    const text = htmlToText(editor.value?.getHTML() || "");
     if (!text || countLetters(text) <= 5) {
-        draft.value.params.language = preferredLanguage.value
-        return
+        draft.value.params.language = preferredLanguage.value;
+        return;
     }
     try {
-        const detectedLanguage = (await languageDetector.detect(text, { signal: detectLanguageAbortController.signal }))[0].detectedLanguage
-        draft.value.params.language = detectedLanguage === 'und' ? preferredLanguage.value : detectedLanguage.substring(0, 2)
-    }
-    catch (e) {
+        const detectedLanguage = (await languageDetector.detect(text, { signal: detectLanguageAbortController.signal }))[0].detectedLanguage;
+        draft.value.params.language = detectedLanguage === "und" ? preferredLanguage.value : detectedLanguage.substring(0, 2);
+    } catch (e) {
         // if error or abort we end up there
-        if ((e as Error).name !== 'AbortError') {
-            console.error(e)
+        if ((e as Error).name !== "AbortError") {
+            console.error(e);
         }
-        draft.value.params.language = preferredLanguage.value
+        draft.value.params.language = preferredLanguage.value;
     }
-}, 500)
+}, 500);
 </script>
 
 <template>

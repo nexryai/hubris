@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-    max: number
-    length: number
-}>()
+    max: number;
+    length: number;
+}>();
 </script>
 
 <template>

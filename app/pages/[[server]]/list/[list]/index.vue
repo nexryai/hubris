@@ -1,53 +1,53 @@
 <script setup lang="ts">
-import type { CommonRouteTabOption } from '#shared/types'
+import type { CommonRouteTabOption } from "#shared/types";
 
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const route = useRoute()
-const { t } = useI18n()
+const route = useRoute();
+const { t } = useI18n();
 
-const list = computed(() => route.params.list as string)
-const server = computed(() => (route.params.server ?? currentServer.value) as string)
+const list = computed(() => route.params.list as string);
+const server = computed(() => (route.params.server ?? currentServer.value) as string);
 
 const tabs = computed<CommonRouteTabOption[]>(() => [
     {
         to: {
-            name: 'list',
+            name: "list",
             params: { server: server.value, list: list.value },
         },
-        display: t('tab.posts'),
-        icon: 'i-ri:list-unordered',
+        display: t("tab.posts"),
+        icon: "i-ri:list-unordered",
     },
     {
         to: {
-            name: 'list-accounts',
+            name: "list-accounts",
             params: { server: server.value, list: list.value },
         },
-        display: t('tab.accounts'),
-        icon: 'i-ri:user-line',
+        display: t("tab.accounts"),
+        icon: "i-ri:user-line",
     },
-])
+]);
 
-const { client } = useMasto()
+const { client } = useMasto();
 const { data: listInfo, refresh } = await useAsyncData(
     () => `list-${list.value}`,
     () => client.value.v1.lists.$select(list.value).fetch(),
     { default: () => shallowRef() },
-)
+);
 
 if (listInfo) {
     useHydratedHead({
-        title: () => `${listInfo.value.title} | ${route.fullPath.endsWith('/accounts') ? t('tab.accounts') : t('tab.posts')} | ${t('nav.lists')}`,
-    })
+        title: () => `${listInfo.value.title} | ${route.fullPath.endsWith("/accounts") ? t("tab.accounts") : t("tab.posts")} | ${t("nav.lists")}`,
+    });
 }
 
 onReactivated(() => {
     // Silently update data when reentering the page
     // The user will see the previous content first, and any changes will be updated to the UI when the request is completed
-    refresh()
-})
+    refresh();
+});
 </script>
 
 <template>

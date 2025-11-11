@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { link = true, avatar = true } = defineProps<{
-    account: mastodon.v1.Account
-    link?: boolean
-    avatar?: boolean
-}>()
+    account: mastodon.v1.Account;
+    link?: boolean;
+    avatar?: boolean;
+}>();
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 </script>
 
 <script lang="ts">

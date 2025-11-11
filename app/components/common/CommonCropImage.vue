@@ -1,58 +1,57 @@
 <script setup lang="ts">
-import type { Boundaries } from 'vue-advanced-cropper'
-import { Cropper } from 'vue-advanced-cropper'
-import 'vue-advanced-cropper/dist/style.css'
+import type { Boundaries } from "vue-advanced-cropper";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 
 const { stencilAspectRatio = 1 / 1, stencilSizePercentage = 0.9 } = defineProps<{
     /** Crop frame aspect ratio (width/height), default 1/1 */
-    stencilAspectRatio?: number
+    stencilAspectRatio?: number;
     /** The ratio of the longest edge of the cut box to the length of the cut screen, default 0.9, not more than 1 */
-    stencilSizePercentage?: number
-}>()
+    stencilSizePercentage?: number;
+}>();
 
-const file = defineModel<File | null>()
+const file = defineModel<File | null>();
 
-const cropperDialog = ref(false)
-const cropper = ref<InstanceType<typeof Cropper>>()
-const cropperFlag = ref(false)
+const cropperDialog = ref(false);
+const cropper = ref<InstanceType<typeof Cropper>>();
+const cropperFlag = ref(false);
 const cropperImage = reactive({
-    src: '',
-    type: 'image/jpg',
-})
+    src: "",
+    type: "image/jpg",
+});
 
 function stencilSize({ boundaries }: { boundaries: Boundaries }) {
     return {
         width: boundaries.width * stencilSizePercentage,
         height: boundaries.height * stencilSizePercentage,
-    }
+    };
 }
 
 watch(file, (file, _, onCleanup) => {
-    let expired = false
-    onCleanup(() => (expired = true))
+    let expired = false;
+    onCleanup(() => (expired = true));
 
     if (file && !cropperFlag.value) {
-        cropperDialog.value = true
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
+        cropperDialog.value = true;
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
         reader.onload = (e) => {
-            if (expired)
-                return
-            cropperImage.src = e.target?.result as string
-            cropperImage.type = file.type
-        }
+            if (expired) return;
+            cropperImage.src = e.target?.result as string;
+            cropperImage.type = file.type;
+        };
     }
-    cropperFlag.value = false
-})
+    cropperFlag.value = false;
+});
 
 function cropImage() {
     if (cropper.value && file.value) {
-        cropperFlag.value = true
-        cropperDialog.value = false
-        const { canvas } = cropper.value.getResult()
+        cropperFlag.value = true;
+        cropperDialog.value = false;
+        const { canvas } = cropper.value.getResult();
         canvas?.toBlob((blob) => {
-            file.value = new File([blob as any], `cropped${file.value?.name}` as string, { type: blob?.type })
-        }, cropperImage.type)
+            file.value = new File([blob as any], `cropped${file.value?.name}` as string, { type: blob?.type });
+        }, cropperImage.type);
     }
 }
 </script>

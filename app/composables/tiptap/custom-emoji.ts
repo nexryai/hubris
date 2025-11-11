@@ -1,95 +1,95 @@
-import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core'
+import { mergeAttributes, Node, nodeInputRule } from "@tiptap/core";
 
 export interface EmojiOptions {
-    inline: boolean
-    allowBase64: boolean
-    HTMLAttributes: Record<string, any>
+    inline: boolean;
+    allowBase64: boolean;
+    HTMLAttributes: Record<string, any>;
 }
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
     interface Commands<ReturnType> {
         emoji: {
             /**
              * Insert a custom emoji.
              */
-            insertCustomEmoji: (options: { src: string, alt?: string, title?: string }) => ReturnType
+            insertCustomEmoji: (options: { src: string; alt?: string; title?: string }) => ReturnType;
             /**
              * Insert a emoji.
              */
-            insertEmoji: (native: string) => ReturnType
-        }
+            insertEmoji: (native: string) => ReturnType;
+        };
     }
 }
 
-const inputRegex = /(?:^|\s)(!\[(.+|:?)\]\((\S+)(?:\s+["'](\S+)["'])?\))$/
+const inputRegex = /(?:^|\s)(!\[(.+|:?)\]\((\S+)(?:\s+["'](\S+)["'])?\))$/;
 
 export const TiptapPluginCustomEmoji = Node.create<EmojiOptions>({
-    name: 'custom-emoji',
+    name: "custom-emoji",
 
     addOptions() {
         return {
             inline: false,
             allowBase64: false,
             HTMLAttributes: {},
-        }
+        };
     },
 
     inline() {
-        return this.options.inline
+        return this.options.inline;
     },
 
     group() {
-        return this.options.inline ? 'inline' : 'block'
+        return this.options.inline ? "inline" : "block";
     },
 
     draggable: false,
 
     addAttributes() {
         return {
-            'src': {
+            src: {
                 default: null,
             },
-            'alt': {
+            alt: {
                 default: null,
             },
-            'title': {
+            title: {
                 default: null,
             },
-            'width': {
+            width: {
                 default: null,
             },
-            'height': {
+            height: {
                 default: null,
             },
-            'data-emoji-id': {
+            "data-emoji-id": {
                 default: null,
             },
-        }
+        };
     },
 
     parseHTML() {
         return [
             {
-                tag: this.options.allowBase64 ? 'img[src]' : 'img[src]:not([src^="data:"])',
+                tag: this.options.allowBase64 ? "img[src]" : 'img[src]:not([src^="data:"])',
             },
-        ]
+        ];
     },
 
     renderHTML({ HTMLAttributes }) {
-        return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+        return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
     },
 
     addCommands() {
         return {
             insertCustomEmoji:
-                options =>
-                    ({ commands }) => {
-                        return commands.insertContent({
-                            type: this.name,
-                            attrs: options,
-                        })
-                    },
-        }
+                (options) =>
+                ({ commands }) => {
+                    return commands.insertContent({
+                        type: this.name,
+                        attrs: options,
+                    });
+                },
+        };
     },
 
     addInputRules() {
@@ -98,11 +98,11 @@ export const TiptapPluginCustomEmoji = Node.create<EmojiOptions>({
                 find: inputRegex,
                 type: this.type,
                 getAttributes: (match) => {
-                    const [, , alt, src, title] = match
+                    const [, , alt, src, title] = match;
 
-                    return { src, alt, title }
+                    return { src, alt, title };
                 },
             }),
-        ]
+        ];
     },
-})
+});

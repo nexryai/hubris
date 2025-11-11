@@ -1,20 +1,20 @@
 <script setup lang="ts">
 const { code, lang } = defineProps<{
-    code: string
-    lang?: string
-}>()
+    code: string;
+    lang?: string;
+}>();
 
-const raw = computed(() => decodeURIComponent(code).replace(/&#39;/g, '\''))
+const raw = computed(() => decodeURIComponent(code).replace(/&#39;/g, "'"));
 
 const langMap: Record<string, string> = {
-    js: 'javascript',
-    ts: 'typescript',
-    vue: 'html',
-}
+    js: "javascript",
+    ts: "typescript",
+    vue: "html",
+};
 
 const highlighted = computed(() => {
-    return lang ? highlightCode(raw.value, (langMap[lang] || lang) as any) : raw
-})
+    return lang ? highlightCode(raw.value, (langMap[lang] || lang) as any) : raw;
+});
 </script>
 
 <template>

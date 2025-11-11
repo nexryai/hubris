@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import type { CommonRouteTabMoreOption, CommonRouteTabOption } from '#shared/types'
+import type { CommonRouteTabMoreOption, CommonRouteTabOption } from "#shared/types";
 
 const {
     options,
     command,
     preventScrollTop = false,
 } = defineProps<{
-    options: CommonRouteTabOption[]
-    moreOptions?: CommonRouteTabMoreOption
-    command?: boolean
-    replace?: boolean
-    preventScrollTop?: boolean
-}>()
+    options: CommonRouteTabOption[];
+    moreOptions?: CommonRouteTabMoreOption;
+    command?: boolean;
+    replace?: boolean;
+    preventScrollTop?: boolean;
+}>();
 
-const { t } = useI18n()
-const router = useRouter()
+const { t } = useI18n();
+const router = useRouter();
 
 useCommands(() =>
     command
-        ? options.map(tab => ({
-                scope: 'Tabs',
-                name: tab.display,
-                icon: tab.icon ?? 'i-ri:file-list-2-line',
-                onActivate: () => router.replace(tab.to),
-            }))
+        ? options.map((tab) => ({
+              scope: "Tabs",
+              name: tab.display,
+              icon: tab.icon ?? "i-ri:file-list-2-line",
+              onActivate: () => router.replace(tab.to),
+          }))
         : [],
-)
+);
 </script>
 
 <template>

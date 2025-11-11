@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { clamp } from '@vueuse/core'
-import { decode } from 'blurhash'
+import type { mastodon } from "masto";
+import { clamp } from "@vueuse/core";
+import { decode } from "blurhash";
 
 const {
     attachment,
     fullSize = false,
     isPreview = false,
 } = defineProps<{
-    attachment: mastodon.v1.MediaAttachment
-    attachments?: mastodon.v1.MediaAttachment[]
-    fullSize?: boolean
-    isPreview?: boolean
-}>()
+    attachment: mastodon.v1.MediaAttachment;
+    attachments?: mastodon.v1.MediaAttachment[];
+    fullSize?: boolean;
+    isPreview?: boolean;
+}>();
 
-const src = computed(() => attachment.previewUrl || attachment.url || attachment.remoteUrl!)
+const src = computed(() => attachment.previewUrl || attachment.url || attachment.remoteUrl!);
 const srcset = computed(() =>
     [
         [attachment.url, attachment.meta?.original?.width],
@@ -23,110 +23,100 @@ const srcset = computed(() =>
     ]
         .filter(([url]) => url)
         .map(([url, size]) => `${url} ${size}w`)
-        .join(', '),
-)
+        .join(", "),
+);
 
 const rawAspectRatio = computed(() => {
-    if (attachment.meta?.original?.aspect)
-        return attachment.meta.original.aspect
-    if (attachment.meta?.small?.aspect)
-        return attachment.meta.small.aspect
-    return undefined
-})
+    if (attachment.meta?.original?.aspect) return attachment.meta.original.aspect;
+    if (attachment.meta?.small?.aspect) return attachment.meta.small.aspect;
+    return undefined;
+});
 
 const aspectRatio = computed(() => {
-    if (fullSize)
-        return rawAspectRatio.value
-    if (rawAspectRatio.value)
-        return clamp(rawAspectRatio.value, 0.8, 6)
-    return undefined
-})
+    if (fullSize) return rawAspectRatio.value;
+    if (rawAspectRatio.value) return clamp(rawAspectRatio.value, 0.8, 6);
+    return undefined;
+});
 
 const objectPosition = computed(() => {
-    const focusX = attachment.meta?.focus?.x || 0
-    const focusY = attachment.meta?.focus?.y || 0
-    const x = (focusX / 2 + 0.5) * 100
-    const y = (focusY / -2 + 0.5) * 100
+    const focusX = attachment.meta?.focus?.x || 0;
+    const focusY = attachment.meta?.focus?.y || 0;
+    const x = (focusX / 2 + 0.5) * 100;
+    const y = (focusY / -2 + 0.5) * 100;
 
-    return `${x}% ${y}%`
-})
+    return `${x}% ${y}%`;
+});
 
 const typeExtsMap = {
-    video: ['mp4', 'webm', 'mov', 'avi', 'mkv', 'flv', 'wmv', 'mpg', 'mpeg'],
-    audio: ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'wma'],
-    image: ['jpg', 'jpeg', 'png', 'svg', 'webp', 'bmp'],
-    gifv: ['gifv', 'gif'],
-}
+    video: ["mp4", "webm", "mov", "avi", "mkv", "flv", "wmv", "mpg", "mpeg"],
+    audio: ["mp3", "wav", "ogg", "flac", "aac", "m4a", "wma"],
+    image: ["jpg", "jpeg", "png", "svg", "webp", "bmp"],
+    gifv: ["gifv", "gif"],
+};
 
 const type = computed(() => {
-    if (attachment.type && attachment.type !== 'unknown')
-        return attachment.type
+    if (attachment.type && attachment.type !== "unknown") return attachment.type;
     // some server returns unknown type, we need to guess it based on file extension
     for (const [type, exts] of Object.entries(typeExtsMap)) {
-        if (exts.some(ext => src.value?.toLowerCase().endsWith(`.${ext}`)))
-            return type
+        if (exts.some((ext) => src.value?.toLowerCase().endsWith(`.${ext}`))) return type;
     }
-    return 'unknown'
-})
+    return "unknown";
+});
 
-const video = ref<HTMLVideoElement | undefined>()
-const prefersReducedMotion = usePreferredReducedMotion()
-const isAudio = computed(() => attachment.type === 'audio')
-const isVideo = computed(() => attachment.type === 'video')
-const isGif = computed(() => attachment.type === 'gifv')
+const video = ref<HTMLVideoElement | undefined>();
+const prefersReducedMotion = usePreferredReducedMotion();
+const isAudio = computed(() => attachment.type === "audio");
+const isVideo = computed(() => attachment.type === "video");
+const isGif = computed(() => attachment.type === "gifv");
 
-const enableAutoplay = usePreferences('enableAutoplay')
-const unmuteVideos = usePreferences('unmuteVideos')
+const enableAutoplay = usePreferences("enableAutoplay");
+const unmuteVideos = usePreferences("unmuteVideos");
 
 useIntersectionObserver(
     video,
     (entries) => {
-        const ready = video.value?.dataset.ready === 'true'
-        if (prefersReducedMotion.value === 'reduce' || !enableAutoplay.value) {
-            if (ready && !video.value?.paused)
-                video.value?.pause()
+        const ready = video.value?.dataset.ready === "true";
+        if (prefersReducedMotion.value === "reduce" || !enableAutoplay.value) {
+            if (ready && !video.value?.paused) video.value?.pause();
 
-            return
+            return;
         }
 
         entries.forEach((entry) => {
             if (entry.intersectionRatio <= 0.75) {
-                if (ready && !video.value?.paused)
-                    video.value?.pause()
-            }
-            else {
+                if (ready && !video.value?.paused) video.value?.pause();
+            } else {
                 video.value
                     ?.play()
                     .then(() => {
-                        video.value!.dataset.ready = 'true'
+                        video.value!.dataset.ready = "true";
                     })
-                    .catch(noop)
+                    .catch(noop);
             }
-        })
+        });
     },
     { threshold: 0.75 },
-)
+);
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
-const shouldLoadAttachment = ref(isPreview || !getPreferences(userSettings.value, 'enableDataSaving'))
+const shouldLoadAttachment = ref(isPreview || !getPreferences(userSettings.value, "enableDataSaving"));
 
 function loadAttachment() {
-    shouldLoadAttachment.value = true
+    shouldLoadAttachment.value = true;
 }
 
 const blurHashSrc = computed(() => {
-    if (!attachment.blurhash)
-        return ''
-    const pixels = decode(attachment.blurhash, 32, 32)
-    return getDataUrlFromArr(pixels, 32, 32)
-})
+    if (!attachment.blurhash) return "";
+    const pixels = decode(attachment.blurhash, 32, 32);
+    return getDataUrlFromArr(pixels, 32, 32);
+});
 
-const videoThumbnail = ref(shouldLoadAttachment.value ? attachment.previewUrl : blurHashSrc.value)
+const videoThumbnail = ref(shouldLoadAttachment.value ? attachment.previewUrl : blurHashSrc.value);
 
 watch(shouldLoadAttachment, () => {
-    videoThumbnail.value = shouldLoadAttachment.value ? attachment.previewUrl : blurHashSrc.value
-})
+    videoThumbnail.value = shouldLoadAttachment.value ? attachment.previewUrl : blurHashSrc.value;
+});
 </script>
 
 <template>

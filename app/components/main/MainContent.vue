@@ -1,27 +1,26 @@
 <script setup lang="ts">
 defineProps<{
     /** Show the back button on small screens */
-    backOnSmallScreen?: boolean
+    backOnSmallScreen?: boolean;
     /** Show the back button on both small and big screens */
-    back?: boolean
+    back?: boolean;
     /** Do not applying overflow hidden to let use floatable components in title */
-    noOverflowHidden?: boolean
-}>()
+    noOverflowHidden?: boolean;
+}>();
 
-const container = ref()
-const route = useRoute()
-const userSettings = useUserSettings()
-const { height: windowHeight } = useWindowSize()
-const { height: containerHeight } = useElementBounding(container)
-const wideLayout = computed(() => route.meta.wideLayout ?? false)
-const sticky = computed(() => route.path?.startsWith('/settings/'))
+const container = ref();
+const route = useRoute();
+const userSettings = useUserSettings();
+const { height: windowHeight } = useWindowSize();
+const { height: containerHeight } = useElementBounding(container);
+const wideLayout = computed(() => route.meta.wideLayout ?? false);
+const sticky = computed(() => route.path?.startsWith("/settings/"));
 const containerClass = computed(() => {
     // we keep original behavior when not in settings page and when the window height is smaller than the container height
-    if (!isHydrated.value || !sticky.value || windowHeight.value < containerHeight.value)
-        return null
+    if (!isHydrated.value || !sticky.value || windowHeight.value < containerHeight.value) return null;
 
-    return 'lg:sticky lg:top-0'
-})
+    return "lg:sticky lg:top-0";
+});
 </script>
 
 <template>

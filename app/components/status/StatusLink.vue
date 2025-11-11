@@ -1,31 +1,29 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-    hover?: boolean
-}>()
+    status: mastodon.v1.Status;
+    hover?: boolean;
+}>();
 
-const el = ref<HTMLElement>()
-const router = useRouter()
-const statusRoute = computed(() => getStatusRoute(status))
+const el = ref<HTMLElement>();
+const router = useRouter();
+const statusRoute = computed(() => getStatusRoute(status));
 
 function onclick(evt: MouseEvent | KeyboardEvent) {
-    const path = evt.composedPath() as HTMLElement[]
-    const el = path.find(el => ['A', 'BUTTON', 'IMG', 'VIDEO'].includes(el.tagName?.toUpperCase()))
-    const text = window.getSelection()?.toString()
-    const isCustomEmoji = el?.parentElement?.classList.contains('custom-emoji')
-    if ((!el && !text) || isCustomEmoji)
-        go(evt)
+    const path = evt.composedPath() as HTMLElement[];
+    const el = path.find((el) => ["A", "BUTTON", "IMG", "VIDEO"].includes(el.tagName?.toUpperCase()));
+    const text = window.getSelection()?.toString();
+    const isCustomEmoji = el?.parentElement?.classList.contains("custom-emoji");
+    if ((!el && !text) || isCustomEmoji) go(evt);
 }
 
 function go(evt: MouseEvent | KeyboardEvent) {
     if (evt.metaKey || evt.ctrlKey) {
-        window.open(statusRoute.value.href)
-    }
-    else {
-        cacheStatus(status)
-        router.push(statusRoute.value)
+        window.open(statusRoute.value.href);
+    } else {
+        cacheStatus(status);
+        router.push(statusRoute.value);
     }
 }
 </script>

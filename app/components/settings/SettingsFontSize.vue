@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { FontSize } from '~/composables/settings'
-import { DEFAULT_FONT_SIZE } from '~/constants'
+import type { FontSize } from "~/composables/settings";
+import { DEFAULT_FONT_SIZE } from "~/constants";
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
 const sizes = Array.from({ length: 11 })
     .fill(0)
-    .map((x, i) => `${10 + i}px`) as FontSize[]
+    .map((x, i) => `${10 + i}px`) as FontSize[];
 
 function setFontSize(e: Event) {
-    if (e.target && 'valueAsNumber' in e.target)
-        userSettings.value.fontSize = sizes[e.target.valueAsNumber as number]
+    if (e.target && "valueAsNumber" in e.target) userSettings.value.fontSize = sizes[e.target.valueAsNumber as number];
 }
 </script>
 

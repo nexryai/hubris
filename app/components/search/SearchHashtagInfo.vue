@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { hashtag } = defineProps<{
-    hashtag: mastodon.v1.Tag
-}>()
+    hashtag: mastodon.v1.Tag;
+}>();
 
-const totalTrend = computed(() => hashtag.history?.reduce((total: number, item) => total + (Number(item.accounts) || 0), 0))
+const totalTrend = computed(() => hashtag.history?.reduce((total: number, item) => total + (Number(item.accounts) || 0), 0));
 </script>
 
 <template>

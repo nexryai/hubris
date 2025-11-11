@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { GroupedNotifications } from '#shared/types'
+import type { GroupedNotifications } from "#shared/types";
 
 const { items } = defineProps<{
-    items: GroupedNotifications
-}>()
+    items: GroupedNotifications;
+}>();
 
-const maxVisibleFollows = 5
-const follows = computed(() => items.items)
-const visibleFollows = computed(() => follows.value.slice(0, maxVisibleFollows))
-const count = computed(() => follows.value.length)
-const countPlus = computed(() => Math.max(count.value - maxVisibleFollows, 0))
-const isExpanded = ref(false)
+const maxVisibleFollows = 5;
+const follows = computed(() => items.items);
+const visibleFollows = computed(() => follows.value.slice(0, maxVisibleFollows));
+const count = computed(() => follows.value.length);
+const countPlus = computed(() => Math.max(count.value - maxVisibleFollows, 0));
+const isExpanded = ref(false);
 const lang = computed(() => {
-    return count.value > 1 || count.value === 0 ? undefined : items.items[0].status?.language
-})
+    return count.value > 1 || count.value === 0 ? undefined : items.items[0].status?.language;
+});
 
-const timeAgoOptions = useTimeAgoOptions(true)
-const timeAgoCreatedAt = computed(() => follows.value[0].createdAt)
-const timeAgo = useTimeAgo(() => timeAgoCreatedAt.value, timeAgoOptions)
+const timeAgoOptions = useTimeAgoOptions(true);
+const timeAgoCreatedAt = computed(() => follows.value[0].createdAt);
+const timeAgo = useTimeAgo(() => timeAgoCreatedAt.value, timeAgoOptions);
 </script>
 
 <template>

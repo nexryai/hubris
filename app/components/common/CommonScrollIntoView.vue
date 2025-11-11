@@ -1,20 +1,19 @@
 <script setup lang="ts">
-const { as = 'div', active } = defineProps<{
-    as?: string
-    active: boolean
-}>()
+const { as = "div", active } = defineProps<{
+    as?: string;
+    active: boolean;
+}>();
 
-const el = ref()
+const el = ref();
 
 watch(
     () => active,
     (active) => {
-        const _el = unrefElement(el)
+        const _el = unrefElement(el);
 
-        if (active && _el)
-            _el.scrollIntoView({ block: 'nearest', inline: 'start' })
+        if (active && _el) _el.scrollIntoView({ block: "nearest", inline: "start" });
     },
-)
+);
 </script>
 
 <template>

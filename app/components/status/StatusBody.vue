@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const {
     status,
     newer,
     withAction = true,
 } = defineProps<{
-    status: mastodon.v1.Status | mastodon.v1.StatusEdit
-    newer?: mastodon.v1.Status
-    withAction?: boolean
-}>()
+    status: mastodon.v1.Status | mastodon.v1.StatusEdit;
+    newer?: mastodon.v1.Status;
+    withAction?: boolean;
+}>();
 
-const { translation } = await useTranslation(status, getLanguageCode())
+const { translation } = await useTranslation(status, getLanguageCode());
 
-const emojisObject = useEmojisFallback(() => status.emojis)
+const emojisObject = useEmojisFallback(() => status.emojis);
 const vnode = computed(() => {
-    if (!status.content)
-        return null
+    if (!status.content) return null;
     return contentToVNode(status.content, {
         emojis: emojisObject.value,
-        mentions: 'mentions' in status ? status.mentions : undefined,
+        mentions: "mentions" in status ? status.mentions : undefined,
         markdown: true,
-        collapseMentionLink: !!('inReplyToId' in status && status.inReplyToId),
-        status: 'id' in status ? status : undefined,
+        collapseMentionLink: !!("inReplyToId" in status && status.inReplyToId),
+        status: "id" in status ? status : undefined,
         inReplyToStatus: newer,
-    })
-})
+    });
+});
 </script>
 
 <template>

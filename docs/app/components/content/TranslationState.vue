@@ -1,67 +1,61 @@
 <script setup lang="ts">
-import type { TranslationStatus } from '../../../types'
+import type { TranslationStatus } from "../../../types";
 
-const localesStatuses: TranslationStatus = await import('../../../translation-status.json').then(m => m.default)
+const localesStatuses: TranslationStatus = await import("../../../translation-status.json").then((m) => m.default);
 
-const totalReference = localesStatuses.en!.total
+const totalReference = localesStatuses.en!.total;
 
-type Tab = 'missing' | 'outdated'
+type Tab = "missing" | "outdated";
 
-const hidden = ref(true)
-const locale = ref()
-const localeTab = ref<Tab>('missing')
-const copied = ref(false)
+const hidden = ref(true);
+const locale = ref();
+const localeTab = ref<Tab>("missing");
+const copied = ref(false);
 
 const currentLocale = computed(() => {
-    if (hidden.value || !locale.value)
-        return undefined
+    if (hidden.value || !locale.value) return undefined;
 
-    return localesStatuses as Record<string, any>
-})
+    return localesStatuses as Record<string, any>;
+});
 
 const localeTitle = computed(() => {
-    if (hidden.value || !locale.value)
-        return undefined
+    if (hidden.value || !locale.value) return undefined;
 
-    return localeTab.value === 'missing' ? `Missing keys in ${locale.value.file}` : `Outdated keys in ${locale.value.file}`
-})
+    return localeTab.value === "missing" ? `Missing keys in ${locale.value.file}` : `Outdated keys in ${locale.value.file}`;
+});
 
 const missingEntries = computed<string[]>(() => {
-    if (hidden.value || !currentLocale.value || localeTab.value !== 'missing')
-        return []
+    if (hidden.value || !currentLocale.value || localeTab.value !== "missing") return [];
 
-    return localesStatuses[locale.value]!.missing
-})
+    return localesStatuses[locale.value]!.missing;
+});
 
 const outdatedEntries = computed<string[]>(() => {
-    if (hidden.value || !currentLocale.value || localeTab.value !== 'outdated')
-        return []
+    if (hidden.value || !currentLocale.value || localeTab.value !== "outdated") return [];
 
-    return localesStatuses[locale.value]!.outdated
-})
+    return localesStatuses[locale.value]!.outdated;
+});
 
-function showDetail(key: string, tab: Tab = 'missing', fromTab = false) {
+function showDetail(key: string, tab: Tab = "missing", fromTab = false) {
     if (key === locale.value && tab === localeTab.value) {
-        if (fromTab)
-            return
+        if (fromTab) return;
 
-        nextTick().then(() => (hidden.value = !hidden.value))
+        nextTick().then(() => (hidden.value = !hidden.value));
 
-        return
+        return;
     }
 
-    locale.value = key
-    localeTab.value = tab
-    nextTick().then(() => (hidden.value = false))
+    locale.value = key;
+    localeTab.value = tab;
+    nextTick().then(() => (hidden.value = false));
 }
 
 async function copyToClipboard() {
     try {
-        await navigator.clipboard.writeText([`# ${localeTitle.value}`, (localeTab.value === 'missing' ? missingEntries.value : outdatedEntries.value).join('\n')].join('\n'))
-        copied.value = true
-        setTimeout(() => (copied.value = false), 750)
-    }
-    catch {}
+        await navigator.clipboard.writeText([`# ${localeTitle.value}`, (localeTab.value === "missing" ? missingEntries.value : outdatedEntries.value).join("\n")].join("\n"));
+        copied.value = true;
+        setTimeout(() => (copied.value = false), 750);
+    } catch {}
 }
 </script>
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Popper as VTooltipType } from 'floating-vue'
+import type { Popper as VTooltipType } from "floating-vue";
 
 export interface Props extends Partial<typeof VTooltipType> {
-    content?: string
+    content?: string;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>
 
 <template>

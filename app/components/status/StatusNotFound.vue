@@ -1,17 +1,16 @@
 <script setup lang="ts">
 const { account, status } = defineProps<{
-    account: string
-    status: string
-}>()
+    account: string;
+    status: string;
+}>();
 
 const originalUrl = computed(() => {
-    const [handle, _server] = account.split('@')
-    const server = _server || currentUser.value?.server
-    if (!server)
-        return null
+    const [handle, _server] = account.split("@");
+    const server = _server || currentUser.value?.server;
+    if (!server) return null;
 
-    return `https://${server}/@${handle}/${status}`
-})
+    return `https://${server}/@${handle}/${status}`;
+});
 </script>
 
 <template>

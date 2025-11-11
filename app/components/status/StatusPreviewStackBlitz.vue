@@ -1,49 +1,48 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { card } = defineProps<{
-    card: mastodon.v1.PreviewCard
+    card: mastodon.v1.PreviewCard;
     /** For the preview image, only the small image mode is displayed */
-    smallPictureOnly?: boolean
+    smallPictureOnly?: boolean;
     /** When it is root card in the list, not appear as a child card */
-    root?: boolean
-}>()
+    root?: boolean;
+}>();
 
 interface Meta {
-    code?: string
-    file?: string
-    lines?: string
-    project?: string
+    code?: string;
+    file?: string;
+    lines?: string;
+    project?: string;
 }
 
 // Protect against long code snippets
-const maxLines = 20
+const maxLines = 20;
 
 const meta = computed(() => {
-    const { description } = card
-    const meta = description.match(/.*Code Snippet from (.+), lines (\S+)\n\n(.+)/s)
-    const file = meta?.[1]
-    const lines = meta?.[2]
-    const code = meta?.[3].split('\n').slice(0, maxLines).join('\n')
-    const project = card.title?.replace(' - StackBlitz', '')
+    const { description } = card;
+    const meta = description.match(/.*Code Snippet from (.+), lines (\S+)\n\n(.+)/s);
+    const file = meta?.[1];
+    const lines = meta?.[2];
+    const code = meta?.[3].split("\n").slice(0, maxLines).join("\n");
+    const project = card.title?.replace(" - StackBlitz", "");
     return {
         file,
         lines,
         code,
         project,
-    } satisfies Meta
-})
+    } satisfies Meta;
+});
 
 const vnodeCode = computed(() => {
-    if (!meta.value.code)
-        return null
-    const code = meta.value.code.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/`/g, '&#96;')
+    if (!meta.value.code) return null;
+    const code = meta.value.code.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/`/g, "&#96;");
 
-    const vnode = contentToVNode(`<p>\`\`\`${meta.value.file?.split('.')?.[1] ?? ''}\n${code}\n\`\`\`\</p>`, {
+    const vnode = contentToVNode(`<p>\`\`\`${meta.value.file?.split(".")?.[1] ?? ""}\n${code}\n\`\`\`\</p>`, {
         markdown: true,
-    })
-    return vnode
-})
+    });
+    return vnode;
+});
 </script>
 
 <template>

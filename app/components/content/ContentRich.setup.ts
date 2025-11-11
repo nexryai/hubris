@@ -1,8 +1,8 @@
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineOptions({
-    name: 'ContentRich',
-})
+    name: "ContentRich",
+});
 
 const {
     content,
@@ -10,21 +10,21 @@ const {
     hideEmojis = false,
     markdown = true,
 } = defineProps<{
-    content: string
-    emojis?: mastodon.v1.CustomEmoji[]
-    hideEmojis?: boolean
-    markdown?: boolean
-}>()
+    content: string;
+    emojis?: mastodon.v1.CustomEmoji[];
+    hideEmojis?: boolean;
+    markdown?: boolean;
+}>();
 
-const emojisObject = useEmojisFallback(() => emojis)
+const emojisObject = useEmojisFallback(() => emojis);
 
 export default () =>
     h(
-        'span',
-        { class: 'content-rich', dir: 'auto' },
+        "span",
+        { class: "content-rich", dir: "auto" },
         contentToVNode(content, {
             emojis: emojisObject.value,
             hideEmojis,
             markdown,
         }),
-    )
+    );

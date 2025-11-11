@@ -1,75 +1,69 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { toggleFollowAccount, useRelationship } from '~/composables/masto/relationship'
+import type { mastodon } from "masto";
+import { toggleFollowAccount, useRelationship } from "~/composables/masto/relationship";
 
 const { account, context, command, ...props } = defineProps<{
-    account: mastodon.v1.Account
-    relationship?: mastodon.v1.Relationship
-    context?: 'followedBy' | 'following'
-    command?: boolean
-}>()
+    account: mastodon.v1.Account;
+    relationship?: mastodon.v1.Relationship;
+    context?: "followedBy" | "following";
+    command?: boolean;
+}>();
 
-const { t } = useI18n()
-const isSelf = useSelfAccount(() => account)
-const enable = computed(() => !isSelf.value && currentUser.value)
-const relationship = computed(() => props.relationship || useRelationship(account).value)
-const isLoading = computed(() => relationship.value === undefined)
+const { t } = useI18n();
+const isSelf = useSelfAccount(() => account);
+const enable = computed(() => !isSelf.value && currentUser.value);
+const relationship = computed(() => props.relationship || useRelationship(account).value);
+const isLoading = computed(() => relationship.value === undefined);
 
-const { client } = useMasto()
+const { client } = useMasto();
 
 async function unblock() {
-    relationship.value!.blocking = false
+    relationship.value!.blocking = false;
     try {
-        const newRel = await client.value.v1.accounts.$select(account.id).unblock()
-        Object.assign(relationship!, newRel)
-    }
-    catch (err) {
-        console.error(err)
+        const newRel = await client.value.v1.accounts.$select(account.id).unblock();
+        Object.assign(relationship!, newRel);
+    } catch (err) {
+        console.error(err);
         // TODO error handling
-        relationship.value!.blocking = true
+        relationship.value!.blocking = true;
     }
 }
 
 async function unmute() {
-    relationship.value!.muting = false
+    relationship.value!.muting = false;
     try {
-        const newRel = await client.value.v1.accounts.$select(account.id).unmute()
-        Object.assign(relationship!, newRel)
-    }
-    catch (err) {
-        console.error(err)
+        const newRel = await client.value.v1.accounts.$select(account.id).unmute();
+        Object.assign(relationship!, newRel);
+    } catch (err) {
+        console.error(err);
         // TODO error handling
-        relationship.value!.muting = true
+        relationship.value!.muting = true;
     }
 }
 
 useCommand({
-    scope: 'Actions',
+    scope: "Actions",
     order: -2,
     visible: () => command && enable,
-    name: () => `${relationship.value?.following ? t('account.unfollow') : t('account.follow')} ${getShortHandle(account)}`,
-    icon: 'i-ri:star-line',
+    name: () => `${relationship.value?.following ? t("account.unfollow") : t("account.follow")} ${getShortHandle(account)}`,
+    icon: "i-ri:star-line",
     onActivate: () => toggleFollowAccount(relationship.value!, account),
-})
+});
 
 const buttonStyle = computed(() => {
-    if (relationship.value?.blocking)
-        return 'text-inverted bg-red border-red'
+    if (relationship.value?.blocking) return "text-inverted bg-red border-red";
 
-    if (relationship.value?.muting)
-        return 'text-base bg-card border-base'
+    if (relationship.value?.muting) return "text-base bg-card border-base";
 
     // If following, use a label style with a strong border for Mutuals
-    if (relationship.value ? relationship.value.following : context === 'following')
-        return `text-base ${relationship.value?.followedBy ? 'border-strong' : 'border-base'}`
+    if (relationship.value ? relationship.value.following : context === "following") return `text-base ${relationship.value?.followedBy ? "border-strong" : "border-base"}`;
 
     // If loading, use a plain style
-    if (isLoading.value)
-        return 'text-base border-base'
+    if (isLoading.value) return "text-base border-base";
 
     // If not following, use a button style
-    return 'text-inverted bg-primary border-primary'
-})
+    return "text-inverted bg-primary border-primary";
+});
 </script>
 
 <template>

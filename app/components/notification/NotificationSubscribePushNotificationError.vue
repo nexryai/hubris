@@ -1,9 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-    title?: string
-    message: string
-}>()
-const modelValue = defineModel<boolean>({ required: true })
+    title?: string;
+    message: string;
+}>();
+const modelValue = defineModel<boolean>({ required: true });
 </script>
 
 <template>

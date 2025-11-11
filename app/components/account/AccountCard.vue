@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { account } = defineProps<{
-    account: mastodon.v1.Account
-    hoverCard?: boolean
-    relationshipContext?: 'followedBy' | 'following'
-}>()
+    account: mastodon.v1.Account;
+    hoverCard?: boolean;
+    relationshipContext?: "followedBy" | "following";
+}>();
 
-cacheAccount(account)
+cacheAccount(account);
 </script>
 
 <template>

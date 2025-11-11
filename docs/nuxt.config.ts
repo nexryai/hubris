@@ -1,23 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    extends: ['docus'],
+    extends: ["docus"],
 
-    css: ['~/assets/css/main.css'],
+    css: ["~/assets/css/main.css"],
 
     site: {
-        name: 'Elk',
-        url: 'https://docs.elk.zone',
+        name: "Elk",
+        url: "https://docs.elk.zone",
     },
 
     llms: {
-        domain: 'https://docs.elk.zone',
+        domain: "https://docs.elk.zone",
     },
 
     vite: {
         optimizeDeps: {
-            include: ['scule'],
+            include: ["scule"],
         },
     },
 
-    compatibilityDate: '2024-11-07',
-})
+    compatibilityDate: "2024-11-07",
+});

@@ -3,39 +3,38 @@ const { options, command } = defineProps<{
     options:
         | string[]
         | {
-            name: string
-            icon?: string
-            display: string
-        }[]
-    command?: boolean
-}>()
+              name: string;
+              icon?: string;
+              display: string;
+          }[];
+    command?: boolean;
+}>();
 
-const modelValue = defineModel<string>({ required: true })
+const modelValue = defineModel<string>({ required: true });
 
 const tabs = computed(() => {
     return options.map((option) => {
-        if (typeof option === 'string')
-            return { name: option, display: option }
-        else return option
-    })
-})
+        if (typeof option === "string") return { name: option, display: option };
+        else return option;
+    });
+});
 
 function toValidName(option: string) {
-    return option.toLowerCase().replace(/[^a-z0-9]/gi, '-')
+    return option.toLowerCase().replace(/[^a-z0-9]/gi, "-");
 }
 
 useCommands(() =>
     command
-        ? tabs.value.map(tab => ({
-                scope: 'Tabs',
+        ? tabs.value.map((tab) => ({
+              scope: "Tabs",
 
-                name: tab.display,
-                icon: tab.icon ?? 'i-ri:file-list-2-line',
+              name: tab.display,
+              icon: tab.icon ?? "i-ri:file-list-2-line",
 
-                onActivate: () => (modelValue.value = tab.name),
-            }))
+              onActivate: () => (modelValue.value = tab.name),
+          }))
         : [],
-)
+);
 </script>
 
 <template>

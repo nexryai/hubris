@@ -1,44 +1,42 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js'
+import Fuse from "fuse.js";
 
-const modelValue = defineModel<string>({ required: true })
+const modelValue = defineModel<string>({ required: true });
 
-const { t } = useI18n()
-const userSettings = useUserSettings()
+const { t } = useI18n();
+const userSettings = useUserSettings();
 
-const languageKeyword = ref('')
+const languageKeyword = ref("");
 
 const fuse = new Fuse(languagesNameList, {
-    keys: ['code', 'nativeName', 'name'],
+    keys: ["code", "nativeName", "name"],
     shouldSort: true,
-})
+});
 
 const languages = computed(() =>
     languageKeyword.value.trim()
-        ? fuse.search(languageKeyword.value).map(r => r.item)
+        ? fuse.search(languageKeyword.value).map((r) => r.item)
         : [...languagesNameList]
-                .filter(entry => !userSettings.value.disabledTranslationLanguages.includes(entry.code))
-                .sort(({ code: a }, { code: b }) => {
-                    // Put English on the top
-                    if (a === 'en')
-                        return -1
+              .filter((entry) => !userSettings.value.disabledTranslationLanguages.includes(entry.code))
+              .sort(({ code: a }, { code: b }) => {
+                  // Put English on the top
+                  if (a === "en") return -1;
 
-                    return a === modelValue.value ? -1 : b === modelValue.value ? 1 : a.localeCompare(b)
-                }),
-)
+                  return a === modelValue.value ? -1 : b === modelValue.value ? 1 : a.localeCompare(b);
+              }),
+);
 
 const preferredLanguages = computed(() => {
-    const result = []
+    const result = [];
     for (const langCode of userSettings.value.disabledTranslationLanguages) {
-        const completeLang = languagesNameList.find(listEntry => listEntry.code === langCode)
-        if (completeLang)
-            result.push(completeLang)
+        const completeLang = languagesNameList.find((listEntry) => listEntry.code === langCode);
+        if (completeLang) result.push(completeLang);
     }
-    return result
-})
+    return result;
+});
 
 function chooseLanguage(language: string) {
-    modelValue.value = language
+    modelValue.value = language;
 }
 </script>
 

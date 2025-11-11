@@ -1,103 +1,97 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { useForm } from 'slimeform'
+import type { mastodon } from "masto";
+import { useForm } from "slimeform";
 
 const emit = defineEmits<{
-    (e: 'listUpdated', list: mastodon.v1.List): void
-    (e: 'listRemoved', id: string): void
-}>()
-const list = defineModel<mastodon.v1.List>({ required: true })
+    (e: "listUpdated", list: mastodon.v1.List): void;
+    (e: "listRemoved", id: string): void;
+}>();
+const list = defineModel<mastodon.v1.List>({ required: true });
 
-const { t } = useI18n()
-const client = useMastoClient()
+const { t } = useI18n();
+const client = useMastoClient();
 
 const { form, isDirty, submitter, reset } = useForm({
     form: () => ({ ...list.value }),
-})
+});
 
-const isEditing = ref<boolean>(false)
-const deleting = ref<boolean>(false)
-const actionError = ref<string | undefined>(undefined)
+const isEditing = ref<boolean>(false);
+const deleting = ref<boolean>(false);
+const actionError = ref<string | undefined>(undefined);
 
-const input = ref<HTMLInputElement>()
-const editBtn = ref<HTMLButtonElement>()
-const deleteBtn = ref<HTMLButtonElement>()
+const input = ref<HTMLInputElement>();
+const editBtn = ref<HTMLButtonElement>();
+const deleteBtn = ref<HTMLButtonElement>();
 
 async function prepareEdit() {
-    isEditing.value = true
-    actionError.value = undefined
-    await nextTick()
-    input.value?.focus()
+    isEditing.value = true;
+    actionError.value = undefined;
+    await nextTick();
+    input.value?.focus();
 }
 async function cancelEdit() {
-    isEditing.value = false
-    actionError.value = undefined
+    isEditing.value = false;
+    actionError.value = undefined;
 
-    await nextTick()
-    reset()
-    editBtn.value?.focus()
+    await nextTick();
+    reset();
+    editBtn.value?.focus();
 }
 
 const { submit, submitting } = submitter(async () => {
     try {
         list.value = await client.v1.lists.$select(form.id).update({
             title: form.title,
-        })
-        cancelEdit()
+        });
+        cancelEdit();
+    } catch (err) {
+        console.error(err);
+        actionError.value = (err as Error).message;
+        await nextTick();
+        input.value?.focus();
     }
-    catch (err) {
-        console.error(err)
-        actionError.value = (err as Error).message
-        await nextTick()
-        input.value?.focus()
-    }
-})
+});
 
 async function removeList() {
-    if (deleting.value)
-        return
+    if (deleting.value) return;
 
     const confirmDelete = await openConfirmDialog({
-        title: t('confirm.delete_list.title'),
-        description: t('confirm.delete_list.description', [list.value.title]),
-        confirm: t('confirm.delete_list.confirm'),
-        cancel: t('confirm.delete_list.cancel'),
-    })
+        title: t("confirm.delete_list.title"),
+        description: t("confirm.delete_list.description", [list.value.title]),
+        confirm: t("confirm.delete_list.confirm"),
+        cancel: t("confirm.delete_list.cancel"),
+    });
 
-    deleting.value = true
-    actionError.value = undefined
-    await nextTick()
+    deleting.value = true;
+    actionError.value = undefined;
+    await nextTick();
 
-    if (confirmDelete.choice === 'confirm') {
-        await nextTick()
+    if (confirmDelete.choice === "confirm") {
+        await nextTick();
         try {
-            await client.v1.lists.$select(list.value.id).remove()
-            emit('listRemoved', list.value.id)
+            await client.v1.lists.$select(list.value.id).remove();
+            emit("listRemoved", list.value.id);
+        } catch (err) {
+            console.error(err);
+            actionError.value = (err as Error).message;
+            await nextTick();
+            deleteBtn.value?.focus();
+        } finally {
+            deleting.value = false;
         }
-        catch (err) {
-            console.error(err)
-            actionError.value = (err as Error).message
-            await nextTick()
-            deleteBtn.value?.focus()
-        }
-        finally {
-            deleting.value = false
-        }
-    }
-    else {
-        deleting.value = false
+    } else {
+        deleting.value = false;
     }
 }
 
 async function clearError() {
-    actionError.value = undefined
-    await nextTick()
-    if (isEditing.value)
-        input.value?.focus()
-    else deleteBtn.value?.focus()
+    actionError.value = undefined;
+    await nextTick();
+    if (isEditing.value) input.value?.focus();
+    else deleteBtn.value?.focus();
 }
 
-onDeactivated(cancelEdit)
+onDeactivated(cancelEdit);
 </script>
 
 <template>

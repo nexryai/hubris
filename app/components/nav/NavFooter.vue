@@ -1,15 +1,15 @@
 <script setup lang="ts">
-const buildInfo = useBuildInfo()
-const timeAgoOptions = useTimeAgoOptions()
-const config = useRuntimeConfig()
-const userSettings = useUserSettings()
+const buildInfo = useBuildInfo();
+const timeAgoOptions = useTimeAgoOptions();
+const config = useRuntimeConfig();
+const userSettings = useUserSettings();
 
-const buildTimeDate = new Date(buildInfo.time)
-const buildTimeAgo = useTimeAgo(buildTimeDate, timeAgoOptions)
+const buildTimeDate = new Date(buildInfo.time);
+const buildTimeAgo = useTimeAgo(buildTimeDate, timeAgoOptions);
 
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 function toggleDark() {
-    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+    colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
 }
 </script>
 

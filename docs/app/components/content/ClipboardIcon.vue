@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
-    copy?: boolean
-}>()
+    copy?: boolean;
+}>();
 </script>
 
 <template>

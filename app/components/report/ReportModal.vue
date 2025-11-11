@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { toggleBlockAccount, toggleFollowAccount, toggleMuteAccount, useRelationship } from '~/composables/masto/relationship'
+import type { mastodon } from "masto";
+import { toggleBlockAccount, toggleFollowAccount, toggleMuteAccount, useRelationship } from "~/composables/masto/relationship";
 
 const { account, status } = defineProps<{
-    account: mastodon.v1.Account
-    status?: mastodon.v1.Status
-}>()
+    account: mastodon.v1.Account;
+    status?: mastodon.v1.Status;
+}>();
 
 const emit = defineEmits<{
-    (event: 'close'): void
-}>()
+    (event: "close"): void;
+}>();
 
-const { client } = useMasto()
+const { client } = useMasto();
 
-const step = ref('selectCategory')
-const serverRules = ref((await client.value.v2.instance.fetch()).rules || [])
-const reportReason = ref('')
-const selectedRuleIds = ref([])
-const availableStatuses = ref(status ? [status] : [])
-const selectedStatusIds = ref(status ? [status.id] : [])
-const additionalComments = ref('')
-const forwardReport = ref(false)
+const step = ref("selectCategory");
+const serverRules = ref((await client.value.v2.instance.fetch()).rules || []);
+const reportReason = ref("");
+const selectedRuleIds = ref([]);
+const availableStatuses = ref(status ? [status] : []);
+const selectedStatusIds = ref(status ? [status.id] : []);
+const additionalComments = ref("");
+const forwardReport = ref(false);
 
-const dismissButton = ref<HTMLDivElement>()
+const dismissButton = ref<HTMLDivElement>();
 
-loadStatuses() // Load statuses asynchronously ahead of time
+loadStatuses(); // Load statuses asynchronously ahead of time
 
 function categoryChosen() {
-    step.value = reportReason.value === 'dontlike' ? 'furtherActions' : 'selectStatuses'
-    resetModal()
+    step.value = reportReason.value === "dontlike" ? "furtherActions" : "selectStatuses";
+    resetModal();
 }
 
 async function loadStatuses() {
@@ -37,23 +37,22 @@ async function loadStatuses() {
         const prevStatuses = await client.value.v1.accounts.$select(account.id).statuses.list({
             maxId: status.id,
             limit: 5,
-        })
+        });
         const nextStatuses = await client.value.v1.accounts.$select(account.id).statuses.list({
             minId: status.id,
             limit: 5,
-        })
-        availableStatuses.value = availableStatuses.value.concat(prevStatuses)
-        availableStatuses.value = availableStatuses.value.concat(nextStatuses)
-    }
-    else {
+        });
+        availableStatuses.value = availableStatuses.value.concat(prevStatuses);
+        availableStatuses.value = availableStatuses.value.concat(nextStatuses);
+    } else {
         // Reporting an account directly
         // Load the 10 most recent statuses
         const mostRecentStatuses = await client.value.v1.accounts.$select(account.id).statuses.list({
             limit: 10,
-        })
-        availableStatuses.value = mostRecentStatuses
+        });
+        availableStatuses.value = mostRecentStatuses;
     }
-    availableStatuses.value.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    availableStatuses.value.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
 async function submitReport() {
@@ -62,31 +61,31 @@ async function submitReport() {
         statusIds: selectedStatusIds.value,
         comment: additionalComments.value,
         forward: forwardReport.value,
-        category: reportReason.value === 'spam' ? 'spam' : reportReason.value === 'violation' ? 'violation' : 'other',
-        ruleIds: reportReason.value === 'violation' ? selectedRuleIds.value : null,
-    })
-    step.value = 'furtherActions'
-    resetModal()
+        category: reportReason.value === "spam" ? "spam" : reportReason.value === "violation" ? "violation" : "other",
+        ruleIds: reportReason.value === "violation" ? selectedRuleIds.value : null,
+    });
+    step.value = "furtherActions";
+    resetModal();
 }
 
 function unfollow() {
-    emit('close')
-    toggleFollowAccount(useRelationship(account).value!, account)
+    emit("close");
+    toggleFollowAccount(useRelationship(account).value!, account);
 }
 
 function mute() {
-    emit('close')
-    toggleMuteAccount(useRelationship(account).value!, account)
+    emit("close");
+    toggleMuteAccount(useRelationship(account).value!, account);
 }
 
 function block() {
-    emit('close')
-    toggleBlockAccount(useRelationship(account).value!, account)
+    emit("close");
+    toggleBlockAccount(useRelationship(account).value!, account);
 }
 
 function resetModal() {
     // TODO: extract this scroll/reset logic into ModalDialog element
-    dismissButton.value?.scrollIntoView() // scroll to top
+    dismissButton.value?.scrollIntoView(); // scroll to top
 }
 </script>
 

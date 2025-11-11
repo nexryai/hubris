@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE } from '~/constants'
+import { STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE } from "~/constants";
 
 defineProps<{
-    command?: boolean
-}>()
-const { notifications } = useNotifications()
-const useStarFavoriteIcon = usePreferences('useStarFavoriteIcon')
-const lastAccessedNotificationRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE, '')
-const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, '')
+    command?: boolean;
+}>();
+const { notifications } = useNotifications();
+const useStarFavoriteIcon = usePreferences("useStarFavoriteIcon");
+const lastAccessedNotificationRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE, "");
+const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, "");
 
 const notificationsLink = computed(() => {
-    const hydrated = isHydrated.value
-    const user = currentUser.value
-    const lastRoute = lastAccessedNotificationRoute.value
+    const hydrated = isHydrated.value;
+    const user = currentUser.value;
+    const lastRoute = lastAccessedNotificationRoute.value;
     if (!hydrated || !user || !lastRoute) {
-        return '/notifications'
+        return "/notifications";
     }
 
-    return `/notifications/${lastRoute}`
-})
+    return `/notifications/${lastRoute}`;
+});
 const exploreLink = computed(() => {
-    const hydrated = isHydrated.value
-    const server = currentServer.value
-    let lastRoute = lastAccessedExploreRoute.value
+    const hydrated = isHydrated.value;
+    const server = currentServer.value;
+    let lastRoute = lastAccessedExploreRoute.value;
     if (!hydrated) {
-        return '/explore'
+        return "/explore";
     }
 
     if (lastRoute.length) {
-        lastRoute = `/${lastRoute}`
+        lastRoute = `/${lastRoute}`;
     }
 
-    return server ? `/${server}/explore${lastRoute}` : `/explore${lastRoute}`
-})
+    return server ? `/${server}/explore${lastRoute}` : `/explore${lastRoute}`;
+});
 </script>
 
 <template>

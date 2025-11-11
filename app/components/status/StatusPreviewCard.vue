@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { card } = defineProps<{
-    card: mastodon.v1.PreviewCard
+    card: mastodon.v1.PreviewCard;
     /** For the preview image, only the small image mode is displayed */
-    smallPictureOnly?: boolean
+    smallPictureOnly?: boolean;
     /** When it is root card in the list, not appear as a child card */
-    root?: boolean
-}>()
+    root?: boolean;
+}>();
 
-const providerName = card.providerName
+const providerName = card.providerName;
 
-const gitHubCards = usePreferences('experimentalGitHubCards')
+const gitHubCards = usePreferences("experimentalGitHubCards");
 </script>
 
 <template>

@@ -1,130 +1,124 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { account } = defineProps<{
-    account: mastodon.v1.Account
-    command?: boolean
-}>()
+    account: mastodon.v1.Account;
+    command?: boolean;
+}>();
 
-const { client } = useMasto()
+const { client } = useMasto();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const createdAt = useFormattedDateTime(() => account.createdAt, {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-})
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+});
 
-const relationship = useRelationship(account)
+const relationship = useRelationship(account);
 
-const namedFields = ref<mastodon.v1.AccountField[]>([])
-const iconFields = ref<mastodon.v1.AccountField[]>([])
-const isEditingPersonalNote = ref<boolean>(false)
-const hasHeader = computed(() => !account.header.endsWith('/original/missing.png'))
-const isCopied = ref<boolean>(false)
+const namedFields = ref<mastodon.v1.AccountField[]>([]);
+const iconFields = ref<mastodon.v1.AccountField[]>([]);
+const isEditingPersonalNote = ref<boolean>(false);
+const hasHeader = computed(() => !account.header.endsWith("/original/missing.png"));
+const isCopied = ref<boolean>(false);
 
 function getFieldIconTitle(fieldName: string) {
-    return fieldName === 'Joined' ? t('account.joined') : fieldName
+    return fieldName === "Joined" ? t("account.joined") : fieldName;
 }
 
 function getNotificationIconTitle() {
-    return relationship.value?.notifying ? t('account.notifications_on_post_disable', { username: `@${account.username}` }) : t('account.notifications_on_post_enable', { username: `@${account.username}` })
+    return relationship.value?.notifying ? t("account.notifications_on_post_disable", { username: `@${account.username}` }) : t("account.notifications_on_post_enable", { username: `@${account.username}` });
 }
 
 function previewHeader() {
     openMediaPreview([
         {
             id: `${account.acct}:header`,
-            type: 'image',
+            type: "image",
             previewUrl: account.header,
-            description: t('account.profile_description', [account.username]),
+            description: t("account.profile_description", [account.username]),
         },
-    ])
+    ]);
 }
 
 function previewAvatar() {
     openMediaPreview([
         {
             id: `${account.acct}:avatar`,
-            type: 'image',
+            type: "image",
             previewUrl: account.avatar,
-            description: t('account.avatar_description', [account.username]),
+            description: t("account.avatar_description", [account.username]),
         },
-    ])
+    ]);
 }
 
 async function toggleNotifications() {
-    relationship.value!.notifying = !relationship.value?.notifying
+    relationship.value!.notifying = !relationship.value?.notifying;
     try {
-        const newRel = await client.value.v1.accounts.$select(account.id).follow({ notify: relationship.value?.notifying })
-        Object.assign(relationship!, newRel)
-    }
-    catch {
+        const newRel = await client.value.v1.accounts.$select(account.id).follow({ notify: relationship.value?.notifying });
+        Object.assign(relationship!, newRel);
+    } catch {
         // TODO error handling
-        relationship.value!.notifying = !relationship.value?.notifying
+        relationship.value!.notifying = !relationship.value?.notifying;
     }
 }
 
 watchEffect(() => {
-    const named: mastodon.v1.AccountField[] = []
-    const icons: mastodon.v1.AccountField[] = []
+    const named: mastodon.v1.AccountField[] = [];
+    const icons: mastodon.v1.AccountField[] = [];
 
     account.fields?.forEach((field) => {
-        const icon = getAccountFieldIcon(field.name)
-        if (icon)
-            icons.push(field)
-        else named.push(field)
-    })
+        const icon = getAccountFieldIcon(field.name);
+        if (icon) icons.push(field);
+        else named.push(field);
+    });
     icons.push({
-        name: 'Joined',
+        name: "Joined",
         value: createdAt.value,
-    })
+    });
 
-    namedFields.value = named
-    iconFields.value = icons
-})
+    namedFields.value = named;
+    iconFields.value = icons;
+});
 
-const personalNoteDraft = ref(relationship.value?.note ?? '')
+const personalNoteDraft = ref(relationship.value?.note ?? "");
 watch(relationship, (relationship, oldValue) => {
-    if (!oldValue && relationship)
-        personalNoteDraft.value = relationship.note ?? ''
-})
+    if (!oldValue && relationship) personalNoteDraft.value = relationship.note ?? "";
+});
 
 async function editNote(event: Event) {
-    if (!event.target || !('value' in event.target) || !relationship.value)
-        return
+    if (!event.target || !("value" in event.target) || !relationship.value) return;
 
-    const newNote = event.target?.value as string
+    const newNote = event.target?.value as string;
 
-    if (relationship.value.note?.trim() === newNote.trim())
-        return
+    if (relationship.value.note?.trim() === newNote.trim()) return;
 
-    const newNoteApiResult = await client.value.v1.accounts.$select(account.id).note.create({ comment: newNote })
-    relationship.value.note = newNoteApiResult.note
-    personalNoteDraft.value = relationship.value.note ?? ''
+    const newNoteApiResult = await client.value.v1.accounts.$select(account.id).note.create({ comment: newNote });
+    relationship.value.note = newNoteApiResult.note;
+    personalNoteDraft.value = relationship.value.note ?? "";
 }
 
-const isSelf = useSelfAccount(() => account)
-const isNotifiedOnPost = computed(() => !!relationship.value?.notifying)
+const isSelf = useSelfAccount(() => account);
+const isNotifiedOnPost = computed(() => !!relationship.value?.notifying);
 
-const personalNoteMaxLength = 2000
+const personalNoteMaxLength = 2000;
 
 async function copyAccountName() {
     try {
-        const shortHandle = getShortHandle(account)
-        const serverName = getServerName(account)
-        const accountName = `${shortHandle}@${serverName}`
-        await navigator.clipboard.writeText(accountName)
-    }
-    catch (err) {
-        console.error('Failed to copy account name:', err)
+        const shortHandle = getShortHandle(account);
+        const serverName = getServerName(account);
+        const accountName = `${shortHandle}@${serverName}`;
+        await navigator.clipboard.writeText(accountName);
+    } catch (err) {
+        console.error("Failed to copy account name:", err);
     }
 
-    isCopied.value = true
+    isCopied.value = true;
     setTimeout(() => {
-        isCopied.value = false
-    }, 2000)
+        isCopied.value = false;
+    }, 2000);
 }
 </script>
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineProps<{
     /** For the preview image, only the small image mode is displayed */
-    square?: boolean
+    square?: boolean;
     /** When it is root card in the list, not appear as a child card */
-    root?: boolean
-}>()
+    root?: boolean;
+}>();
 </script>
 
 <template>

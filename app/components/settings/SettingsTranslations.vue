@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import ISO6391 from 'iso-639-1'
+import ISO6391 from "iso-639-1";
 
-const supportedTranslationLanguages = ISO6391.getLanguages([...supportedTranslationCodes])
-const userSettings = useUserSettings()
+const supportedTranslationLanguages = ISO6391.getLanguages([...supportedTranslationCodes]);
+const userSettings = useUserSettings();
 
-const language = ref<string | null>(null)
+const language = ref<string | null>(null);
 
 const availableOptions = computed(() => {
     return Object.values(supportedTranslationLanguages).filter((value) => {
-        return !userSettings.value.disabledTranslationLanguages.includes(value.code)
-    })
-})
+        return !userSettings.value.disabledTranslationLanguages.includes(value.code);
+    });
+});
 
 function addDisabledTranslation() {
     if (language.value) {
-        const uniqueValues = new Set(userSettings.value.disabledTranslationLanguages)
-        uniqueValues.add(language.value)
-        userSettings.value.disabledTranslationLanguages = [...uniqueValues]
-        language.value = null
+        const uniqueValues = new Set(userSettings.value.disabledTranslationLanguages);
+        uniqueValues.add(language.value);
+        userSettings.value.disabledTranslationLanguages = [...uniqueValues];
+        language.value = null;
     }
 }
 function removeDisabledTranslation(code: string) {
-    const uniqueValues = new Set(userSettings.value.disabledTranslationLanguages)
-    uniqueValues.delete(code)
-    userSettings.value.disabledTranslationLanguages = [...uniqueValues]
+    const uniqueValues = new Set(userSettings.value.disabledTranslationLanguages);
+    uniqueValues.delete(code);
+    userSettings.value.disabledTranslationLanguages = [...uniqueValues];
 }
 </script>
 

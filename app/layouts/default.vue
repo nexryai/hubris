@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { usePreferences } from '~/composables/settings'
+import { usePreferences } from "~/composables/settings";
 
-const route = useRoute()
-const info = useBuildInfo()
+const route = useRoute();
+const info = useBuildInfo();
 
-const wideLayout = computed(() => route.meta.wideLayout ?? false)
+const wideLayout = computed(() => route.meta.wideLayout ?? false);
 
-const showUserPicker = logicAnd(usePreferences('experimentalUserPicker'), () => useUsers().value.length > 1)
+const showUserPicker = logicAnd(usePreferences("experimentalUserPicker"), () => useUsers().value.length > 1);
 
-const isGrayscale = usePreferences('grayscaleMode')
-const instance = instanceStorage.value[currentServer.value]
+const isGrayscale = usePreferences("grayscaleMode");
+const instance = instanceStorage.value[currentServer.value];
 </script>
 
 <template>

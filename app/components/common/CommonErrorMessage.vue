@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ describedBy: string }>()
+defineProps<{ describedBy: string }>();
 </script>
 
 <template>

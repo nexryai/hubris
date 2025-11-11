@@ -1,101 +1,89 @@
 <script setup lang="ts">
-defineProps<{ show?: boolean }>()
+defineProps<{ show?: boolean }>();
 
-const { pushNotificationData, saveEnabled, undoChanges, hiddenNotification, isSubscribed, isSupported, notificationPermission, updateSubscription, subscribe, unsubscribe } = usePushManager()
-const { t } = useI18n()
+const { pushNotificationData, saveEnabled, undoChanges, hiddenNotification, isSubscribed, isSupported, notificationPermission, updateSubscription, subscribe, unsubscribe } = usePushManager();
+const { t } = useI18n();
 
-const pwaEnabled = useAppConfig().pwaEnabled
+const pwaEnabled = useAppConfig().pwaEnabled;
 
-const busy = ref<boolean>(false)
-const animateSave = ref<boolean>(false)
-const animateSubscription = ref<boolean>(false)
-const animateRemoveSubscription = ref<boolean>(false)
-const subscribeError = ref<string>('')
-const showSubscribeError = ref<boolean>(false)
+const busy = ref<boolean>(false);
+const animateSave = ref<boolean>(false);
+const animateSubscription = ref<boolean>(false);
+const animateRemoveSubscription = ref<boolean>(false);
+const subscribeError = ref<string>("");
+const showSubscribeError = ref<boolean>(false);
 
 function hideNotification() {
-    const key = currentUser.value?.account?.acct
-    if (key)
-        hiddenNotification.value[key] = true
+    const key = currentUser.value?.account?.acct;
+    if (key) hiddenNotification.value[key] = true;
 }
 
 const showWarning = computed(() => {
-    if (!pwaEnabled)
-        return false
+    if (!pwaEnabled) return false;
 
-    return isSupported && (!isSubscribed.value || !notificationPermission.value || notificationPermission.value === 'prompt') && !hiddenNotification.value[currentUser.value?.account?.acct ?? '']
-})
+    return isSupported && (!isSubscribed.value || !notificationPermission.value || notificationPermission.value === "prompt") && !hiddenNotification.value[currentUser.value?.account?.acct ?? ""];
+});
 
 async function saveSettings() {
-    if (busy.value)
-        return
+    if (busy.value) return;
 
-    busy.value = true
-    await nextTick()
-    animateSave.value = true
+    busy.value = true;
+    await nextTick();
+    animateSave.value = true;
 
     try {
-        await updateSubscription()
-    }
-    catch (err) {
+        await updateSubscription();
+    } catch (err) {
         // todo: handle error
-        console.error(err)
-    }
-    finally {
-        busy.value = false
-        animateSave.value = false
+        console.error(err);
+    } finally {
+        busy.value = false;
+        animateSave.value = false;
     }
 }
 
 async function doSubscribe() {
-    if (busy.value)
-        return
+    if (busy.value) return;
 
-    busy.value = true
-    await nextTick()
-    animateSubscription.value = true
+    busy.value = true;
+    await nextTick();
+    animateSubscription.value = true;
 
     try {
-        const result = await subscribe()
-        if (result !== 'subscribed') {
-            subscribeError.value = t(`settings.notifications.push_notifications.subscription_error.${result === 'notification-denied' ? 'permission_denied' : 'request_error'}`)
-            showSubscribeError.value = true
+        const result = await subscribe();
+        if (result !== "subscribed") {
+            subscribeError.value = t(`settings.notifications.push_notifications.subscription_error.${result === "notification-denied" ? "permission_denied" : "request_error"}`);
+            showSubscribeError.value = true;
         }
-    }
-    catch (err) {
+    } catch (err) {
         if (err instanceof PushSubscriptionError) {
-            subscribeError.value = t(`settings.notifications.push_notifications.subscription_error.${err.code}`)
+            subscribeError.value = t(`settings.notifications.push_notifications.subscription_error.${err.code}`);
+        } else {
+            console.error(err);
+            subscribeError.value = t("settings.notifications.push_notifications.subscription_error.request_error");
         }
-        else {
-            console.error(err)
-            subscribeError.value = t('settings.notifications.push_notifications.subscription_error.request_error')
-        }
-        showSubscribeError.value = true
-    }
-    finally {
-        busy.value = false
-        animateSubscription.value = false
+        showSubscribeError.value = true;
+    } finally {
+        busy.value = false;
+        animateSubscription.value = false;
     }
 }
 async function removeSubscription() {
-    if (busy.value)
-        return
+    if (busy.value) return;
 
-    busy.value = true
-    await nextTick()
-    animateRemoveSubscription.value = true
+    busy.value = true;
+    await nextTick();
+    animateRemoveSubscription.value = true;
     try {
-        await unsubscribe()
-    }
-    catch (err) {
-        console.error(err)
-    }
-    finally {
-        busy.value = false
-        animateRemoveSubscription.value = false
+        await unsubscribe();
+    } catch (err) {
+        console.error(err);
+    } finally {
+        busy.value = false;
+        animateRemoveSubscription.value = false;
     }
 }
-onActivated(() => (busy.value = false))
+onActivated(() => (busy.value = false));
 </script>
 
 <template>

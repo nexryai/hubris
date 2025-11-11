@@ -6,45 +6,45 @@ const {
     userOnly = false,
     command,
 } = defineProps<{
-    text?: string
-    icon: string
-    to: string | Record<string, string>
-    userOnly?: boolean
-    command?: boolean
-}>()
+    text?: string;
+    icon: string;
+    to: string | Record<string, string>;
+    userOnly?: boolean;
+    command?: boolean;
+}>();
 
 defineSlots<{
-    icon: (props: object) => void
-    default: (props: object) => void
-}>()
+    icon: (props: object) => void;
+    default: (props: object) => void;
+}>();
 
-const router = useRouter()
+const router = useRouter();
 
 useCommand({
-    scope: 'Navigation',
+    scope: "Navigation",
 
-    name: () => text ?? (typeof to === 'string' ? (to as string) : to.name),
+    name: () => text ?? (typeof to === "string" ? (to as string) : to.name),
     icon: () => icon,
     visible: () => command,
 
     onActivate() {
-        router.push(to)
+        router.push(to);
     },
-})
+});
 
-const activeClass = ref('text-primary')
+const activeClass = ref("text-primary");
 onHydrated(async () => {
     // TODO: force NuxtLink to reevaluate, we now we are in this route though, so we should force it to active
     // we don't have currentServer defined until later
-    activeClass.value = ''
-    await nextTick()
-    activeClass.value = 'text-primary'
-})
+    activeClass.value = "";
+    await nextTick();
+    activeClass.value = "text-primary";
+});
 
 // Optimize rendering for the common case of being logged in, only show visual feedback for disabled user-only items
 // when we know there is no user.
-const noUserDisable = computed(() => !isHydrated.value || (userOnly && !currentUser.value))
-const noUserVisual = computed(() => isHydrated.value && userOnly && !currentUser.value)
+const noUserDisable = computed(() => !isHydrated.value || (userOnly && !currentUser.value));
+const noUserVisual = computed(() => isHydrated.value && userOnly && !currentUser.value);
 </script>
 
 <template>

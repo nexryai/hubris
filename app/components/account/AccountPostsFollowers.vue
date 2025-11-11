@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineProps<{
-    account: mastodon.v1.Account
-    isHoverCard?: boolean
-}>()
+    account: mastodon.v1.Account;
+    isHoverCard?: boolean;
+}>();
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 </script>
 
 <template>

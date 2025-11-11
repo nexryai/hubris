@@ -1,12 +1,12 @@
 <script setup lang="ts">
 export interface SearchEmoji {
-    title: string
-    src: string
+    title: string;
+    src: string;
 }
 
 defineProps<{
-    emoji: SearchEmoji
-}>()
+    emoji: SearchEmoji;
+}>();
 </script>
 
 <template>

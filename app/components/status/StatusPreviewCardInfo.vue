@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineProps<{
-    card: mastodon.v1.PreviewCard
+    card: mastodon.v1.PreviewCard;
     /** When it is root card in the list, not appear as a child card */
-    root?: boolean
+    root?: boolean;
     /** For the preview image, only the small image mode is displayed */
-    provider?: string
-}>()
+    provider?: string;
+}>();
 </script>
 
 <template>

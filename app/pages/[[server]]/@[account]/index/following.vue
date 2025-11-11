@@ -1,19 +1,19 @@
 <script setup lang="ts">
-const { t } = useI18n()
-const params = useRoute().params
-const handle = computed(() => params.account as string)
+const { t } = useI18n();
+const params = useRoute().params;
+const handle = computed(() => params.account as string);
 
-definePageMeta({ name: 'account-following' })
+definePageMeta({ name: "account-following" });
 
-const account = await fetchAccountByHandle(handle.value)
-const paginator = account ? useMastoClient().v1.accounts.$select(account.id).following.list() : null
+const account = await fetchAccountByHandle(handle.value);
+const paginator = account ? useMastoClient().v1.accounts.$select(account.id).following.list() : null;
 
-const isSelf = useSelfAccount(account)
+const isSelf = useSelfAccount(account);
 
 if (account) {
     useHydratedHead({
-        title: () => `${t('account.following')} | ${getDisplayName(account)} (@${account.acct})`,
-    })
+        title: () => `${t("account.following")} | ${getDisplayName(account)} (@${account.acct})`,
+    });
 }
 </script>
 

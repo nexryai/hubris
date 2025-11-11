@@ -1,18 +1,18 @@
 <script setup lang="ts">
 defineOptions({
     inheritAttrs: false,
-})
+});
 
 const { count } = defineProps<{
-    count: number
-    keypath: string
-}>()
+    count: number;
+    keypath: string;
+}>();
 
-const { formatHumanReadableNumber, formatNumber, forSR } = useHumanReadableNumber()
+const { formatHumanReadableNumber, formatNumber, forSR } = useHumanReadableNumber();
 
-const useSR = computed(() => forSR(count))
-const rawNumber = computed(() => formatNumber(count))
-const humanReadableNumber = computed(() => formatHumanReadableNumber(count))
+const useSR = computed(() => forSR(count));
+const rawNumber = computed(() => formatNumber(count));
+const humanReadableNumber = computed(() => formatHumanReadableNumber(count));
 </script>
 
 <template>

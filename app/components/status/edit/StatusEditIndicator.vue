@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-    inline: boolean
-}>()
+    status: mastodon.v1.Status;
+    inline: boolean;
+}>();
 
-const editedAt = computed(() => status.editedAt)
-const formatted = useFormattedDateTime(editedAt)
+const editedAt = computed(() => status.editedAt);
+const formatted = useFormattedDateTime(editedAt);
 </script>
 
 <template>

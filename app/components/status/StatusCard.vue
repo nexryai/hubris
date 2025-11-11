@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const {
     actions = true,
@@ -11,71 +11,69 @@ const {
     account,
     ...props
 } = defineProps<{
-    status: mastodon.v1.Status
-    followedTag?: string | null
-    actions?: boolean
-    context?: mastodon.v2.FilterContext
-    hover?: boolean
-    inNotification?: boolean
-    isPreview?: boolean
+    status: mastodon.v1.Status;
+    followedTag?: string | null;
+    actions?: boolean;
+    context?: mastodon.v2.FilterContext;
+    hover?: boolean;
+    inNotification?: boolean;
+    isPreview?: boolean;
 
     // If we know the prev and next status in the timeline, we can simplify the card
-    older?: mastodon.v1.Status
-    newer?: mastodon.v1.Status
+    older?: mastodon.v1.Status;
+    newer?: mastodon.v1.Status;
     // Manual overrides
-    hasOlder?: boolean
-    hasNewer?: boolean
+    hasOlder?: boolean;
+    hasNewer?: boolean;
 
     // When looking into a detailed view of a post, we can simplify the replying badges
     // to the main expanded post
-    main?: mastodon.v1.Status
-    account?: mastodon.v1.Account
-}>()
+    main?: mastodon.v1.Status;
+    account?: mastodon.v1.Account;
+}>();
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
 const status = computed(() => {
-    if (props.status.reblog && (!props.status.content || props.status.content === props.status.reblog.content))
-        return props.status.reblog
-    return props.status
-})
+    if (props.status.reblog && (!props.status.content || props.status.content === props.status.reblog.content)) return props.status.reblog;
+    return props.status;
+});
 
 // Use original status, avoid connecting a reblog
-const directReply = computed(() => hasNewer || (!!status.value.inReplyToId && (status.value.inReplyToId === newer?.id || status.value.inReplyToId === newer?.reblog?.id)))
+const directReply = computed(() => hasNewer || (!!status.value.inReplyToId && (status.value.inReplyToId === newer?.id || status.value.inReplyToId === newer?.reblog?.id)));
 // Use reblogged status, connect it to further replies
-const connectReply = computed(() => hasOlder || status.value.id === older?.inReplyToId || status.value.id === older?.reblog?.inReplyToId)
+const connectReply = computed(() => hasOlder || status.value.id === older?.inReplyToId || status.value.id === older?.reblog?.inReplyToId);
 // Open a detailed status, the replies directly to it
-const replyToMain = computed(() => main && main.id === status.value.inReplyToId)
+const replyToMain = computed(() => main && main.id === status.value.inReplyToId);
 
-const rebloggedBy = computed(() => (props.status.reblog ? props.status.account : null))
+const rebloggedBy = computed(() => (props.status.reblog ? props.status.account : null));
 
-const statusRoute = computed(() => getStatusRoute(status.value))
+const statusRoute = computed(() => getStatusRoute(status.value));
 
-const router = useRouter()
+const router = useRouter();
 
 function go(evt: MouseEvent | KeyboardEvent) {
     if (evt.metaKey || evt.ctrlKey) {
-        window.open(statusRoute.value.href)
-    }
-    else {
-        cacheStatus(status.value)
-        router.push(statusRoute.value)
+        window.open(statusRoute.value.href);
+    } else {
+        cacheStatus(status.value);
+        router.push(statusRoute.value);
     }
 }
 
-const createdAt = useFormattedDateTime(status.value.createdAt)
-const timeAgoOptions = useTimeAgoOptions(true)
-const timeago = useTimeAgo(() => status.value.createdAt, timeAgoOptions)
+const createdAt = useFormattedDateTime(status.value.createdAt);
+const timeAgoOptions = useTimeAgoOptions(true);
+const timeago = useTimeAgo(() => status.value.createdAt, timeAgoOptions);
 
-const isSelfReply = computed(() => status.value.inReplyToAccountId === status.value.account.id)
-const collapseRebloggedBy = computed(() => rebloggedBy.value?.id === status.value.account.id)
-const isDM = computed(() => status.value.visibility === 'direct')
-const isPinned = computed(() => !!props.status.pinned && account?.id === status.value.account.id)
+const isSelfReply = computed(() => status.value.inReplyToAccountId === status.value.account.id);
+const collapseRebloggedBy = computed(() => rebloggedBy.value?.id === status.value.account.id);
+const isDM = computed(() => status.value.visibility === "direct");
+const isPinned = computed(() => !!props.status.pinned && account?.id === status.value.account.id);
 
-const showUpperBorder = computed(() => newer && !directReply.value)
-const showReplyTo = computed(() => !replyToMain.value && !directReply.value)
+const showUpperBorder = computed(() => newer && !directReply.value);
+const showReplyTo = computed(() => !replyToMain.value && !directReply.value);
 
-const forceShow = ref(false)
+const forceShow = ref(false);
 </script>
 
 <template>

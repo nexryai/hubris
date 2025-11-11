@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import type { DraftItem } from '#shared/types'
-import type { mastodon } from 'masto'
+import type { DraftItem } from "#shared/types";
+import type { mastodon } from "masto";
 
 const {
     draftKey,
     initial = getDefaultDraftItem,
     expanded = false,
 } = defineProps<{
-    draftKey: string
-    initial?: () => DraftItem
-    placeholder?: string
-    inReplyToId?: string
-    inReplyToVisibility?: mastodon.v1.StatusVisibility
-    expanded?: boolean
-    dialogLabelledBy?: string
-}>()
+    draftKey: string;
+    initial?: () => DraftItem;
+    placeholder?: string;
+    inReplyToId?: string;
+    inReplyToVisibility?: mastodon.v1.StatusVisibility;
+    expanded?: boolean;
+    dialogLabelledBy?: string;
+}>();
 
-const threadComposer = useThreadComposer(draftKey, initial)
-const threadItems = computed(() => threadComposer.threadItems.value)
+const threadComposer = useThreadComposer(draftKey, initial);
+const threadItems = computed(() => threadComposer.threadItems.value);
 
 onDeactivated(() => {
-    clearEmptyDrafts()
-})
+    clearEmptyDrafts();
+});
 
 function isFirstItem(index: number) {
-    return index === 0
+    return index === 0;
 }
 </script>
 

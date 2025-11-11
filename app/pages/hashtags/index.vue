@@ -1,18 +1,18 @@
 <script setup lang="ts">
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const { client } = useMasto()
+const { client } = useMasto();
 const paginator = client.value.v1.followedTags.list({
     limit: 20,
-})
+});
 
 useHydratedHead({
-    title: () => t('nav.hashtags'),
-})
+    title: () => t("nav.hashtags"),
+});
 </script>
 
 <template>

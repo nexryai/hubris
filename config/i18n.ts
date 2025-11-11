@@ -1,10 +1,10 @@
-import type { DateTimeFormats, NumberFormats, PluralizationRule, PluralizationRules } from '@intlify/core-base'
-import type { LocaleObject } from '@nuxtjs/i18n'
+import type { DateTimeFormats, NumberFormats, PluralizationRule, PluralizationRules } from "@intlify/core-base";
+import type { LocaleObject } from "@nuxtjs/i18n";
 
 interface LocaleObjectData extends LocaleObject {
-    numberFormats?: NumberFormats
-    dateTimeFormats?: DateTimeFormats
-    pluralRule?: PluralizationRule
+    numberFormats?: NumberFormats;
+    dateTimeFormats?: DateTimeFormats;
+    pluralRule?: PluralizationRule;
 }
 
 export const countryLocaleVariants: Record<string, (LocaleObjectData & { country?: boolean })[]> = {
@@ -12,7 +12,7 @@ export const countryLocaleVariants: Record<string, (LocaleObjectData & { country
         // ar.json contains ar-EG translations
         // { code: 'ar-DZ', name: 'Arabic (Algeria)' },
         // { code: 'ar-BH', name: 'Arabic (Bahrain)' },
-        { country: true, code: 'ar-EG', name: 'العربية' },
+        { country: true, code: "ar-EG", name: "العربية" },
         // { code: 'ar-EG', name: 'Arabic (Egypt)' },
         // { code: 'ar-IQ', name: 'Arabic (Iraq)' },
         // { code: 'ar-JO', name: 'Arabic (Jordan)' },
@@ -30,15 +30,15 @@ export const countryLocaleVariants: Record<string, (LocaleObjectData & { country
     ],
     en: [
         // en.json contains en-US translations
-        { country: true, code: 'en-US', name: 'English (US)' },
-        { code: 'en-CA', name: 'English (Canada)' },
-        { code: 'en-GB', name: 'English (UK)' },
+        { country: true, code: "en-US", name: "English (US)" },
+        { code: "en-CA", name: "English (Canada)" },
+        { code: "en-GB", name: "English (UK)" },
     ],
     ca: [
         // ca.json contains ca-ES translations
         // { code: 'ca-AD', name: 'Català (Andorra)' },
-        { country: true, code: 'ca-ES', name: 'Català (Espanya)' },
-        { code: 'ca-valencia', name: 'Català (valencià)' },
+        { country: true, code: "ca-ES", name: "Català (Espanya)" },
+        { code: "ca-valencia", name: "Català (valencià)" },
         // { code: 'ca-FR', name: 'Català (França)' },
         // { code: 'ca-IT', name: 'Català (Itàlia)' },
     ],
@@ -51,9 +51,9 @@ export const countryLocaleVariants: Record<string, (LocaleObjectData & { country
         // { code: 'es-CR', name: 'Español (Costa Rica)' },
         // { code: 'es-DO', name: 'Español (República Dominicana)' },
         // { code: 'es-EC', name: 'Español (Ecuador)' },
-        { country: true, code: 'es-ES', name: 'Español (España)' },
+        { country: true, code: "es-ES", name: "Español (España)" },
         // TODO: Support es-419, if we include spanish country variants remove also fix on utils/language.ts module
-        { code: 'es-419', name: 'Español (Latinoamérica)' },
+        { code: "es-419", name: "Español (Latinoamérica)" },
         // { code: 'es-GT', name: 'Español (Guatemala)' },
         // { code: 'es-HN', name: 'Español (Honduras)' },
         // { code: 'es-MX', name: 'Español (México)' },
@@ -68,200 +68,198 @@ export const countryLocaleVariants: Record<string, (LocaleObjectData & { country
     ],
     pt: [
         // pt.json contains pt-PT translations
-        { country: true, code: 'pt-PT', name: 'Português (Portugal)' },
-        { code: 'pt-BR', name: 'Português (Brasil)' },
+        { country: true, code: "pt-PT", name: "Português (Portugal)" },
+        { code: "pt-BR", name: "Português (Brasil)" },
     ],
-}
+};
 
 const locales: LocaleObjectData[] = [
     {
-        code: 'en',
-        file: 'en.json',
-        name: 'English',
+        code: "en",
+        file: "en.json",
+        name: "English",
     },
     {
-        code: 'ar',
-        file: 'ar.json',
-        name: 'العربية',
-        dir: 'rtl',
+        code: "ar",
+        file: "ar.json",
+        name: "العربية",
+        dir: "rtl",
         pluralRule: (choice: number) => {
-            const name = new Intl.PluralRules('ar-EG').select(choice)
-            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name]
+            const name = new Intl.PluralRules("ar-EG").select(choice);
+            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name];
         },
     } satisfies LocaleObjectData,
     {
-        code: 'ckb',
-        file: 'ckb.json',
-        name: 'کوردیی ناوەندی',
-        dir: 'rtl',
+        code: "ckb",
+        file: "ckb.json",
+        name: "کوردیی ناوەندی",
+        dir: "rtl",
         pluralRule: (choice: number) => {
-            const name = new Intl.PluralRules('ckb').select(choice)
-            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name]
+            const name = new Intl.PluralRules("ckb").select(choice);
+            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name];
         },
     } satisfies LocaleObjectData,
     {
-        code: 'fa-IR',
-        file: 'fa-IR.json',
-        name: 'فارسی',
-        dir: 'rtl',
+        code: "fa-IR",
+        file: "fa-IR.json",
+        name: "فارسی",
+        dir: "rtl",
         pluralRule: (choice: number) => {
-            const name = new Intl.PluralRules('fa-IR').select(choice)
-            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name]
+            const name = new Intl.PluralRules("fa-IR").select(choice);
+            return { zero: 0, one: 1, two: 2, few: 3, many: 4, other: 5 }[name];
         },
     } satisfies LocaleObjectData,
     {
-        code: 'ca',
-        file: 'ca.json',
-        name: 'Català',
+        code: "ca",
+        file: "ca.json",
+        name: "Català",
     },
     {
-        code: 'el-GR',
-        file: 'el-GR.json',
-        name: 'Ελληνικά',
+        code: "el-GR",
+        file: "el-GR.json",
+        name: "Ελληνικά",
     },
     {
-        code: 'de-DE',
-        file: 'de-DE.json',
-        name: 'Deutsch',
+        code: "de-DE",
+        file: "de-DE.json",
+        name: "Deutsch",
     },
     {
-        code: 'hu-HU',
-        file: 'hu-HU.json',
-        name: 'Magyar',
+        code: "hu-HU",
+        file: "hu-HU.json",
+        name: "Magyar",
     },
     {
-        code: 'zh-CN',
-        file: 'zh-CN.json',
-        name: '简体中文',
+        code: "zh-CN",
+        file: "zh-CN.json",
+        name: "简体中文",
     },
     {
-        code: 'zh-TW',
-        file: 'zh-TW.json',
-        name: '繁體中文',
+        code: "zh-TW",
+        file: "zh-TW.json",
+        name: "繁體中文",
     },
     {
-        code: 'ja-JP',
-        file: 'ja-JP.json',
-        name: '日本語',
+        code: "ja-JP",
+        file: "ja-JP.json",
+        name: "日本語",
     },
     {
-        code: 'nl-NL',
-        file: 'nl-NL.json',
-        name: 'Nederlands',
+        code: "nl-NL",
+        file: "nl-NL.json",
+        name: "Nederlands",
     },
     {
-        code: 'es',
-        file: 'es.json',
-        name: 'Español',
+        code: "es",
+        file: "es.json",
+        name: "Español",
     },
     {
-        code: 'eu-ES',
-        file: 'eu-ES.json',
-        name: 'Euskara',
+        code: "eu-ES",
+        file: "eu-ES.json",
+        name: "Euskara",
     },
     {
-        code: 'fr-FR',
-        file: 'fr-FR.json',
-        name: 'Français',
+        code: "fr-FR",
+        file: "fr-FR.json",
+        name: "Français",
     },
     {
-        code: 'ru-RU',
-        file: 'ru-RU.json',
-        name: 'Русский',
+        code: "ru-RU",
+        file: "ru-RU.json",
+        name: "Русский",
         pluralRule: (choice: number) => {
-            const name = new Intl.PluralRules('ru-RU').select(choice)
-            return { zero: 2 /* not used */, one: 0, two: 1 /* not used */, few: 1, many: 2, other: 3 }[name]
+            const name = new Intl.PluralRules("ru-RU").select(choice);
+            return { zero: 2 /* not used */, one: 0, two: 1 /* not used */, few: 1, many: 2, other: 3 }[name];
         },
     },
     {
-        code: 'uk-UA',
-        file: 'uk-UA.json',
-        name: 'Українська',
+        code: "uk-UA",
+        file: "uk-UA.json",
+        name: "Українська",
         pluralRule: (choice: number) => {
-            if (choice === 0)
-                return 0
+            if (choice === 0) return 0;
 
-            const name = new Intl.PluralRules('uk-UA').select(choice)
-            return { zero: 0, one: 1, two: 0 /* not used */, few: 2, many: 3, other: 4 }[name]
+            const name = new Intl.PluralRules("uk-UA").select(choice);
+            return { zero: 0, one: 1, two: 0 /* not used */, few: 2, many: 3, other: 4 }[name];
         },
     },
     {
-        code: 'cs-CZ',
-        file: 'cs-CZ.json',
-        name: 'Česky',
+        code: "cs-CZ",
+        file: "cs-CZ.json",
+        name: "Česky",
     },
     {
-        code: 'pl-PL',
-        file: 'pl-PL.json',
-        name: 'Polski',
+        code: "pl-PL",
+        file: "pl-PL.json",
+        name: "Polski",
         pluralRule: (choice: number) => {
-            if (choice === 0)
-                return 0
+            if (choice === 0) return 0;
 
-            const name = new Intl.PluralRules('pl-PL').select(choice)
-            return { zero: 0, one: 1, two: 0 /* not used */, few: 2, many: 3, other: 4 }[name]
+            const name = new Intl.PluralRules("pl-PL").select(choice);
+            return { zero: 0, one: 1, two: 0 /* not used */, few: 2, many: 3, other: 4 }[name];
         },
     },
     {
-        code: 'pt',
-        file: 'pt.json',
-        name: 'Português',
+        code: "pt",
+        file: "pt.json",
+        name: "Português",
     },
     {
-        code: 'tr-TR',
-        file: 'tr-TR.json',
-        name: 'Türkçe',
+        code: "tr-TR",
+        file: "tr-TR.json",
+        name: "Türkçe",
     },
     {
-        code: 'id-ID',
-        file: 'id-ID.json',
-        name: 'Indonesia',
+        code: "id-ID",
+        file: "id-ID.json",
+        name: "Indonesia",
     },
     {
-        code: 'fi',
-        file: 'fi.json',
-        name: 'Suomi',
+        code: "fi",
+        file: "fi.json",
+        name: "Suomi",
     },
     {
-        code: 'gl-ES',
-        file: 'gl-ES.json',
-        name: 'Galego',
+        code: "gl-ES",
+        file: "gl-ES.json",
+        name: "Galego",
     },
     {
-        code: 'ko-KR',
-        file: 'ko-KR.json',
-        name: '한국어',
+        code: "ko-KR",
+        file: "ko-KR.json",
+        name: "한국어",
     },
     {
-        code: 'it-IT',
-        file: 'it-IT.json',
-        name: 'Italiano',
+        code: "it-IT",
+        file: "it-IT.json",
+        name: "Italiano",
     },
     {
-        code: 'th-TH',
-        file: 'th-TH.json',
-        name: 'ไทย',
+        code: "th-TH",
+        file: "th-TH.json",
+        name: "ไทย",
     },
     {
-        code: 'tl-PH',
-        file: 'tl-PH.json',
-        name: 'Tagalog',
+        code: "tl-PH",
+        file: "tl-PH.json",
+        name: "Tagalog",
     },
     {
-        code: 'vi-VN',
-        file: 'vi-VN.json',
-        name: 'Tiếng Việt',
+        code: "vi-VN",
+        file: "vi-VN.json",
+        name: "Tiếng Việt",
     },
     {
-        code: 'cy',
-        file: 'cy.json',
-        name: 'Cymraeg',
+        code: "cy",
+        file: "cy.json",
+        name: "Cymraeg",
     },
-]
+];
 
 function buildLocales() {
     const useLocales = Object.values(locales).reduce((acc, data) => {
-        const locales = countryLocaleVariants[data.code]
+        const locales = countryLocaleVariants[data.code];
         if (locales) {
             locales.forEach((l) => {
                 const entry: LocaleObjectData = {
@@ -269,85 +267,82 @@ function buildLocales() {
                     code: l.code,
                     name: l.name,
                     files: [data.file as string, `${l.code}.json`],
-                }
-                delete entry.file
-                acc.push(entry)
-            })
+                };
+                delete entry.file;
+                acc.push(entry);
+            });
+        } else {
+            acc.push(data);
         }
-        else {
-            acc.push(data)
-        }
-        return acc
-    }, [] as LocaleObjectData[])
+        return acc;
+    }, [] as LocaleObjectData[]);
 
-    return useLocales.sort((a, b) => a.code.localeCompare(b.code))
+    return useLocales.sort((a, b) => a.code.localeCompare(b.code));
 }
 
-export const currentLocales = buildLocales()
+export const currentLocales = buildLocales();
 
 export const datetimeFormats = Object.values(currentLocales).reduce((acc, data) => {
-    const dateTimeFormats = data.dateTimeFormats
+    const dateTimeFormats = data.dateTimeFormats;
     if (dateTimeFormats) {
-        acc[data.code] = { ...dateTimeFormats }
-        delete data.dateTimeFormats
-    }
-    else {
+        acc[data.code] = { ...dateTimeFormats };
+        delete data.dateTimeFormats;
+    } else {
         acc[data.code] = {
             shortDate: {
-                dateStyle: 'short',
+                dateStyle: "short",
             },
             short: {
-                dateStyle: 'short',
-                timeStyle: 'short',
+                dateStyle: "short",
+                timeStyle: "short",
             },
             long: {
-                dateStyle: 'long',
-                timeStyle: 'medium',
+                dateStyle: "long",
+                timeStyle: "medium",
             },
-        }
+        };
     }
 
-    return acc
-}, {} as DateTimeFormats)
+    return acc;
+}, {} as DateTimeFormats);
 
 export const numberFormats = Object.values(currentLocales).reduce((acc, data) => {
-    const numberFormats = data.numberFormats
+    const numberFormats = data.numberFormats;
     if (numberFormats) {
-        acc[data.code] = { ...numberFormats }
-        delete data.numberFormats
-    }
-    else {
+        acc[data.code] = { ...numberFormats };
+        delete data.numberFormats;
+    } else {
         acc[data.code] = {
             percentage: {
-                style: 'percent',
+                style: "percent",
                 maximumFractionDigits: 1,
             },
             smallCounting: {
-                style: 'decimal',
+                style: "decimal",
                 maximumFractionDigits: 0,
             },
             kiloCounting: {
-                notation: 'compact',
-                compactDisplay: 'short',
+                notation: "compact",
+                compactDisplay: "short",
                 maximumFractionDigits: 1,
             },
             millionCounting: {
-                notation: 'compact',
-                compactDisplay: 'short',
+                notation: "compact",
+                compactDisplay: "short",
                 maximumFractionDigits: 2,
             },
-        }
+        };
     }
 
-    return acc
-}, {} as NumberFormats)
+    return acc;
+}, {} as NumberFormats);
 
 export const pluralRules = Object.values(currentLocales).reduce((acc, data) => {
-    const pluralRule = data.pluralRule
+    const pluralRule = data.pluralRule;
     if (pluralRule) {
-        acc[data.code] = pluralRule
-        delete data.pluralRule
+        acc[data.code] = pluralRule;
+        delete data.pluralRule;
     }
 
-    return acc
-}, {} as PluralizationRules)
+    return acc;
+}, {} as PluralizationRules);

@@ -1,61 +1,60 @@
 <script setup lang="ts">
-import type { NavButtonName } from '~/composables/settings'
-import { STORAGE_KEY_BOTTOM_NAV_BUTTONS } from '~/constants'
+import type { NavButtonName } from "~/composables/settings";
+import { STORAGE_KEY_BOTTOM_NAV_BUTTONS } from "~/constants";
 
 interface NavButton {
-    name: NavButtonName
-    label: string
-    icon: string
+    name: NavButtonName;
+    label: string;
+    icon: string;
 }
 
 const availableNavButtons: NavButton[] = [
-    { name: 'home', label: 'nav.home', icon: 'i-ri:home-5-line' },
-    { name: 'search', label: 'nav.search', icon: 'i-ri:search-line' },
-    { name: 'notification', label: 'nav.notifications', icon: 'i-ri:notification-4-line' },
-    { name: 'mention', label: 'nav.conversations', icon: 'i-ri:at-line' },
-    { name: 'favorite', label: 'nav.favourites', icon: 'i-ri:heart-line' },
-    { name: 'bookmark', label: 'nav.bookmarks', icon: 'i-ri:bookmark-line' },
-    { name: 'compose', label: 'nav.compose', icon: 'i-ri:quill-pen-line' },
-    { name: 'explore', label: 'nav.explore', icon: 'i-ri:compass-3-line' },
-    { name: 'local', label: 'nav.local', icon: 'i-ri:group-2-line' },
-    { name: 'federated', label: 'nav.federated', icon: 'i-ri:earth-line' },
-    { name: 'list', label: 'nav.lists', icon: 'i-ri:list-check' },
-    { name: 'hashtag', label: 'nav.hashtags', icon: 'i-ri:hashtag' },
-    { name: 'moreMenu', label: 'nav.more_menu', icon: 'i-ri:more-fill' },
-] as const
+    { name: "home", label: "nav.home", icon: "i-ri:home-5-line" },
+    { name: "search", label: "nav.search", icon: "i-ri:search-line" },
+    { name: "notification", label: "nav.notifications", icon: "i-ri:notification-4-line" },
+    { name: "mention", label: "nav.conversations", icon: "i-ri:at-line" },
+    { name: "favorite", label: "nav.favourites", icon: "i-ri:heart-line" },
+    { name: "bookmark", label: "nav.bookmarks", icon: "i-ri:bookmark-line" },
+    { name: "compose", label: "nav.compose", icon: "i-ri:quill-pen-line" },
+    { name: "explore", label: "nav.explore", icon: "i-ri:compass-3-line" },
+    { name: "local", label: "nav.local", icon: "i-ri:group-2-line" },
+    { name: "federated", label: "nav.federated", icon: "i-ri:earth-line" },
+    { name: "list", label: "nav.lists", icon: "i-ri:list-check" },
+    { name: "hashtag", label: "nav.hashtags", icon: "i-ri:hashtag" },
+    { name: "moreMenu", label: "nav.more_menu", icon: "i-ri:more-fill" },
+] as const;
 
-const defaultSelectedNavButtonNames = computed<NavButtonName[]>(() => (currentUser.value ? ['home', 'search', 'notification', 'mention', 'moreMenu'] : ['explore', 'local', 'federated', 'moreMenu']))
-const navButtonNamesSetting = useLocalStorage<NavButtonName[]>(STORAGE_KEY_BOTTOM_NAV_BUTTONS, defaultSelectedNavButtonNames.value)
-const selectedNavButtonNames = ref<NavButtonName[]>(navButtonNamesSetting.value)
+const defaultSelectedNavButtonNames = computed<NavButtonName[]>(() => (currentUser.value ? ["home", "search", "notification", "mention", "moreMenu"] : ["explore", "local", "federated", "moreMenu"]));
+const navButtonNamesSetting = useLocalStorage<NavButtonName[]>(STORAGE_KEY_BOTTOM_NAV_BUTTONS, defaultSelectedNavButtonNames.value);
+const selectedNavButtonNames = ref<NavButtonName[]>(navButtonNamesSetting.value);
 
-const selectedNavButtons = computed<NavButton[]>(() => selectedNavButtonNames.value.map(name => availableNavButtons.find(navButton => navButton.name === name)!))
+const selectedNavButtons = computed<NavButton[]>(() => selectedNavButtonNames.value.map((name) => availableNavButtons.find((navButton) => navButton.name === name)!));
 
-const canSave = computed(() => selectedNavButtonNames.value.length > 0 && selectedNavButtonNames.value.includes('moreMenu') && JSON.stringify(selectedNavButtonNames.value) !== JSON.stringify(navButtonNamesSetting.value))
+const canSave = computed(() => selectedNavButtonNames.value.length > 0 && selectedNavButtonNames.value.includes("moreMenu") && JSON.stringify(selectedNavButtonNames.value) !== JSON.stringify(navButtonNamesSetting.value));
 
 function isAdded(name: NavButtonName) {
-    return selectedNavButtonNames.value.includes(name)
+    return selectedNavButtonNames.value.includes(name);
 }
 
 function append(navButtonName: NavButtonName) {
-    const maxButtonNumber = 5
-    if (selectedNavButtonNames.value.length < maxButtonNumber)
-        selectedNavButtonNames.value = [...selectedNavButtonNames.value, navButtonName]
+    const maxButtonNumber = 5;
+    if (selectedNavButtonNames.value.length < maxButtonNumber) selectedNavButtonNames.value = [...selectedNavButtonNames.value, navButtonName];
 }
 
 function remove(navButtonName: NavButtonName) {
-    selectedNavButtonNames.value = selectedNavButtonNames.value.filter(name => name !== navButtonName)
+    selectedNavButtonNames.value = selectedNavButtonNames.value.filter((name) => name !== navButtonName);
 }
 
 function clear() {
-    selectedNavButtonNames.value = []
+    selectedNavButtonNames.value = [];
 }
 
 function reset() {
-    selectedNavButtonNames.value = defaultSelectedNavButtonNames.value
+    selectedNavButtonNames.value = defaultSelectedNavButtonNames.value;
 }
 
 function save() {
-    navButtonNamesSetting.value = selectedNavButtonNames.value
+    navButtonNamesSetting.value = selectedNavButtonNames.value;
 }
 </script>
 

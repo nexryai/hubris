@@ -1,13 +1,13 @@
 <script setup lang="ts">
 defineProps<{
-    label?: string
-    hover?: boolean
-    iconChecked?: string
-    iconUnchecked?: string
-    checkedIconColor?: string
-    prependCheckbox?: boolean
-}>()
-const modelValue = defineModel<boolean | null>()
+    label?: string;
+    hover?: boolean;
+    iconChecked?: string;
+    iconUnchecked?: string;
+    checkedIconColor?: string;
+    prependCheckbox?: boolean;
+}>();
+const modelValue = defineModel<boolean | null>();
 </script>
 
 <template>

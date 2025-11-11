@@ -1,51 +1,51 @@
 <script setup lang="ts">
 const {
-    is = 'div',
+    is = "div",
     text,
     description,
     icon,
     command,
 } = defineProps<{
-    is?: string
-    text?: string
-    description?: string
-    icon?: string
-    checked?: boolean
-    command?: boolean
-}>()
+    is?: string;
+    text?: string;
+    description?: string;
+    icon?: string;
+    checked?: boolean;
+    command?: boolean;
+}>();
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(["click"]);
 
-const type = computed(() => (is === 'button' ? 'button' : null))
+const type = computed(() => (is === "button" ? "button" : null));
 
-const { hide } = useDropdownContext() || {}
+const { hide } = useDropdownContext() || {};
 
-const el = ref<HTMLDivElement>()
+const el = ref<HTMLDivElement>();
 
 function handleClick(evt: MouseEvent) {
-    hide?.()
-    emit('click', evt)
+    hide?.();
+    emit("click", evt);
 }
 
 useCommand({
-    scope: 'Actions',
+    scope: "Actions",
 
     order: -1,
     visible: () => command && text,
 
     name: () => text!,
-    icon: () => icon ?? 'i-ri:question-line',
+    icon: () => icon ?? "i-ri:question-line",
     description: () => description,
 
     onActivate() {
-        const clickEvent = new MouseEvent('click', {
+        const clickEvent = new MouseEvent("click", {
             view: window,
             bubbles: true,
             cancelable: true,
-        })
-        el.value?.dispatchEvent(clickEvent)
+        });
+        el.value?.dispatchEvent(clickEvent);
     },
-})
+});
 </script>
 
 <template>

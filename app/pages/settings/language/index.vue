@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { ElkTranslationStatus } from '#shared/types/translation-status'
+import type { ElkTranslationStatus } from "#shared/types/translation-status";
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
-const translationStatus: ElkTranslationStatus = await import('~~/elk-translation-status.json').then(m => m.default)
+const translationStatus: ElkTranslationStatus = await import("~~/elk-translation-status.json").then((m) => m.default);
 
 useHydratedHead({
-    title: () => `${t('settings.language.label')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.language.label")} | ${t("nav.settings")}`,
+});
 const status = computed(() => {
-    const entry = translationStatus.locales[locale.value]
-    return t('settings.language.status', [entry.total, translationStatus.total, entry.percentage])
-})
+    const entry = translationStatus.locales[locale.value];
+    return t("settings.language.status", [entry.total, translationStatus.total, entry.percentage]);
+});
 </script>
 
 <template>

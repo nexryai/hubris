@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { SearchResult } from '~/composables/masto/search'
+import type { SearchResult } from "~/composables/masto/search";
 
 defineProps<{
-    result: SearchResult
-    active: boolean
-}>()
+    result: SearchResult;
+    active: boolean;
+}>();
 </script>
 
 <template>

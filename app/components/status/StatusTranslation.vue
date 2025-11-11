@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-}>()
+    status: mastodon.v1.Status;
+}>();
 
-const { toggle: _toggleTranslation, translation, enabled: isTranslationEnabled } = await useTranslation(status, getLanguageCode())
-const preferenceHideTranslation = usePreferences('hideTranslation')
+const { toggle: _toggleTranslation, translation, enabled: isTranslationEnabled } = await useTranslation(status, getLanguageCode());
+const preferenceHideTranslation = usePreferences("hideTranslation");
 
-const showButton = computed(() => !preferenceHideTranslation.value && isTranslationEnabled && status.content.trim().length)
+const showButton = computed(() => !preferenceHideTranslation.value && isTranslationEnabled && status.content.trim().length);
 
-const translating = ref(false)
+const translating = ref(false);
 async function toggleTranslation() {
-    translating.value = true
+    translating.value = true;
     try {
-        await _toggleTranslation()
-    }
-    finally {
-        translating.value = false
+        await _toggleTranslation();
+    } finally {
+        translating.value = false;
     }
 }
 </script>

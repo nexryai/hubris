@@ -1,14 +1,13 @@
 <script setup lang="ts">
 definePageMeta({
     middleware: () => {
-        if (!useAppConfig().pwaEnabled)
-            return navigateTo('/')
+        if (!useAppConfig().pwaEnabled) return navigateTo("/");
     },
-})
+});
 
-useWebShareTarget()
+useWebShareTarget();
 
-const pwaIsInstalled = import.meta.client && !!useNuxtApp().$pwa?.isInstalled
+const pwaIsInstalled = import.meta.client && !!useNuxtApp().$pwa?.isInstalled;
 </script>
 
 <template>

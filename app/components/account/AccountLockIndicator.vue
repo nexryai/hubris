@@ -1,9 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-    showLabel?: boolean
-}>()
+    showLabel?: boolean;
+}>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <template>

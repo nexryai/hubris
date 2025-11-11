@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
+import type { Editor } from "@tiptap/core";
 
 defineProps<{
-    editor: Editor
-}>()
+    editor: Editor;
+}>();
 </script>
 
 <template>

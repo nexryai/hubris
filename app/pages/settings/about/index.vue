@@ -1,18 +1,18 @@
 <script setup lang="ts">
-const buildInfo = useBuildInfo()
-const { t } = useI18n()
+const buildInfo = useBuildInfo();
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${t('settings.about.label')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.about.label")} | ${t("nav.settings")}`,
+});
 
-const showCommit = ref(buildInfo.env !== 'release' && buildInfo.env !== 'dev')
-const builtTime = useFormattedDateTime(buildInfo.time)
+const showCommit = ref(buildInfo.env !== "release" && buildInfo.env !== "dev");
+const builtTime = useFormattedDateTime(buildInfo.time);
 
 function handleShowCommit() {
     setTimeout(() => {
-        showCommit.value = true
-    }, 50)
+        showCommit.value = true;
+    }, 50);
 }
 </script>
 

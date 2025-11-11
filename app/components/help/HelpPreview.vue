@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-    (event: 'close'): void
-}>()
+    (event: "close"): void;
+}>();
 
-const vAutoFocus = (el: HTMLElement) => el.focus()
+const vAutoFocus = (el: HTMLElement) => el.focus();
 </script>
 
 <template>

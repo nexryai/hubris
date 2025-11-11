@@ -1,20 +1,20 @@
 <script setup lang="ts">
-const { env } = useBuildInfo()
-const router = useRouter()
-const back = ref<any>('')
+const { env } = useBuildInfo();
+const router = useRouter();
+const back = ref<any>("");
 
-const nuxtApp = useNuxtApp()
+const nuxtApp = useNuxtApp();
 
 function onClickLogo() {
-    nuxtApp.hooks.callHook('elk-logo:click')
+    nuxtApp.hooks.callHook("elk-logo:click");
 }
 
 onMounted(() => {
-    back.value = router.options.history.state.back
-})
+    back.value = router.options.history.state.back;
+});
 router.afterEach(() => {
-    back.value = router.options.history.state.back
-})
+    back.value = router.options.history.state.back;
+});
 </script>
 
 <template>

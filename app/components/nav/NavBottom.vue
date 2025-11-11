@@ -1,39 +1,39 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
-import type { NavButtonName } from '../../composables/settings'
+import type { Component } from "vue";
+import type { NavButtonName } from "../../composables/settings";
 
-import { NavButtonBookmark, NavButtonCompose, NavButtonExplore, NavButtonFavorite, NavButtonFederated, NavButtonHashtag, NavButtonHome, NavButtonList, NavButtonLocal, NavButtonMention, NavButtonMoreMenu, NavButtonNotification, NavButtonSearch } from '#components'
+import { NavButtonBookmark, NavButtonCompose, NavButtonExplore, NavButtonFavorite, NavButtonFederated, NavButtonHashtag, NavButtonHome, NavButtonList, NavButtonLocal, NavButtonMention, NavButtonMoreMenu, NavButtonNotification, NavButtonSearch } from "#components";
 
-import { STORAGE_KEY_BOTTOM_NAV_BUTTONS } from '~/constants'
+import { STORAGE_KEY_BOTTOM_NAV_BUTTONS } from "~/constants";
 
 interface NavButton {
-    name: string
-    component: Component
+    name: string;
+    component: Component;
 }
 
 const navButtons: NavButton[] = [
-    { name: 'home', component: NavButtonHome },
-    { name: 'search', component: NavButtonSearch },
-    { name: 'notification', component: NavButtonNotification },
-    { name: 'mention', component: NavButtonMention },
-    { name: 'favorite', component: NavButtonFavorite },
-    { name: 'bookmark', component: NavButtonBookmark },
-    { name: 'compose', component: NavButtonCompose },
-    { name: 'explore', component: NavButtonExplore },
-    { name: 'local', component: NavButtonLocal },
-    { name: 'federated', component: NavButtonFederated },
-    { name: 'list', component: NavButtonList },
-    { name: 'hashtag', component: NavButtonHashtag },
-    { name: 'moreMenu', component: NavButtonMoreMenu },
-]
+    { name: "home", component: NavButtonHome },
+    { name: "search", component: NavButtonSearch },
+    { name: "notification", component: NavButtonNotification },
+    { name: "mention", component: NavButtonMention },
+    { name: "favorite", component: NavButtonFavorite },
+    { name: "bookmark", component: NavButtonBookmark },
+    { name: "compose", component: NavButtonCompose },
+    { name: "explore", component: NavButtonExplore },
+    { name: "local", component: NavButtonLocal },
+    { name: "federated", component: NavButtonFederated },
+    { name: "list", component: NavButtonList },
+    { name: "hashtag", component: NavButtonHashtag },
+    { name: "moreMenu", component: NavButtonMoreMenu },
+];
 
-const defaultSelectedNavButtonNames: NavButtonName[] = currentUser.value ? ['home', 'search', 'notification', 'mention', 'moreMenu'] : ['explore', 'local', 'federated', 'moreMenu']
-const selectedNavButtonNames = useLocalStorage<NavButtonName[]>(STORAGE_KEY_BOTTOM_NAV_BUTTONS, defaultSelectedNavButtonNames)
+const defaultSelectedNavButtonNames: NavButtonName[] = currentUser.value ? ["home", "search", "notification", "mention", "moreMenu"] : ["explore", "local", "federated", "moreMenu"];
+const selectedNavButtonNames = useLocalStorage<NavButtonName[]>(STORAGE_KEY_BOTTOM_NAV_BUTTONS, defaultSelectedNavButtonNames);
 
-const selectedNavButtons = computed(() => selectedNavButtonNames.value.map(name => navButtons.find(navButton => navButton.name === name)))
+const selectedNavButtons = computed(() => selectedNavButtonNames.value.map((name) => navButtons.find((navButton) => navButton.name === name)));
 
 // only one icon can be lit up at the same time
-const moreMenuVisible = ref(false)
+const moreMenuVisible = ref(false);
 </script>
 
 <template>

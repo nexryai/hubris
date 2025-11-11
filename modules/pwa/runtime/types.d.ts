@@ -1,27 +1,27 @@
-import type { Ref, UnwrapNestedRefs } from 'vue'
+import type { Ref, UnwrapNestedRefs } from "vue";
 
 export interface PwaInjection {
-    isInstalled: boolean
-    showInstallPrompt: Ref<boolean>
-    cancelInstall: () => void
-    install: () => Promise<void>
-    swActivated: Ref<boolean>
-    registrationError: Ref<boolean>
-    needRefresh: Ref<boolean>
-    updateServiceWorker: (reloadPage?: boolean | undefined) => Promise<void>
-    close: () => Promise<void>
+    isInstalled: boolean;
+    showInstallPrompt: Ref<boolean>;
+    cancelInstall: () => void;
+    install: () => Promise<void>;
+    swActivated: Ref<boolean>;
+    registrationError: Ref<boolean>;
+    needRefresh: Ref<boolean>;
+    updateServiceWorker: (reloadPage?: boolean | undefined) => Promise<void>;
+    close: () => Promise<void>;
 }
 
-declare module '#app' {
+declare module "#app" {
     interface NuxtApp {
-        $pwa?: UnwrapNestedRefs<PwaInjection>
+        $pwa?: UnwrapNestedRefs<PwaInjection>;
     }
 }
 
-declare module 'vue' {
+declare module "vue" {
     interface ComponentCustomProperties {
-        $pwa?: UnwrapNestedRefs<PwaInjection>
+        $pwa?: UnwrapNestedRefs<PwaInjection>;
     }
 }
 
-export {}
+export {};

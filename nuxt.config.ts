@@ -1,21 +1,21 @@
-import type { BuildInfo } from './shared/types'
-import { resolveModulePath } from 'exsolve'
-import { createResolver, useNuxt } from 'nuxt/kit'
-import { isCI, isDevelopment, isWindows } from 'std-env'
-import { isPreview } from './config/env'
-import { currentLocales } from './config/i18n'
-import { pwa } from './config/pwa'
+import type { BuildInfo } from "./shared/types";
+import { resolveModulePath } from "exsolve";
+import { createResolver, useNuxt } from "nuxt/kit";
+import { isCI, isDevelopment, isWindows } from "std-env";
+import { isPreview } from "./config/env";
+import { currentLocales } from "./config/i18n";
+import { pwa } from "./config/pwa";
 
-const { resolve } = createResolver(import.meta.url)
+const { resolve } = createResolver(import.meta.url);
 
-const mockProxy = resolveModulePath('mocked-exports/proxy', { from: import.meta.url })
+const mockProxy = resolveModulePath("mocked-exports/proxy", { from: import.meta.url });
 
 export default defineNuxtConfig({
-    compatibilityDate: '2025-07-11',
+    compatibilityDate: "2025-07-11",
     typescript: {
         tsConfig: {
-            include: ['../tests/nuxt'],
-            exclude: ['../service-worker'],
+            include: ["../tests/nuxt"],
+            exclude: ["../service-worker"],
             compilerOptions: {
                 // TODO: enable this once we fix the issues
                 noUncheckedIndexedAccess: false,
@@ -25,7 +25,7 @@ export default defineNuxtConfig({
             },
         },
     },
-    modules: ['@vueuse/nuxt', '@unocss/nuxt', '@pinia/nuxt', '@vue-macros/nuxt', '@nuxtjs/i18n', '@nuxtjs/color-mode', '@unlazy/nuxt', '@nuxt/test-utils/module', ...(isDevelopment || isWindows ? [] : ['nuxt-security'])],
+    modules: ["@vueuse/nuxt", "@unocss/nuxt", "@pinia/nuxt", "@vue-macros/nuxt", "@nuxtjs/i18n", "@nuxtjs/color-mode", "@unlazy/nuxt", "@nuxt/test-utils/module", ...(isDevelopment || isWindows ? [] : ["nuxt-security"])],
     vue: {
         propsDestructure: true,
     },
@@ -48,18 +48,18 @@ export default defineNuxtConfig({
         // ref. https://github.com/elk-zone/elk/issues/3385#issuecomment-3335167005
         entryImportMap: false,
     },
-    css: ['@unocss/reset/tailwind.css', 'floating-vue/dist/style.css', '~/styles/default-theme.css', '~/styles/vars.css', '~/styles/global.css', '~/styles/scrollbars.css', '~/styles/tiptap.css', '~/styles/dropdown.css'],
+    css: ["@unocss/reset/tailwind.css", "floating-vue/dist/style.css", "~/styles/default-theme.css", "~/styles/vars.css", "~/styles/global.css", "~/styles/scrollbars.css", "~/styles/tiptap.css", "~/styles/dropdown.css"],
     alias: {
-        'querystring': 'rollup-plugin-node-polyfills/polyfills/qs',
-        'change-case': 'scule',
-        'semver': resolve('./mocks/semver'),
+        querystring: "rollup-plugin-node-polyfills/polyfills/qs",
+        "change-case": "scule",
+        semver: resolve("./mocks/semver"),
     },
     imports: {
-        dirs: ['./composables/masto', './composables/push-notifications', './composables/settings', './composables/tiptap/index.ts'],
+        dirs: ["./composables/masto", "./composables/push-notifications", "./composables/settings", "./composables/tiptap/index.ts"],
         imports: [
             {
-                name: 'useI18n',
-                from: '~/utils/i18n',
+                name: "useI18n",
+                from: "~/utils/i18n",
                 priority: 100,
             },
         ],
@@ -67,111 +67,111 @@ export default defineNuxtConfig({
     },
     vite: {
         define: {
-            'process.env.VSCODE_TEXTMATE_DEBUG': 'false',
-            'process.mock': ((!isCI || isPreview) && process.env.MOCK_USER) || 'false',
-            'process.test': 'false',
+            "process.env.VSCODE_TEXTMATE_DEBUG": "false",
+            "process.mock": ((!isCI || isPreview) && process.env.MOCK_USER) || "false",
+            "process.test": "false",
         },
         build: {
-            target: 'esnext',
+            target: "esnext",
         },
         optimizeDeps: {
             include: [
-                '@tiptap/vue-3',
-                'string-length',
-                'vue-virtual-scroller',
-                'emoji-mart',
-                'iso-639-1',
-                '@tiptap/extension-placeholder',
-                '@tiptap/extension-document',
-                '@tiptap/extension-paragraph',
-                '@tiptap/extension-text',
-                '@tiptap/extension-mention',
-                '@tiptap/extension-hard-break',
-                '@tiptap/extension-bold',
-                '@tiptap/extension-italic',
-                '@tiptap/extension-code',
-                '@tiptap/extension-history',
-                'prosemirror-state',
-                'browser-fs-access',
-                'blurhash',
-                '@vueuse/integrations/useFocusTrap',
-                '@tiptap/extension-code-block',
-                'prosemirror-highlight',
-                '@tiptap/core',
-                'tippy.js',
-                'prosemirror-highlight/shiki',
-                '@fnando/sparkline',
-                '@vueuse/gesture',
-                'github-reserved-names',
-                'file-saver',
-                'slimeform',
-                'vue-advanced-cropper',
-                'workbox-window',
-                'workbox-precaching',
-                'workbox-routing',
-                'workbox-cacheable-response',
-                'workbox-strategies',
-                'workbox-expiration',
+                "@tiptap/vue-3",
+                "string-length",
+                "vue-virtual-scroller",
+                "emoji-mart",
+                "iso-639-1",
+                "@tiptap/extension-placeholder",
+                "@tiptap/extension-document",
+                "@tiptap/extension-paragraph",
+                "@tiptap/extension-text",
+                "@tiptap/extension-mention",
+                "@tiptap/extension-hard-break",
+                "@tiptap/extension-bold",
+                "@tiptap/extension-italic",
+                "@tiptap/extension-code",
+                "@tiptap/extension-history",
+                "prosemirror-state",
+                "browser-fs-access",
+                "blurhash",
+                "@vueuse/integrations/useFocusTrap",
+                "@tiptap/extension-code-block",
+                "prosemirror-highlight",
+                "@tiptap/core",
+                "tippy.js",
+                "prosemirror-highlight/shiki",
+                "@fnando/sparkline",
+                "@vueuse/gesture",
+                "github-reserved-names",
+                "file-saver",
+                "slimeform",
+                "vue-advanced-cropper",
+                "workbox-window",
+                "workbox-precaching",
+                "workbox-routing",
+                "workbox-cacheable-response",
+                "workbox-strategies",
+                "workbox-expiration",
             ],
         },
     },
     postcss: {
         plugins: {
-            'postcss-nested': {},
+            "postcss-nested": {},
         },
     },
     appConfig: {
         storage: {
-            driver: process.env.NUXT_STORAGE_DRIVER ?? (isCI ? 'cloudflare' : 'fs'),
+            driver: process.env.NUXT_STORAGE_DRIVER ?? (isCI ? "cloudflare" : "fs"),
         },
     },
     runtimeConfig: {
-        adminKey: '',
+        adminKey: "",
         cloudflare: {
-            accountId: '',
-            namespaceId: '',
-            apiToken: '',
+            accountId: "",
+            namespaceId: "",
+            apiToken: "",
         },
         vercel: {
-            url: '',
-            token: '',
-            env: '',
-            base: '',
+            url: "",
+            token: "",
+            env: "",
+            base: "",
         },
         public: {
-            privacyPolicyUrl: '',
+            privacyPolicyUrl: "",
             // We use LibreTranslate (https://github.com/LibreTranslate/LibreTranslate) as
             // our default translation server #76
-            translateApi: '',
+            translateApi: "",
             // Use the instance where Elk has its Mastodon account as the default
-            defaultServer: 'm.webtoo.ls',
+            defaultServer: "m.webtoo.ls",
             singleInstance: false,
         },
         storage: {
-            fsBase: 'node_modules/.cache/app',
+            fsBase: "node_modules/.cache/app",
         },
     },
     routeRules: {
         // Static generation
-        '/': { prerender: true },
-        '/settings/**': { prerender: false },
+        "/": { prerender: true },
+        "/settings/**": { prerender: false },
         // incremental regeneration
-        '/api/list-servers': { swr: true },
+        "/api/list-servers": { swr: true },
         // CDN cache rules
-        '/manifest.webmanifest': {
+        "/manifest.webmanifest": {
             headers: {
-                'Content-Type': 'application/manifest+json',
-                'Cache-Control': 'public, max-age=0, must-revalidate',
+                "Content-Type": "application/manifest+json",
+                "Cache-Control": "public, max-age=0, must-revalidate",
             },
         },
     },
     nitro: {
         alias: {
-            'isomorphic-ws': mockProxy,
+            "isomorphic-ws": mockProxy,
         },
         esbuild: {
             options: {
-                target: 'esnext',
+                target: "esnext",
             },
         },
         prerender: {
@@ -179,79 +179,77 @@ export default defineNuxtConfig({
         },
         publicAssets: [
             {
-                dir: resolve('./public/avatars'),
+                dir: resolve("./public/avatars"),
                 maxAge: 24 * 60 * 60 * 30, // 30 days
-                baseURL: '/avatars',
+                baseURL: "/avatars",
             },
             {
-                dir: resolve('./public/emojis'),
+                dir: resolve("./public/emojis"),
                 maxAge: 24 * 60 * 60 * 15, // 15 days, matching service worker
-                baseURL: '/emojis',
+                baseURL: "/emojis",
             },
             {
-                dir: resolve('./public/fonts'),
+                dir: resolve("./public/fonts"),
                 maxAge: 24 * 60 * 60 * 365, // 1 year (versioned)
-                baseURL: '/fonts',
+                baseURL: "/fonts",
             },
         ],
     },
     sourcemap: isDevelopment,
     hooks: {
-        'prepare:types': function ({ references }) {
-            references.push({ types: '@types/wicg-file-system-access' })
+        "prepare:types": function ({ references }) {
+            references.push({ types: "@types/wicg-file-system-access" });
         },
-        'nitro:config': function (config) {
-            const nuxt = useNuxt()
-            config.virtual = config.virtual || {}
-            config.virtual['#storage-config'] = `export const driver = ${JSON.stringify(nuxt.options.appConfig.storage.driver)}`
+        "nitro:config": function (config) {
+            const nuxt = useNuxt();
+            config.virtual = config.virtual || {};
+            config.virtual["#storage-config"] = `export const driver = ${JSON.stringify(nuxt.options.appConfig.storage.driver)}`;
         },
-        'vite:extendConfig': function (config, { isServer }) {
+        "vite:extendConfig": function (config, { isServer }) {
             if (isServer) {
-                const alias = config.resolve!.alias as Record<string, string>
-                for (const dep of ['eventemitter3', 'isomorphic-ws']) alias[dep] = resolve('./mocks/class')
-                for (const dep of ['fuse.js']) alias[dep] = mockProxy
-                const resolver = createResolver(import.meta.url)
+                const alias = config.resolve!.alias as Record<string, string>;
+                for (const dep of ["eventemitter3", "isomorphic-ws"]) alias[dep] = resolve("./mocks/class");
+                for (const dep of ["fuse.js"]) alias[dep] = mockProxy;
+                const resolver = createResolver(import.meta.url);
 
                 config.plugins!.unshift({
-                    name: 'mock',
-                    enforce: 'pre',
+                    name: "mock",
+                    enforce: "pre",
                     resolveId(id) {
-                        if (id.match(/(^|\/)(@tiptap)\//))
-                            return resolver.resolve('./mocks/tiptap.ts')
-                        if (id.match(/(^|\/)(prosemirror)/))
-                            return resolver.resolve('./mocks/prosemirror.ts')
+                        if (id.match(/(^|\/)(@tiptap)\//)) return resolver.resolve("./mocks/tiptap.ts");
+                        if (id.match(/(^|\/)(prosemirror)/)) return resolver.resolve("./mocks/prosemirror.ts");
                     },
-                })
+                });
 
-                const noExternal = config.ssr!.noExternal as string[]
-                noExternal.push('masto', '@fnando/sparkline', 'vue-i18n', '@mastojs/ponyfills')
+                const noExternal = config.ssr!.noExternal as string[];
+                noExternal.push("masto", "@fnando/sparkline", "vue-i18n", "@mastojs/ponyfills");
             }
         },
     },
     app: {
         keepalive: true,
         head: {
-            viewport: 'width=device-width,initial-scale=1,viewport-fit=cover',
+            viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
             bodyAttrs: {
-                class: 'overflow-x-hidden',
+                class: "overflow-x-hidden",
             },
             link: [
-                { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
-                { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' },
-                { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+                { rel: "icon", href: "/favicon.ico", sizes: "any" },
+                { rel: "icon", type: "image/svg+xml", href: "/logo.svg" },
+                { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
             ],
             meta: [
-                { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+                { name: "apple-mobile-web-app-status-bar-style", content: "default" },
                 // open graph social image
-                { property: 'og:title', content: 'Elk' },
-                { property: 'og:description', content: 'A nimble Mastodon web client' },
-                { property: 'og:type', content: 'website' },
-                { property: 'og:image', content: 'https://elk.zone/elk-og.png' },
-                { property: 'og:image:width', content: '3800' },
-                { property: 'og:image:height', content: '1900' },
-                { property: 'og:site_name', content: 'Elk' },
-                { name: 'twitter:site', content: '@elk_zone' },
-                { name: 'twitter:card', content: 'summary_large_image' },
+                { property: "og:title", content: "Elk" },
+                { property: "og:description", content: "A nimble Mastodon web client" },
+                { property: "og:type", content: "website" },
+                { property: "og:image", content: "https://elk.zone/elk-og.png" },
+                { property: "og:image:width", content: "3800" },
+                { property: "og:image:height", content: "1900" },
+                { property: "og:site_name", content: "Elk" },
+                { name: "twitter:site", content: "@elk_zone" },
+                { name: "twitter:card", content: "summary_large_image" },
             ],
         },
     },
@@ -262,48 +260,48 @@ export default defineNuxtConfig({
         headers: {
             crossOriginEmbedderPolicy: false,
             contentSecurityPolicy: {
-                'default-src': ['\'self\''],
-                'base-uri': ['\'self\''],
-                'connect-src': ['\'self\'', 'https:', 'http:', 'wss:', 'ws:'],
-                'font-src': ['\'self\''],
-                'form-action': ['\'none\''],
-                'frame-ancestors': ['\'none\''],
-                'frame-src': ['https:'],
-                'img-src': ['\'self\'', 'https:', 'http:', 'data:', 'blob:'],
-                'manifest-src': ['\'self\''],
-                'media-src': ['\'self\'', 'https:', 'http:'],
-                'object-src': ['\'none\''],
-                'script-src': ['\'self\'', '\'unsafe-inline\'', '\'wasm-unsafe-eval\''],
-                'script-src-attr': ['\'none\''],
-                'style-src': ['\'self\'', '\'unsafe-inline\''],
-                'upgrade-insecure-requests': true,
+                "default-src": ["'self'"],
+                "base-uri": ["'self'"],
+                "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
+                "font-src": ["'self'"],
+                "form-action": ["'none'"],
+                "frame-ancestors": ["'none'"],
+                "frame-src": ["https:"],
+                "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
+                "manifest-src": ["'self'"],
+                "media-src": ["'self'", "https:", "http:"],
+                "object-src": ["'none'"],
+                "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
+                "script-src-attr": ["'none'"],
+                "style-src": ["'self'", "'unsafe-inline'"],
+                "upgrade-insecure-requests": true,
             },
             permissionsPolicy: {
-                fullscreen: '*',
+                fullscreen: "*",
             },
         },
         rateLimiter: false,
     },
-    colorMode: { classSuffix: '' },
+    colorMode: { classSuffix: "" },
     i18n: {
         locales: currentLocales,
-        strategy: 'no_prefix',
+        strategy: "no_prefix",
         detectBrowserLanguage: false,
         // relative to i18n dir on rootDir: not yet v4 compat layout
-        langDir: '../locales',
-        defaultLocale: 'en-US',
-        vueI18n: '../config/i18n.config.ts',
+        langDir: "../locales",
+        defaultLocale: "en-US",
+        vueI18n: "../config/i18n.config.ts",
     },
     pwa,
     unlazy: {
         ssr: false,
     },
-})
+});
 
-declare module '@nuxt/schema' {
+declare module "@nuxt/schema" {
     interface AppConfig {
-        storage: any
-        env: BuildInfo['env']
-        buildInfo: BuildInfo
+        storage: any;
+        env: BuildInfo["env"];
+        buildInfo: BuildInfo;
     }
 }

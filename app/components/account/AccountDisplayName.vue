@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { hideEmojis = false } = defineProps<{
-    account: mastodon.v1.Account
-    hideEmojis?: boolean
-}>()
+    account: mastodon.v1.Account;
+    hideEmojis?: boolean;
+}>();
 </script>
 
 <template>

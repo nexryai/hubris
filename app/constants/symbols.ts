@@ -1,5 +1,5 @@
-import type { InjectionKey } from 'vue'
+import type { InjectionKey } from "vue";
 
 export const InjectionKeyDropdownContext: InjectionKey<{
-    hide: () => void
-}> = Symbol('dropdown-context')
+    hide: () => void;
+}> = Symbol("dropdown-context");

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { LocaleObject } from '@nuxtjs/i18n'
-import type { ComputedRef } from 'vue'
+import type { LocaleObject } from "@nuxtjs/i18n";
+import type { ComputedRef } from "vue";
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
-const { locales } = useI18n() as { locales: ComputedRef<LocaleObject[]> }
+const { locales } = useI18n() as { locales: ComputedRef<LocaleObject[]> };
 </script>
 
 <template>

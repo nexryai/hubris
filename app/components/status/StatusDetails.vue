@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { actions = true, ...props } = defineProps<{
-    status: mastodon.v1.Status
-    newer?: mastodon.v1.Status
-    command?: boolean
-    actions?: boolean
-}>()
+    status: mastodon.v1.Status;
+    newer?: mastodon.v1.Status;
+    command?: boolean;
+    actions?: boolean;
+}>();
 
 defineEmits<{
-    (event: 'refetchStatus'): void
-}>()
+    (event: "refetchStatus"): void;
+}>();
 
 const status = computed(() => {
-    if (props.status.reblog && props.status.reblog)
-        return props.status.reblog
-    return props.status
-})
+    if (props.status.reblog && props.status.reblog) return props.status.reblog;
+    return props.status;
+});
 
-const createdAt = useFormattedDateTime(status.value.createdAt)
+const createdAt = useFormattedDateTime(status.value.createdAt);
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${getDisplayName(status.value.account)} ${t('common.in')} ${t('app_name')}: "${removeHTMLTags(status.value.content) || ''}"`,
-})
+    title: () => `${getDisplayName(status.value.account)} ${t("common.in")} ${t("app_name")}: "${removeHTMLTags(status.value.content) || ""}"`,
+});
 </script>
 
 <template>

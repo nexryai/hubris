@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import reservedNames from 'github-reserved-names'
+import type { mastodon } from "masto";
+import reservedNames from "github-reserved-names";
 
 const { card } = defineProps<{
-    card: mastodon.v1.PreviewCard
-}>()
+    card: mastodon.v1.PreviewCard;
+}>();
 
-type UrlType = 'user' | 'repo' | 'issue' | 'pull'
+type UrlType = "user" | "repo" | "issue" | "pull";
 interface Meta {
-    type: UrlType
-    user?: string
-    titleUrl: string
-    avatar: string
-    details: string
-    repo?: string
-    number?: string
+    type: UrlType;
+    user?: string;
+    titleUrl: string;
+    avatar: string;
+    details: string;
+    repo?: string;
+    number?: string;
     author?: {
-        avatar: string
-        user: string
-    }
+        avatar: string;
+        user: string;
+    };
 }
 
 // Supported paths
@@ -27,59 +27,56 @@ interface Meta {
 // /user/repo/issues/number
 // /user/repo/pull/number
 // /sponsors/user
-const supportedReservedRoutes = ['sponsors']
+const supportedReservedRoutes = ["sponsors"];
 
 const meta = computed(() => {
-    const { url } = card
-    const path = url.split('https://github.com/')[1]
-    const [firstName, secondName] = path?.split('/') || []
-    if (!firstName || (reservedNames.check(firstName) && !supportedReservedRoutes.includes(firstName)))
-        return undefined
+    const { url } = card;
+    const path = url.split("https://github.com/")[1];
+    const [firstName, secondName] = path?.split("/") || [];
+    if (!firstName || (reservedNames.check(firstName) && !supportedReservedRoutes.includes(firstName))) return undefined;
 
-    const firstIsUser = firstName && !supportedReservedRoutes.includes(firstName)
-    const user = firstIsUser ? firstName : secondName
-    const repo = firstIsUser ? secondName : undefined
+    const firstIsUser = firstName && !supportedReservedRoutes.includes(firstName);
+    const user = firstIsUser ? firstName : secondName;
+    const repo = firstIsUser ? secondName : undefined;
 
-    let type: UrlType = repo ? 'repo' : 'user'
-    let number: string | undefined
-    let details = (card.title ?? '').replace('GitHub - ', '').split(' · ')[0]
+    let type: UrlType = repo ? "repo" : "user";
+    let number: string | undefined;
+    let details = (card.title ?? "").replace("GitHub - ", "").split(" · ")[0];
 
     if (repo) {
-        const repoPath = `${user}/${repo}`
-        details = details.replace(`${repoPath}: `, '')
-        const inRepoPath = path.split(`${repoPath}/`)?.[1]
+        const repoPath = `${user}/${repo}`;
+        details = details.replace(`${repoPath}: `, "");
+        const inRepoPath = path.split(`${repoPath}/`)?.[1];
         if (inRepoPath) {
-            number = inRepoPath.match(/issues\/(\d+)/)?.[1]
+            number = inRepoPath.match(/issues\/(\d+)/)?.[1];
             if (number) {
-                type = 'issue'
-            }
-            else {
-                number = inRepoPath.match(/pull\/(\d+)/)?.[1]
-                if (number)
-                    type = 'pull'
+                type = "issue";
+            } else {
+                number = inRepoPath.match(/pull\/(\d+)/)?.[1];
+                if (number) type = "pull";
             }
         }
     }
 
-    const avatar = `https://github.com/${user}.png?size=256`
+    const avatar = `https://github.com/${user}.png?size=256`;
 
-    const author = card.authorName
+    const author = card.authorName;
     return {
         type,
         user,
-        titleUrl: `https://github.com/${user}${repo ? `/${repo}` : ''}`,
+        titleUrl: `https://github.com/${user}${repo ? `/${repo}` : ""}`,
         details,
         repo,
         number,
         avatar,
         author: author
             ? {
-                    avatar: `https://github.com/${author}.png?size=64`,
-                    user: author,
-                }
+                  avatar: `https://github.com/${author}.png?size=64`,
+                  user: author,
+              }
             : undefined,
-    } satisfies Meta
-})
+    } satisfies Meta;
+});
 </script>
 
 <template>

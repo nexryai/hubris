@@ -1,18 +1,17 @@
 <script setup lang="ts">
 definePageMeta({
-    middleware: 'auth',
-    alias: ['/signin/callback'],
-})
+    middleware: "auth",
+    alias: ["/signin/callback"],
+});
 
-const route = useRoute()
-const router = useRouter()
-if (import.meta.client && route.path === '/signin/callback')
-    router.push('/home')
+const route = useRoute();
+const router = useRouter();
+if (import.meta.client && route.path === "/signin/callback") router.push("/home");
 
-const { t } = useI18n()
+const { t } = useI18n();
 useHydratedHead({
-    title: () => t('nav.home'),
-})
+    title: () => t("nav.home"),
+});
 </script>
 
 <template>

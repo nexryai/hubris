@@ -1,56 +1,54 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { toggleBlockAccount, toggleBlockDomain, toggleMuteAccount } from '~/composables/masto/relationship'
+import type { mastodon } from "masto";
+import { toggleBlockAccount, toggleBlockDomain, toggleMuteAccount } from "~/composables/masto/relationship";
 
 const { account } = defineProps<{
-    account: mastodon.v1.Account
-    command?: boolean
-}>()
+    account: mastodon.v1.Account;
+    command?: boolean;
+}>();
 const emit = defineEmits<{
-    (evt: 'addNote'): void
-    (evt: 'removeNote'): void
-}>()
+    (evt: "addNote"): void;
+    (evt: "removeNote"): void;
+}>();
 
-const relationship = useRelationship(account)
+const relationship = useRelationship(account);
 
-const isSelf = useSelfAccount(() => account)
+const isSelf = useSelfAccount(() => account);
 
-const { t } = useI18n()
-const { client } = useMasto()
-const useStarFavoriteIcon = usePreferences('useStarFavoriteIcon')
-const { share, isSupported: isShareSupported } = useShare()
+const { t } = useI18n();
+const { client } = useMasto();
+const useStarFavoriteIcon = usePreferences("useStarFavoriteIcon");
+const { share, isSupported: isShareSupported } = useShare();
 
 function shareAccount() {
-    share({ url: location.href })
+    share({ url: location.href });
 }
 
 async function toggleReblogs() {
     if (!relationship.value!.showingReblogs) {
         const dialogChoice = await openConfirmDialog({
-            title: t('confirm.show_reblogs.title'),
-            description: t('confirm.show_reblogs.description', [account.acct]),
-            confirm: t('confirm.show_reblogs.confirm'),
-            cancel: t('confirm.show_reblogs.cancel'),
-        })
-        if (dialogChoice.choice !== 'confirm')
-            return
+            title: t("confirm.show_reblogs.title"),
+            description: t("confirm.show_reblogs.description", [account.acct]),
+            confirm: t("confirm.show_reblogs.confirm"),
+            cancel: t("confirm.show_reblogs.cancel"),
+        });
+        if (dialogChoice.choice !== "confirm") return;
     }
 
-    const showingReblogs = !relationship.value?.showingReblogs
-    relationship.value = await client.value.v1.accounts.$select(account.id).follow({ reblogs: showingReblogs })
+    const showingReblogs = !relationship.value?.showingReblogs;
+    relationship.value = await client.value.v1.accounts.$select(account.id).follow({ reblogs: showingReblogs });
 }
 
 async function addUserNote() {
-    emit('addNote')
+    emit("addNote");
 }
 
 async function removeUserNote() {
-    if (!relationship.value!.note || relationship.value!.note.length === 0)
-        return
+    if (!relationship.value!.note || relationship.value!.note.length === 0) return;
 
-    const newNote = await client.value.v1.accounts.$select(account.id).note.create({ comment: '' })
-    relationship.value!.note = newNote.note
-    emit('removeNote')
+    const newNote = await client.value.v1.accounts.$select(account.id).note.create({ comment: "" });
+    relationship.value!.note = newNote.note;
+    emit("removeNote");
 }
 </script>
 

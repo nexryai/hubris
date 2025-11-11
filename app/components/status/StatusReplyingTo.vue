@@ -1,47 +1,45 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
-import { fetchAccountById } from '~/composables/cache'
+import type { mastodon } from "masto";
+import { fetchAccountById } from "~/composables/cache";
 
-type WatcherType = [status?: mastodon.v1.Status, v?: boolean]
+type WatcherType = [status?: mastodon.v1.Status, v?: boolean];
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-    isSelfReply: boolean
-}>()
+    status: mastodon.v1.Status;
+    isSelfReply: boolean;
+}>();
 
-const link = ref()
-const targetIsVisible = ref(false)
-const isSelf = computed(() => status.inReplyToAccountId === status.account.id)
-const account = ref<mastodon.v1.Account | null | undefined>(isSelf.value ? status.account : undefined)
+const link = ref();
+const targetIsVisible = ref(false);
+const isSelf = computed(() => status.inReplyToAccountId === status.account.id);
+const account = ref<mastodon.v1.Account | null | undefined>(isSelf.value ? status.account : undefined);
 
 useIntersectionObserver(link, ([{ intersectionRatio }]) => {
-    targetIsVisible.value = intersectionRatio > 0.1
-})
+    targetIsVisible.value = intersectionRatio > 0.1;
+});
 
 watch(
     () => [status, targetIsVisible.value] satisfies WatcherType,
     ([newStatus, newVisible]) => {
         if (newStatus.account && newStatus.inReplyToAccountId === newStatus.account.id) {
-            account.value = newStatus.account
-            return
+            account.value = newStatus.account;
+            return;
         }
 
-        if (!newVisible)
-            return
+        if (!newVisible) return;
 
-        const newId = newStatus.inReplyToAccountId
+        const newId = newStatus.inReplyToAccountId;
 
         if (newId) {
             fetchAccountById(newStatus.inReplyToAccountId).then((acc) => {
-                if (newId === status.inReplyToAccountId)
-                    account.value = acc
-            })
-            return
+                if (newId === status.inReplyToAccountId) account.value = acc;
+            });
+            return;
         }
-        account.value = undefined
+        account.value = undefined;
     },
-    { immediate: true, flush: 'post' },
-)
+    { immediate: true, flush: "post" },
+);
 </script>
 
 <template>

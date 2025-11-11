@@ -1,16 +1,16 @@
 <script setup lang="ts">
 defineProps<{
-    editing?: boolean
-}>()
+    editing?: boolean;
+}>();
 
 const modelValue = defineModel<string>({
     required: true,
-})
+});
 
-const currentVisibility = computed(() => statusVisibilities.find(v => v.value === modelValue.value) || statusVisibilities[0])
+const currentVisibility = computed(() => statusVisibilities.find((v) => v.value === modelValue.value) || statusVisibilities[0]);
 
 function chooseVisibility(visibility: string) {
-    modelValue.value = visibility
+    modelValue.value = visibility;
 }
 </script>
 

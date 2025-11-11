@@ -1,7 +1,6 @@
-let servers: string[]
+let servers: string[];
 
 export default defineEventHandler(async () => {
-    if (!servers)
-        servers = await listServers()
-    return servers
-})
+    if (!servers) servers = await listServers();
+    return servers;
+});

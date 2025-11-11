@@ -1,12 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
-    key: route => `${route.params.server ?? currentServer.value}:${route.params.account}`,
-})
+    key: (route) => `${route.params.server ?? currentServer.value}:${route.params.account}`,
+});
 
-const params = useRoute().params
-const accountName = computed(() => toShortHandle(params.account as string))
+const params = useRoute().params;
+const accountName = computed(() => toShortHandle(params.account as string));
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const {
     data: account,
@@ -16,16 +16,16 @@ const {
     () => `account-${accountName.value}`,
     () => fetchAccountByHandle(accountName.value).catch(() => null),
     { immediate: import.meta.client, default: () => shallowRef() },
-)
-const relationship = computed(() => (account.value ? useRelationship(account.value).value : undefined))
+);
+const relationship = computed(() => (account.value ? useRelationship(account.value).value : undefined));
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
 onReactivated(() => {
     // Silently update data when reentering the page
     // The user will see the previous content first, and any changes will be updated to the UI when the request is completed
-    refresh()
-})
+    refresh();
+});
 </script>
 
 <template>

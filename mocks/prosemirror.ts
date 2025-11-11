@@ -1,8 +1,8 @@
-import proxy from 'mocked-exports/proxy'
+import proxy from "mocked-exports/proxy";
 
-export const Plugin = proxy
-export const PluginKey = proxy
-export const createParser = proxy
-export const createHighlightPlugin = proxy
+export const Plugin = proxy;
+export const PluginKey = proxy;
+export const createParser = proxy;
+export const createHighlightPlugin = proxy;
 
-export { proxy as default }
+export { proxy as default };

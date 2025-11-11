@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { ErrorDialogData } from '#shared/types'
+import type { ErrorDialogData } from "#shared/types";
 
-defineProps<ErrorDialogData>()
+defineProps<ErrorDialogData>();
 </script>
 
 <template>

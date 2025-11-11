@@ -1,19 +1,19 @@
 <script setup lang="ts">
-setupPageHeader()
-provideGlobalCommands()
+setupPageHeader();
+provideGlobalCommands();
 
-const route = useRoute()
+const route = useRoute();
 
-if (import.meta.server && !route.path.startsWith('/settings')) {
-    const url = useRequestURL()
+if (import.meta.server && !route.path.startsWith("/settings")) {
+    const url = useRequestURL();
 
     useHead({
-        meta: [{ property: 'og:url', content: `${url.origin}${route.path}` }],
-    })
+        meta: [{ property: "og:url", content: `${url.origin}${route.path}` }],
+    });
 }
 
 // We want to trigger rerendering the page when account changes
-const key = computed(() => `${currentUser.value?.server ?? currentServer.value}:${currentUser.value?.account.id || ''}`)
+const key = computed(() => `${currentUser.value?.server ?? currentServer.value}:${currentUser.value?.account.id || ""}`);
 </script>
 
 <template>

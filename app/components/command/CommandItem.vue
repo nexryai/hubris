@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { ResolvedCommand } from '~/composables/command'
+import type { ResolvedCommand } from "~/composables/command";
 
 const { active = false } = defineProps<{
-    cmd: ResolvedCommand
-    index: number
-    active?: boolean
-}>()
+    cmd: ResolvedCommand;
+    index: number;
+    active?: boolean;
+}>();
 
 const emit = defineEmits<{
-    (event: 'activate'): void
-}>()
+    (event: "activate"): void;
+}>();
 </script>
 
 <template>

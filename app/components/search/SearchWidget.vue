@@ -1,21 +1,20 @@
 <script setup lang="ts">
-const query = ref('')
-const { accounts, hashtags, loading, statuses } = useSearch(query)
-const index = ref(0)
+const query = ref("");
+const { accounts, hashtags, loading, statuses } = useSearch(query);
+const index = ref(0);
 
-const { t } = useI18n()
-const el = ref<HTMLElement>()
-const input = ref<HTMLInputElement>()
-const router = useRouter()
-const { focused } = useFocusWithin(el)
+const { t } = useI18n();
+const el = ref<HTMLElement>();
+const input = ref<HTMLInputElement>();
+const router = useRouter();
+const { focused } = useFocusWithin(el);
 
 defineExpose({
     input,
-})
+});
 
 const results = computed(() => {
-    if (query.value.length === 0)
-        return []
+    if (query.value.length === 0) return [];
 
     const results = [
         ...hashtags.value.slice(0, 3),
@@ -30,35 +29,34 @@ const results = computed(() => {
         //     label: `Search for ${query.value}`,
         //   },
         // },
-    ]
+    ];
 
-    return results
-})
+    return results;
+});
 
 // Reset index when results change
-watch([results, focused], () => (index.value = -1))
+watch([results, focused], () => (index.value = -1));
 
 function shift(delta: number) {
-    return (index.value = (index.value + (delta % results.value.length) + results.value.length) % results.value.length)
+    return (index.value = (index.value + (delta % results.value.length) + results.value.length) % results.value.length);
 }
 
 function activate() {
-    const currentIndex = index.value
+    const currentIndex = index.value;
 
-    if (query.value.length === 0)
-        return
+    if (query.value.length === 0) return;
 
     // Disable redirection until search page is implemented
     if (currentIndex === -1) {
-        index.value = 0
+        index.value = 0;
         // router.push(`/search?q=${query.value}`)
-        return
+        return;
     }
 
-    (document.activeElement as HTMLElement).blur()
-    index.value = -1
+    (document.activeElement as HTMLElement).blur();
+    index.value = -1;
 
-    router.push(results.value[currentIndex].to)
+    router.push(results.value[currentIndex].to);
 }
 </script>
 

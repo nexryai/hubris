@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => t('title.federated_timeline'),
-})
+    title: () => t("title.federated_timeline"),
+});
 </script>
 
 <template>

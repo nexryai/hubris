@@ -1,129 +1,129 @@
 <script setup lang="ts">
-const emit = defineEmits(['close'])
-const { t } = useI18n()
+const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 /* TODOs:
  * - I18n
  */
 
 interface ShortcutDef {
-    keys: string[]
-    isSequence: boolean
+    keys: string[];
+    isSequence: boolean;
 }
 
 interface ShortcutItem {
-    description: string
-    shortcut: ShortcutDef
+    description: string;
+    shortcut: ShortcutDef;
 }
 
 interface ShortcutItemGroup {
-    name: string
-    items: ShortcutItem[]
+    name: string;
+    items: ShortcutItem[];
 }
 
-const isMac = useIsMac()
-const modifierKeyName = computed(() => (isMac.value ? '⌘' : 'Ctrl'))
+const isMac = useIsMac();
+const modifierKeyName = computed(() => (isMac.value ? "⌘" : "Ctrl"));
 
 const shortcutItemGroups = computed<ShortcutItemGroup[]>(() => [
     {
-        name: t('magic_keys.groups.navigation.title'),
+        name: t("magic_keys.groups.navigation.title"),
         items: [
             {
-                description: t('magic_keys.groups.navigation.shortcut_help'),
-                shortcut: { keys: ['?'], isSequence: false },
+                description: t("magic_keys.groups.navigation.shortcut_help"),
+                shortcut: { keys: ["?"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.navigation.next_status'),
-                shortcut: { keys: ['j'], isSequence: false },
+                description: t("magic_keys.groups.navigation.next_status"),
+                shortcut: { keys: ["j"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.navigation.previous_status'),
-                shortcut: { keys: ['k'], isSequence: false },
+                description: t("magic_keys.groups.navigation.previous_status"),
+                shortcut: { keys: ["k"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_search'),
-                shortcut: { keys: ['/'], isSequence: false },
+                description: t("magic_keys.groups.navigation.go_to_search"),
+                shortcut: { keys: ["/"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_home'),
-                shortcut: { keys: ['g', 'h'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_home"),
+                shortcut: { keys: ["g", "h"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_notifications'),
-                shortcut: { keys: ['g', 'n'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_notifications"),
+                shortcut: { keys: ["g", "n"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_conversations'),
-                shortcut: { keys: ['g', 'c'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_conversations"),
+                shortcut: { keys: ["g", "c"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_favourites'),
-                shortcut: { keys: ['g', 'f'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_favourites"),
+                shortcut: { keys: ["g", "f"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_bookmarks'),
-                shortcut: { keys: ['g', 'b'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_bookmarks"),
+                shortcut: { keys: ["g", "b"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_explore'),
-                shortcut: { keys: ['g', 'e'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_explore"),
+                shortcut: { keys: ["g", "e"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_local'),
-                shortcut: { keys: ['g', 'l'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_local"),
+                shortcut: { keys: ["g", "l"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_federated'),
-                shortcut: { keys: ['g', 't'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_federated"),
+                shortcut: { keys: ["g", "t"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_lists'),
-                shortcut: { keys: ['g', 'i'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_lists"),
+                shortcut: { keys: ["g", "i"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_settings'),
-                shortcut: { keys: ['g', 's'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_settings"),
+                shortcut: { keys: ["g", "s"], isSequence: true },
             },
             {
-                description: t('magic_keys.groups.navigation.go_to_profile'),
-                shortcut: { keys: ['g', 'p'], isSequence: true },
+                description: t("magic_keys.groups.navigation.go_to_profile"),
+                shortcut: { keys: ["g", "p"], isSequence: true },
             },
         ],
     },
     {
-        name: t('magic_keys.groups.actions.title'),
+        name: t("magic_keys.groups.actions.title"),
         items: [
             {
-                description: t('magic_keys.groups.actions.search'),
-                shortcut: { keys: [modifierKeyName.value, 'k'], isSequence: false },
+                description: t("magic_keys.groups.actions.search"),
+                shortcut: { keys: [modifierKeyName.value, "k"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.actions.command_mode'),
-                shortcut: { keys: [modifierKeyName.value, '/'], isSequence: false },
+                description: t("magic_keys.groups.actions.command_mode"),
+                shortcut: { keys: [modifierKeyName.value, "/"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.actions.compose'),
-                shortcut: { keys: ['c'], isSequence: false },
+                description: t("magic_keys.groups.actions.compose"),
+                shortcut: { keys: ["c"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.actions.show_new_items'),
-                shortcut: { keys: ['.'], isSequence: false },
+                description: t("magic_keys.groups.actions.show_new_items"),
+                shortcut: { keys: ["."], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.actions.favourite'),
-                shortcut: { keys: ['f'], isSequence: false },
+                description: t("magic_keys.groups.actions.favourite"),
+                shortcut: { keys: ["f"], isSequence: false },
             },
             {
-                description: t('magic_keys.groups.actions.boost'),
-                shortcut: { keys: ['b'], isSequence: false },
+                description: t("magic_keys.groups.actions.boost"),
+                shortcut: { keys: ["b"], isSequence: false },
             },
         ],
     },
     {
-        name: t('magic_keys.groups.media.title'),
+        name: t("magic_keys.groups.media.title"),
         items: [],
     },
-])
+]);
 </script>
 
 <template>

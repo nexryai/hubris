@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
+import { NodeViewContent, nodeViewProps, NodeViewWrapper } from "@tiptap/vue-3";
 
-const { node, updateAttributes } = defineProps(nodeViewProps)
+const { node, updateAttributes } = defineProps(nodeViewProps);
 
-const languages = ['c', 'cpp', 'csharp', 'css', 'dart', 'go', 'html', 'java', 'javascript', 'jsx', 'kotlin', 'python', 'rust', 'svelte', 'swift', 'tsx', 'typescript', 'vue']
+const languages = ["c", "cpp", "csharp", "css", "dart", "go", "html", "java", "javascript", "jsx", "kotlin", "python", "rust", "svelte", "swift", "tsx", "typescript", "vue"];
 
 const selectedLanguage = computed({
     get() {
-        return node.attrs.language
+        return node.attrs.language;
     },
     set(language) {
-        updateAttributes({ language })
+        updateAttributes({ language });
     },
-})
+});
 </script>
 
 <template>

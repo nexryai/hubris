@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { account, list } = defineProps<{
-    account: mastodon.v1.Account
-    hoverCard?: boolean
-    list: string
-}>()
+    account: mastodon.v1.Account;
+    hoverCard?: boolean;
+    list: string;
+}>();
 
-cacheAccount(account)
+cacheAccount(account);
 
-const client = useMastoClient()
+const client = useMastoClient();
 
-const isRemoved = ref(false)
+const isRemoved = ref(false);
 
 async function edit() {
     try {
-        if (isRemoved.value)
-            await client.v1.lists.$select(list).accounts.create({ accountIds: [account.id] })
-        else await client.v1.lists.$select(list).accounts.remove({ accountIds: [account.id] })
-        isRemoved.value = !isRemoved.value
-    }
-    catch (err) {
-        console.error(err)
+        if (isRemoved.value) await client.v1.lists.$select(list).accounts.create({ accountIds: [account.id] });
+        else await client.v1.lists.$select(list).accounts.remove({ accountIds: [account.id] });
+        isRemoved.value = !isRemoved.value;
+    } catch (err) {
+        console.error(err);
     }
 }
 </script>

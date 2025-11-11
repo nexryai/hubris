@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { InjectionKeyDropdownContext } from '~/constants/symbols'
+import { InjectionKeyDropdownContext } from "~/constants/symbols";
 
 defineProps<{
-    placement?: string
-    autoBoundaryMaxSize?: boolean
-}>()
+    placement?: string;
+    autoBoundaryMaxSize?: boolean;
+}>();
 
-const dropdown = ref<any>()
-const colorMode = useColorMode()
+const dropdown = ref<any>();
+const colorMode = useColorMode();
 
 function hide() {
-    return dropdown.value.hide()
+    return dropdown.value.hide();
 }
 provide(InjectionKeyDropdownContext, {
     hide,
-})
+});
 
 defineExpose({
     hide,
-})
+});
 </script>
 
 <template>

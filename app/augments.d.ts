@@ -1,19 +1,19 @@
-export {}
+export {};
 
-declare module '#app' {
+declare module "#app" {
     interface PageMeta {
-        wideLayout?: boolean
+        wideLayout?: boolean;
     }
 
     interface RuntimeNuxtHooks {
-        'elk-logo:click': () => void
+        "elk-logo:click": () => void;
     }
 }
 
 declare global {
     namespace NodeJS {
         interface Process {
-            mock?: Record<string, any>
+            mock?: Record<string, any>;
         }
     }
 }

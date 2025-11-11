@@ -1,33 +1,31 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { tag } = defineProps<{
-    tag: mastodon.v1.Tag
-}>()
+    tag: mastodon.v1.Tag;
+}>();
 
 const emit = defineEmits<{
-    (event: 'change'): void
-}>()
+    (event: "change"): void;
+}>();
 
-const { client } = useMasto()
+const { client } = useMasto();
 
 async function toggleFollowTag() {
     // We save the state so be can do an optimistic UI update, but fallback to the previous state if the API call fails
-    const previousFollowingState = tag.following
+    const previousFollowingState = tag.following;
 
     // eslint-disable-next-line vue/no-mutating-props
-    tag.following = !tag.following
+    tag.following = !tag.following;
 
     try {
-        if (previousFollowingState)
-            await client.value.v1.tags.$select(tag.name).unfollow()
-        else await client.value.v1.tags.$select(tag.name).follow()
+        if (previousFollowingState) await client.value.v1.tags.$select(tag.name).unfollow();
+        else await client.value.v1.tags.$select(tag.name).follow();
 
-        emit('change')
-    }
-    catch {
+        emit("change");
+    } catch {
         // eslint-disable-next-line vue/no-mutating-props
-        tag.following = previousFollowingState
+        tag.following = previousFollowingState;
     }
 }
 </script>

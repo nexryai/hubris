@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { STORAGE_KEY_HIDE_EXPLORE_NEWS_TIPS, STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE } from '~/constants'
+import { STORAGE_KEY_HIDE_EXPLORE_NEWS_TIPS, STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE } from "~/constants";
 
-const { t } = useI18n()
-const route = useRoute()
+const { t } = useI18n();
+const route = useRoute();
 
-const paginator = useMastoClient().v1.trends.links.list()
+const paginator = useMastoClient().v1.trends.links.list();
 
-const hideNewsTips = useLocalStorage(STORAGE_KEY_HIDE_EXPLORE_NEWS_TIPS, false)
+const hideNewsTips = useLocalStorage(STORAGE_KEY_HIDE_EXPLORE_NEWS_TIPS, false);
 
 useHydratedHead({
-    title: () => `${t('tab.news')} | ${t('nav.explore')}`,
-})
+    title: () => `${t("tab.news")} | ${t("nav.explore")}`,
+});
 
-const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, '')
-lastAccessedExploreRoute.value = route.path.replace(/(.*\/explore\/?)/, '')
+const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, "");
+lastAccessedExploreRoute.value = route.path.replace(/(.*\/explore\/?)/, "");
 
 onActivated(() => {
-    lastAccessedExploreRoute.value = route.path.replace(/(.*\/explore\/?)/, '')
-})
+    lastAccessedExploreRoute.value = route.path.replace(/(.*\/explore\/?)/, "");
+});
 </script>
 
 <template>

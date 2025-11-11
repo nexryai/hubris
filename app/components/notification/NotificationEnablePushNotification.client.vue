@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core'
+import { useMediaQuery } from "@vueuse/core";
 
 defineProps<{
-    closeableHeader?: boolean
-    busy?: boolean
-    animate?: boolean
-}>()
+    closeableHeader?: boolean;
+    busy?: boolean;
+    animate?: boolean;
+}>();
 
-defineEmits(['hide', 'subscribe'])
+defineEmits(["hide", "subscribe"]);
 
 defineSlots<{
-    error: (props: object) => void
-}>()
+    error: (props: object) => void;
+}>();
 
-const xl = useMediaQuery('(min-width: 1280px)')
+const xl = useMediaQuery("(min-width: 1280px)");
 
-const isLegacyAccount = computed(() => !currentUser.value?.vapidKey)
+const isLegacyAccount = computed(() => !currentUser.value?.vapidKey);
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineProps<{
-    edit: mastodon.v1.StatusEdit
-}>()
+    edit: mastodon.v1.StatusEdit;
+}>();
 </script>
 
 <template>

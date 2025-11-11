@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ConfirmDialogChoice } from '#shared/types'
-import type { mastodon } from 'masto'
-import { isCommandPanelOpen, isConfirmDialogOpen, isEditHistoryDialogOpen, isErrorDialogOpen, isFavouritedBoostedByDialogOpen, isKeyboardShortcutsDialogOpen, isMediaPreviewOpen, isPreviewHelpOpen, isPublishDialogOpen, isReportDialogOpen, isSigninDialogOpen } from '~/composables/dialog'
+import type { ConfirmDialogChoice } from "#shared/types";
+import type { mastodon } from "masto";
+import { isCommandPanelOpen, isConfirmDialogOpen, isEditHistoryDialogOpen, isErrorDialogOpen, isFavouritedBoostedByDialogOpen, isKeyboardShortcutsDialogOpen, isMediaPreviewOpen, isPreviewHelpOpen, isPublishDialogOpen, isReportDialogOpen, isSigninDialogOpen } from "~/composables/dialog";
 
-const isMac = useIsMac()
+const isMac = useIsMac();
 
 // TODO: temporary, await for keybind system
 // open search panel
@@ -11,33 +11,33 @@ const isMac = useIsMac()
 // open command panel
 // listen to ctrl+/ on windows/linux or cmd+/ on mac
 // or shift+ctrl+k on windows/linux or shift+cmd+k on mac
-useEventListener('keydown', (e: KeyboardEvent) => {
-    if ((e.key === 'k' || e.key === 'л') && (isMac.value ? e.metaKey : e.ctrlKey)) {
-        e.preventDefault()
-        openCommandPanel(e.shiftKey)
+useEventListener("keydown", (e: KeyboardEvent) => {
+    if ((e.key === "k" || e.key === "л") && (isMac.value ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        openCommandPanel(e.shiftKey);
     }
-    if ((e.key === '/' || e.key === ',') && (isMac.value ? e.metaKey : e.ctrlKey)) {
-        e.preventDefault()
-        openCommandPanel(true)
+    if ((e.key === "/" || e.key === ",") && (isMac.value ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        openCommandPanel(true);
     }
-})
+});
 
 function handlePublished(status: mastodon.v1.Status) {
-    lastPublishDialogStatus.value = status
-    isPublishDialogOpen.value = false
+    lastPublishDialogStatus.value = status;
+    isPublishDialogOpen.value = false;
 }
 
 function handlePublishClose() {
-    lastPublishDialogStatus.value = null
+    lastPublishDialogStatus.value = null;
 }
 
 function handleConfirmChoice(choice: ConfirmDialogChoice) {
-    confirmDialogChoice.value = choice
-    isConfirmDialogOpen.value = false
+    confirmDialogChoice.value = choice;
+    isConfirmDialogOpen.value = false;
 }
 
 function handleFavouritedBoostedByClose() {
-    isFavouritedBoostedByDialogOpen.value = false
+    isFavouritedBoostedByDialogOpen.value = false;
 }
 </script>
 

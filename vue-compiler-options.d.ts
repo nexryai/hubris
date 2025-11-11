@@ -1,8 +1,8 @@
-declare module 'pkg-types' {
+declare module "pkg-types" {
     interface TSConfig {
         // TODO: augment in nuxt
-        vueCompilerOptions: any
+        vueCompilerOptions: any;
     }
 }
 
-export {}
+export {};

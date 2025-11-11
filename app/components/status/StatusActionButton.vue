@@ -1,37 +1,37 @@
 <script setup lang="ts">
 defineOptions({
     inheritAttrs: false,
-})
+});
 
 const {
-    as = 'button',
+    as = "button",
     command,
     disabled,
     content,
     icon,
 } = defineProps<{
-    text?: string | number
-    content: string
-    color: string
-    icon: string
-    activeIcon?: string
-    inactiveIcon?: string
-    hover: string
-    elkGroupHover: string
-    active?: boolean
-    disabled?: boolean
-    as?: string
-    command?: boolean
-}>()
+    text?: string | number;
+    content: string;
+    color: string;
+    icon: string;
+    activeIcon?: string;
+    inactiveIcon?: string;
+    hover: string;
+    elkGroupHover: string;
+    active?: boolean;
+    disabled?: boolean;
+    as?: string;
+    command?: boolean;
+}>();
 
 defineSlots<{
-    text: (props: object) => void
-}>()
+    text: (props: object) => void;
+}>();
 
-const el = ref<HTMLDivElement>()
+const el = ref<HTMLDivElement>();
 
 useCommand({
-    scope: 'Actions',
+    scope: "Actions",
 
     order: -2,
     visible: () => command && !disabled,
@@ -40,16 +40,15 @@ useCommand({
     icon: () => icon,
 
     onActivate() {
-        if (!checkLogin())
-            return
-        const clickEvent = new MouseEvent('click', {
+        if (!checkLogin()) return;
+        const clickEvent = new MouseEvent("click", {
             view: window,
             bubbles: true,
             cancelable: true,
-        })
-        el.value?.dispatchEvent(clickEvent)
+        });
+        el.value?.dispatchEvent(clickEvent);
     },
-})
+});
 </script>
 
 <template>

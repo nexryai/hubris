@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineOptions({
     inheritAttrs: false,
-})
+});
 
 const { tagName } = defineProps<{
-    tagName?: string
-    disabled?: boolean
-}>()
+    tagName?: string;
+    disabled?: boolean;
+}>();
 
-const tag = ref<mastodon.v1.Tag>()
-const tagHover = ref()
-const hovered = useElementHover(tagHover)
+const tag = ref<mastodon.v1.Tag>();
+const tagHover = ref();
+const hovered = useElementHover(tagHover);
 
 watch(hovered, (newHovered) => {
     if (newHovered && tagName) {
         fetchTag(tagName).then((t) => {
-            tag.value = t
-        })
+            tag.value = t;
+        });
     }
-})
+});
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
-const pwaEnabled = useAppConfig().pwaEnabled
+const { t } = useI18n();
+const pwaEnabled = useAppConfig().pwaEnabled;
 
 useHydratedHead({
-    title: () => `${t('settings.notifications.label')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.notifications.label")} | ${t("nav.settings")}`,
+});
 </script>
 
 <template>

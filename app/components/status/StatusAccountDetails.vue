@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { link = true } = defineProps<{
-    account: mastodon.v1.Account
-    link?: boolean
-}>()
+    account: mastodon.v1.Account;
+    link?: boolean;
+}>();
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 </script>
 
 <template>

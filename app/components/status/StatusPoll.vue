@@ -1,64 +1,60 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status } = defineProps<{
-    status: mastodon.v1.Status
-}>()
-const poll = reactive({ ...status.poll! })
+    status: mastodon.v1.Status;
+}>();
+const poll = reactive({ ...status.poll! });
 
 function toPercentage(num: number) {
-    const percentage = 100 * num
-    return `${percentage.toFixed(1).replace(/\.?0+$/, '')}%`
+    const percentage = 100 * num;
+    return `${percentage.toFixed(1).replace(/\.?0+$/, "")}%`;
 }
-const timeAgoOptions = useTimeAgoOptions()
-const expiredTimeAgo = useTimeAgo(poll.expiresAt!, timeAgoOptions)
-const expiredTimeFormatted = useFormattedDateTime(poll.expiresAt!)
-const { formatPercentage } = useHumanReadableNumber()
-const loading = ref(false)
+const timeAgoOptions = useTimeAgoOptions();
+const expiredTimeAgo = useTimeAgo(poll.expiresAt!, timeAgoOptions);
+const expiredTimeFormatted = useFormattedDateTime(poll.expiresAt!);
+const { formatPercentage } = useHumanReadableNumber();
+const loading = ref(false);
 
-const { client } = useMasto()
+const { client } = useMasto();
 
 async function vote(e: Event) {
-    const formData = new FormData(e.target as HTMLFormElement)
-    const choices = formData.getAll('choices').map(i => +i) as number[]
+    const formData = new FormData(e.target as HTMLFormElement);
+    const choices = formData.getAll("choices").map((i) => +i) as number[];
 
     // Update the poll optimistically
     for (const [index, option] of poll.options.entries()) {
-        if (choices.includes(index))
-            option.votesCount = (option.votesCount || 0) + 1
+        if (choices.includes(index)) option.votesCount = (option.votesCount || 0) + 1;
     }
-    poll.voted = true
-    poll.votesCount++
+    poll.voted = true;
+    poll.votesCount++;
 
-    if (!poll.votersCount && poll.votesCount)
-        poll.votesCount = poll.votesCount + 1
-    else poll.votersCount = (poll.votersCount || 0) + 1
+    if (!poll.votersCount && poll.votesCount) poll.votesCount = poll.votesCount + 1;
+    else poll.votersCount = (poll.votersCount || 0) + 1;
 
-    cacheStatus({ ...status, poll }, undefined, true)
+    cacheStatus({ ...status, poll }, undefined, true);
 
-    await client.value.v1.polls.$select(poll.id).votes.create({ choices })
+    await client.value.v1.polls.$select(poll.id).votes.create({ choices });
 }
 
 async function refresh() {
     if (loading.value) {
-        return
+        return;
     }
 
-    loading.value = true
+    loading.value = true;
     try {
-        const newPoll = await client.value.v1.polls.$select(poll.id).fetch()
-        Object.assign(poll, newPoll)
-        cacheStatus({ ...status, poll: newPoll }, undefined, true)
-    }
-    catch (e) {
-        console.error(e)
-    }
-    finally {
-        loading.value = false
+        const newPoll = await client.value.v1.polls.$select(poll.id).fetch();
+        Object.assign(poll, newPoll);
+        cacheStatus({ ...status, poll: newPoll }, undefined, true);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        loading.value = false;
     }
 }
 
-const votersCount = computed(() => poll.votersCount ?? poll.votesCount ?? 0)
+const votersCount = computed(() => poll.votersCount ?? poll.votesCount ?? 0);
 </script>
 
 <template>

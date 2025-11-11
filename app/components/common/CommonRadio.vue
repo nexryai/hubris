@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineProps<{
-    label: string
-    value: any
-    hover?: boolean
-}>()
-const modelValue = defineModel()
+    label: string;
+    value: any;
+    hover?: boolean;
+}>();
+const modelValue = defineModel();
 </script>
 
 <template>

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { invoke } from '@vueuse/core'
+import { invoke } from "@vueuse/core";
 
-const modelValue = defineModel<boolean>({ required: true })
-const colorMode = useColorMode()
+const modelValue = defineModel<boolean>({ required: true });
+const colorMode = useColorMode();
 
-const userSettings = useUserSettings()
+const userSettings = useUserSettings();
 
-const drawerEl = ref<HTMLDivElement>()
+const drawerEl = ref<HTMLDivElement>();
 
 function toggleVisible() {
-    modelValue.value = !modelValue.value
+    modelValue.value = !modelValue.value;
 }
 
-const buttonEl = ref<HTMLDivElement>()
+const buttonEl = ref<HTMLDivElement>();
 /**
  * Close the drop-down menu if the mouse click is not on the drop-down menu button when the drop-down menu is opened
  * @param mouse
@@ -20,118 +20,109 @@ const buttonEl = ref<HTMLDivElement>()
 function clickEvent(mouse: MouseEvent) {
     if (mouse.target && !buttonEl.value?.children[0].contains(mouse.target as any)) {
         if (modelValue.value) {
-            document.removeEventListener('click', clickEvent)
-            modelValue.value = false
+            document.removeEventListener("click", clickEvent);
+            modelValue.value = false;
         }
     }
 }
 
 function toggleDark() {
-    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+    colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
 }
 
 watch(modelValue, (val) => {
-    if (val && typeof document !== 'undefined')
-        document.addEventListener('click', clickEvent)
-})
+    if (val && typeof document !== "undefined") document.addEventListener("click", clickEvent);
+});
 
 onBeforeUnmount(() => {
-    document.removeEventListener('click', clickEvent)
-})
+    document.removeEventListener("click", clickEvent);
+});
 
 // Pull down to close
 const { dragging, dragDistance } = invoke(() => {
-    const triggerDistance = 120
+    const triggerDistance = 120;
 
-    let scrollTop = 0
-    let beforeTouchPointY = 0
+    let scrollTop = 0;
+    let beforeTouchPointY = 0;
 
-    const dragDistance = ref(0)
-    const dragging = ref(false)
+    const dragDistance = ref(0);
+    const dragging = ref(false);
 
     useEventListener(
         drawerEl,
-        'scroll',
+        "scroll",
         (e: Event) => {
-            scrollTop = (e.target as HTMLDivElement).scrollTop
+            scrollTop = (e.target as HTMLDivElement).scrollTop;
 
             // Prevent the page from scrolling when the drawer is being dragged.
-            if (dragDistance.value > 0)
-                (e.target as HTMLDivElement).scrollTop = 0
+            if (dragDistance.value > 0) (e.target as HTMLDivElement).scrollTop = 0;
         },
         { passive: true },
-    )
+    );
 
     useEventListener(
         drawerEl,
-        'touchstart',
+        "touchstart",
         (e: TouchEvent) => {
-            if (!modelValue.value)
-                return
+            if (!modelValue.value) return;
 
-            beforeTouchPointY = e.touches[0].pageY
-            dragDistance.value = 0
+            beforeTouchPointY = e.touches[0].pageY;
+            dragDistance.value = 0;
         },
         { passive: true },
-    )
+    );
 
     useEventListener(
         drawerEl,
-        'touchmove',
+        "touchmove",
         (e: TouchEvent) => {
-            if (!modelValue.value)
-                return
+            if (!modelValue.value) return;
 
             // Do not move the entire drawer when its contents are not scrolled to the top.
             if (scrollTop > 0 && dragDistance.value <= 0) {
-                dragging.value = false
-                beforeTouchPointY = e.touches[0].pageY
-                return
+                dragging.value = false;
+                beforeTouchPointY = e.touches[0].pageY;
+                return;
             }
 
-            const { pageY } = e.touches[0]
+            const { pageY } = e.touches[0];
 
             // Calculate the drag distance.
-            dragDistance.value += pageY - beforeTouchPointY
-            if (dragDistance.value < 0)
-                dragDistance.value = 0
-            beforeTouchPointY = pageY
+            dragDistance.value += pageY - beforeTouchPointY;
+            if (dragDistance.value < 0) dragDistance.value = 0;
+            beforeTouchPointY = pageY;
 
             // Marked as dragging.
-            if (dragDistance.value > 1)
-                dragging.value = true
+            if (dragDistance.value > 1) dragging.value = true;
 
             // Prevent the page from scrolling when the drawer is being dragged.
             if (dragDistance.value > 0) {
-                if (e?.cancelable && e?.preventDefault)
-                    e.preventDefault()
-                e?.stopPropagation()
+                if (e?.cancelable && e?.preventDefault) e.preventDefault();
+                e?.stopPropagation();
             }
         },
         { passive: true },
-    )
+    );
 
     useEventListener(
         drawerEl,
-        'touchend',
+        "touchend",
         () => {
-            if (!modelValue.value)
-                return
+            if (!modelValue.value) return;
 
-            if (dragDistance.value >= triggerDistance)
-                modelValue.value = false
+            if (dragDistance.value >= triggerDistance) modelValue.value = false;
 
-            dragging.value = false
+            dragging.value = false;
             // code
         },
         { passive: true },
-    )
+    );
 
     return {
         dragDistance,
         dragging,
-    }
-})
+    };
+});
 </script>
 
 <template>

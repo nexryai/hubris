@@ -1,13 +1,13 @@
 <script setup lang="ts">
 definePageMeta({
-    middleware: 'auth',
-})
+    middleware: "auth",
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => t('nav.compose'),
-})
+    title: () => t("nav.compose"),
+});
 </script>
 
 <template>

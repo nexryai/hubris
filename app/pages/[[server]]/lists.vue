@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => t('nav.lists'),
-})
+    title: () => t("nav.lists"),
+});
 </script>
 
 <template>

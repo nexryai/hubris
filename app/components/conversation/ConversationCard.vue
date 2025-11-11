@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { conversation } = defineProps<{
-    conversation: mastodon.v1.Conversation
-}>()
+    conversation: mastodon.v1.Conversation;
+}>();
 
-const withAccounts = computed(() => conversation.accounts.filter(account => account.id !== conversation.lastStatus?.account.id))
+const withAccounts = computed(() => conversation.accounts.filter((account) => account.id !== conversation.lastStatus?.account.id));
 </script>
 
 <template>

@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import type { ColorMode } from '~/composables/settings'
+import type { ColorMode } from "~/composables/settings";
 
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 
 function setColorMode(mode: ColorMode) {
-    colorMode.preference = mode
+    colorMode.preference = mode;
 }
 
 const modes = [
     {
-        icon: 'i-ri-moon-line',
-        label: 'settings.interface.dark_mode',
-        mode: 'dark',
+        icon: "i-ri-moon-line",
+        label: "settings.interface.dark_mode",
+        mode: "dark",
     },
     {
-        icon: 'i-ri-sun-line',
-        label: 'settings.interface.light_mode',
-        mode: 'light',
+        icon: "i-ri-sun-line",
+        label: "settings.interface.light_mode",
+        mode: "light",
     },
     {
-        icon: 'i-ri-computer-line',
-        label: 'settings.interface.system_mode',
-        mode: 'system',
+        icon: "i-ri-computer-line",
+        label: "settings.interface.system_mode",
+        mode: "system",
     },
-] as const
+] as const;
 </script>
 
 <template>

@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import type { UserLogin } from '#shared/types'
+import type { UserLogin } from "#shared/types";
 
-const all = useUsers()
-const router = useRouter()
+const all = useUsers();
+const router = useRouter();
 
 function clickUser(user: UserLogin) {
-    if (user.account.acct === currentUser.value?.account.acct)
-        router.push(getAccountRoute(user.account))
-    else switchUser(user)
+    if (user.account.acct === currentUser.value?.account.acct) router.push(getAccountRoute(user.account));
+    else switchUser(user);
 }
 </script>
 

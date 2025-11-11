@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { status, context } = defineProps<{
-    status: mastodon.v1.Status
-    newer?: mastodon.v1.Status
-    context?: mastodon.v2.FilterContext | 'details'
-    isPreview?: boolean
-    inNotification?: boolean
-}>()
+    status: mastodon.v1.Status;
+    newer?: mastodon.v1.Status;
+    context?: mastodon.v2.FilterContext | "details";
+    isPreview?: boolean;
+    inNotification?: boolean;
+}>();
 
-const isDM = computed(() => status.visibility === 'direct')
-const isDetails = computed(() => context === 'details')
+const isDM = computed(() => status.visibility === "direct");
+const isDetails = computed(() => context === "details");
 
 // Content Filter logic
-const filterResult = computed(() => (status.filtered?.length ? status.filtered[0] : null))
-const filter = computed(() => filterResult.value?.filter)
+const filterResult = computed(() => (status.filtered?.length ? status.filtered[0] : null));
+const filter = computed(() => filterResult.value?.filter);
 
-const filterPhrase = computed(() => filter.value?.title)
-const isFiltered = computed(() => status.account.id !== currentUser.value?.account.id && filterPhrase && context && context !== 'details' && !!filter.value?.context.includes(context))
+const filterPhrase = computed(() => filter.value?.title);
+const isFiltered = computed(() => status.account.id !== currentUser.value?.account.id && filterPhrase && context && context !== "details" && !!filter.value?.context.includes(context));
 
 // check spoiler text or media attachment
 // needed to handle accounts that mark all their posts as sensitive
-const spoilerTextPresent = computed(() => !!status.spoilerText && status.spoilerText.trim().length > 0)
-const hasSpoilerOrSensitiveMedia = computed(() => spoilerTextPresent.value || (status.sensitive && !!status.mediaAttachments.length))
-const isSensitiveNonSpoiler = computed(() => status.sensitive && !status.spoilerText && !!status.mediaAttachments.length)
+const spoilerTextPresent = computed(() => !!status.spoilerText && status.spoilerText.trim().length > 0);
+const hasSpoilerOrSensitiveMedia = computed(() => spoilerTextPresent.value || (status.sensitive && !!status.mediaAttachments.length));
+const isSensitiveNonSpoiler = computed(() => status.sensitive && !status.spoilerText && !!status.mediaAttachments.length);
 const hideAllMedia = computed(() => {
-    return currentUser.value ? getHideMediaByDefault(currentUser.value.account) && (!!status.mediaAttachments.length || !!status.card?.html) : false
-})
-const embeddedMediaPreference = usePreferences('experimentalEmbeddedMedia')
-const allowEmbeddedMedia = computed(() => status.card?.html && embeddedMediaPreference.value)
+    return currentUser.value ? getHideMediaByDefault(currentUser.value.account) && (!!status.mediaAttachments.length || !!status.card?.html) : false;
+});
+const embeddedMediaPreference = usePreferences("experimentalEmbeddedMedia");
+const allowEmbeddedMedia = computed(() => status.card?.html && embeddedMediaPreference.value);
 </script>
 
 <template>

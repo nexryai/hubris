@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 defineOptions({
     inheritAttrs: false,
-})
+});
 
-const { account, as = 'div' } = defineProps<{
-    account: mastodon.v1.Account
-    as?: string
-}>()
+const { account, as = "div" } = defineProps<{
+    account: mastodon.v1.Account;
+    as?: string;
+}>();
 
-cacheAccount(account)
+cacheAccount(account);
 </script>
 
 <template>

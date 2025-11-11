@@ -1,178 +1,169 @@
 <script setup lang="ts">
-import type { CommandScope, QueryResult, QueryResultItem } from '~/composables/command'
-import type { SearchResult as SearchResultType } from '~/composables/masto/search'
+import type { CommandScope, QueryResult, QueryResultItem } from "~/composables/command";
+import type { SearchResult as SearchResultType } from "~/composables/masto/search";
 
 const emit = defineEmits<{
-    (event: 'close'): void
-}>()
+    (event: "close"): void;
+}>();
 
-const registry = useCommandRegistry()
+const registry = useCommandRegistry();
 
-const router = useRouter()
+const router = useRouter();
 
-const inputEl = ref<HTMLInputElement>()
-const resultEl = ref<HTMLDivElement>()
+const inputEl = ref<HTMLInputElement>();
+const resultEl = ref<HTMLDivElement>();
 
-const scopes = ref<CommandScope[]>([])
-const input = commandPanelInput
+const scopes = ref<CommandScope[]>([]);
+const input = commandPanelInput;
 
 onMounted(() => {
-    inputEl.value?.focus()
-})
+    inputEl.value?.focus();
+});
 
-const commandMode = computed(() => input.value.startsWith('>'))
+const commandMode = computed(() => input.value.startsWith(">"));
 
-const query = computed(() => (commandMode.value ? '' : input.value.trim()))
+const query = computed(() => (commandMode.value ? "" : input.value.trim()));
 
-const { accounts, hashtags, loading } = useSearch(query)
+const { accounts, hashtags, loading } = useSearch(query);
 
 function toSearchQueryResultItem(search: SearchResultType): QueryResultItem {
     return {
         index: 0,
-        type: 'search',
+        type: "search",
         search,
         onActivate: () => router.push(search.to),
-    }
+    };
 }
 
 const searchResult = computed<QueryResult>(() => {
-    if (query.value.length === 0 || loading.value)
-        return { length: 0, items: [], grouped: {} as any }
+    if (query.value.length === 0 || loading.value) return { length: 0, items: [], grouped: {} as any };
 
     // TODO extract this scope
     // duplicate in SearchWidget.vue
-    const hashtagList = hashtags.value.slice(0, 3).map(toSearchQueryResultItem)
-    const accountList = accounts.value.map(toSearchQueryResultItem)
+    const hashtagList = hashtags.value.slice(0, 3).map(toSearchQueryResultItem);
+    const accountList = accounts.value.map(toSearchQueryResultItem);
 
-    const grouped: QueryResult['grouped'] = new Map()
-    grouped.set('Hashtags', hashtagList)
-    grouped.set('Users', accountList)
+    const grouped: QueryResult["grouped"] = new Map();
+    grouped.set("Hashtags", hashtagList);
+    grouped.set("Users", accountList);
 
-    let index = 0
+    let index = 0;
     for (const items of grouped.values()) {
-        for (const item of items) item.index = index++
+        for (const item of items) item.index = index++;
     }
 
     return {
         grouped,
         items: [...hashtagList, ...accountList],
         length: hashtagList.length + accountList.length,
-    }
-})
+    };
+});
 
-const result = computed<QueryResult>(() => (commandMode.value ? registry.query(scopes.value.map(s => s.id).join('.'), input.value.slice(1).trim()) : searchResult.value))
+const result = computed<QueryResult>(() => (commandMode.value ? registry.query(scopes.value.map((s) => s.id).join("."), input.value.slice(1).trim()) : searchResult.value));
 
-const isMac = useIsMac()
-const modifierKeyName = computed(() => (isMac.value ? '⌘' : 'Ctrl'))
+const isMac = useIsMac();
+const modifierKeyName = computed(() => (isMac.value ? "⌘" : "Ctrl"));
 
-const active = ref(0)
+const active = ref(0);
 watch(result, (n, o) => {
-    if (n.length !== o.length || !n.items.every((i, idx) => i === o.items[idx]))
-        active.value = 0
-})
+    if (n.length !== o.length || !n.items.every((i, idx) => i === o.items[idx])) active.value = 0;
+});
 
 function findItemEl(index: number) {
-    return resultEl.value?.querySelector(`[data-index="${index}"]`) as HTMLDivElement | null
+    return resultEl.value?.querySelector(`[data-index="${index}"]`) as HTMLDivElement | null;
 }
 function onCommandActivate(item: QueryResultItem) {
     if (item.onActivate) {
-        item.onActivate()
-        emit('close')
-    }
-    else if (item.onComplete) {
-        scopes.value.push(item.onComplete())
-        input.value = '> '
+        item.onActivate();
+        emit("close");
+    } else if (item.onComplete) {
+        scopes.value.push(item.onComplete());
+        input.value = "> ";
     }
 }
 function onCommandComplete(item: QueryResultItem) {
     if (item.onComplete) {
-        scopes.value.push(item.onComplete())
-        input.value = '> '
-    }
-    else if (item.onActivate) {
-        item.onActivate()
-        emit('close')
+        scopes.value.push(item.onComplete());
+        input.value = "> ";
+    } else if (item.onActivate) {
+        item.onActivate();
+        emit("close");
     }
 }
 function intoView(index: number) {
-    const el = findItemEl(index)
-    if (el)
-        el.scrollIntoView({ block: 'nearest' })
+    const el = findItemEl(index);
+    if (el) el.scrollIntoView({ block: "nearest" });
 }
 
 function setActive(index: number) {
-    const len = result.value.length
-    active.value = (index + len) % len
-    intoView(active.value)
+    const len = result.value.length;
+    active.value = (index + len) % len;
+    intoView(active.value);
 }
 
 function onKeyDown(e: KeyboardEvent) {
     switch (e.key) {
-        case 'p':
-        case 'ArrowUp': {
-            if (e.key === 'p' && !e.ctrlKey)
-                break
-            e.preventDefault()
+        case "p":
+        case "ArrowUp": {
+            if (e.key === "p" && !e.ctrlKey) break;
+            e.preventDefault();
 
-            setActive(active.value - 1)
+            setActive(active.value - 1);
 
-            break
+            break;
         }
-        case 'n':
-        case 'ArrowDown': {
-            if (e.key === 'n' && !e.ctrlKey)
-                break
-            e.preventDefault()
+        case "n":
+        case "ArrowDown": {
+            if (e.key === "n" && !e.ctrlKey) break;
+            e.preventDefault();
 
-            setActive(active.value + 1)
+            setActive(active.value + 1);
 
-            break
+            break;
         }
 
-        case 'Home': {
-            e.preventDefault()
+        case "Home": {
+            e.preventDefault();
 
-            active.value = 0
+            active.value = 0;
 
-            intoView(active.value)
+            intoView(active.value);
 
-            break
+            break;
         }
 
-        case 'End': {
-            e.preventDefault()
+        case "End": {
+            e.preventDefault();
 
-            setActive(result.value.length - 1)
+            setActive(result.value.length - 1);
 
-            break
+            break;
         }
 
-        case 'Enter': {
-            e.preventDefault()
+        case "Enter": {
+            e.preventDefault();
 
-            const cmd = result.value.items[active.value]
-            if (cmd)
-                onCommandActivate(cmd)
+            const cmd = result.value.items[active.value];
+            if (cmd) onCommandActivate(cmd);
 
-            break
+            break;
         }
 
-        case 'Tab': {
-            e.preventDefault()
+        case "Tab": {
+            e.preventDefault();
 
-            const cmd = result.value.items[active.value]
-            if (cmd)
-                onCommandComplete(cmd)
+            const cmd = result.value.items[active.value];
+            if (cmd) onCommandComplete(cmd);
 
-            break
+            break;
         }
 
-        case 'Backspace': {
-            if (input.value === '>' && scopes.value.length) {
-                e.preventDefault()
-                scopes.value.pop()
+        case "Backspace": {
+            if (input.value === ">" && scopes.value.length) {
+                e.preventDefault();
+                scopes.value.pop();
             }
-            break
+            break;
         }
     }
 }

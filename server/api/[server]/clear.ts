@@ -1,11 +1,10 @@
 export default defineEventHandler(async (event) => {
-    const { server } = getRouterParams(event)
-    const { key } = getQuery(event)
+    const { server } = getRouterParams(event);
+    const { key } = getQuery(event);
 
-    if (key !== String(useRuntimeConfig().adminKey))
-        return { status: false, error: 'incorrect key' }
+    if (key !== String(useRuntimeConfig().adminKey)) return { status: false, error: "incorrect key" };
 
-    await deleteApp(server)
+    await deleteApp(server);
 
-    return { status: true }
-})
+    return { status: true };
+});

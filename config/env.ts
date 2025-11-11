@@ -1,7 +1,7 @@
-import Git from 'simple-git'
-import { isDevelopment } from 'std-env'
+import Git from "simple-git";
+import { isDevelopment } from "std-env";
 
-export { version } from '../package.json'
+export { version } from "../package.json";
 
 /**
  * Environment variable `PULL_REQUEST` provided by Netlify.
@@ -9,7 +9,7 @@ export { version } from '../package.json'
  *
  * Whether triggered by a GitHub PR
  */
-export const isPR = process.env.PULL_REQUEST === 'true'
+export const isPR = process.env.PULL_REQUEST === "true";
 
 /**
  * Environment variable `BRANCH` provided by Netlify.
@@ -17,7 +17,7 @@ export const isPR = process.env.PULL_REQUEST === 'true'
  *
  * Git branch
  */
-export const gitBranch = process.env.BRANCH
+export const gitBranch = process.env.BRANCH;
 
 /**
  * Environment variable `CONTEXT` provided by Netlify.
@@ -25,39 +25,36 @@ export const gitBranch = process.env.BRANCH
  *
  * Whether triggered by PR, `deploy-preview` or `dev`.
  */
-export const isPreview = isPR || process.env.CONTEXT === 'deploy-preview' || process.env.CONTEXT === 'dev'
+export const isPreview = isPR || process.env.CONTEXT === "deploy-preview" || process.env.CONTEXT === "dev";
 
-const git = Git()
+const git = Git();
 export async function getGitInfo() {
-    let branch
+    let branch;
     try {
-        branch = gitBranch || (await git.revparse(['--abbrev-ref', 'HEAD']))
-    }
-    catch {
-        branch = 'unknown'
+        branch = gitBranch || (await git.revparse(["--abbrev-ref", "HEAD"]));
+    } catch {
+        branch = "unknown";
     }
 
-    let commit
+    let commit;
     try {
-        commit = await git.revparse(['HEAD'])
-    }
-    catch {
-        commit = 'unknown'
+        commit = await git.revparse(["HEAD"]);
+    } catch {
+        commit = "unknown";
     }
 
-    let shortCommit
+    let shortCommit;
     try {
-        shortCommit = await git.revparse(['--short=7', 'HEAD'])
-    }
-    catch {
-        shortCommit = 'unknown'
+        shortCommit = await git.revparse(["--short=7", "HEAD"]);
+    } catch {
+        shortCommit = "unknown";
     }
 
-    return { branch, commit, shortCommit }
+    return { branch, commit, shortCommit };
 }
 
 export async function getEnv() {
-    const { commit, shortCommit, branch } = await getGitInfo()
-    const env = isDevelopment ? 'dev' : isPreview ? 'preview' : branch === 'main' ? 'canary' : 'release'
-    return { commit, shortCommit, branch, env } as const
+    const { commit, shortCommit, branch } = await getGitInfo();
+    const env = isDevelopment ? "dev" : isPreview ? "preview" : branch === "main" ? "canary" : "release";
+    return { commit, shortCommit, branch, env } as const;
 }

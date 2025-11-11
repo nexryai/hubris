@@ -1,67 +1,62 @@
-import type { MaybeRefOrGetter, RemovableRef } from '@vueuse/core'
-import type { UseIDBOptions } from '@vueuse/integrations/useIDBKeyval'
-import { del, get, set, update } from '~/utils/elk-idb'
+import type { MaybeRefOrGetter, RemovableRef } from "@vueuse/core";
+import type { UseIDBOptions } from "@vueuse/integrations/useIDBKeyval";
+import { del, get, set, update } from "~/utils/elk-idb";
 
 export interface UseAsyncIDBKeyvalReturn<T> {
-    set: (value: T) => Promise<void>
-    readIDB: () => Promise<T | undefined>
+    set: (value: T) => Promise<void>;
+    readIDB: () => Promise<T | undefined>;
 }
 
-export async function useAsyncIDBKeyval<T>(key: IDBValidKey, initialValue: MaybeRefOrGetter<T>, source: RemovableRef<T>, options: Omit<UseIDBOptions, 'shallow'> = {}): Promise<UseAsyncIDBKeyvalReturn<T>> {
+export async function useAsyncIDBKeyval<T>(key: IDBValidKey, initialValue: MaybeRefOrGetter<T>, source: RemovableRef<T>, options: Omit<UseIDBOptions, "shallow"> = {}): Promise<UseAsyncIDBKeyvalReturn<T>> {
     const {
-        flush = 'pre',
+        flush = "pre",
         deep = true,
         writeDefaults = true,
         onError = (e: unknown) => {
-            console.error(e)
+            console.error(e);
         },
-    } = options
+    } = options;
 
-    const rawInit: T = toValue<T>(initialValue)
+    const rawInit: T = toValue<T>(initialValue);
 
     try {
-        const rawValue = await get<T>(key)
+        const rawValue = await get<T>(key);
         if (rawValue === undefined) {
             if (rawInit !== undefined && rawInit !== null && writeDefaults) {
-                await set(key, rawInit)
-                source.value = rawInit
+                await set(key, rawInit);
+                source.value = rawInit;
             }
+        } else {
+            source.value = rawValue;
         }
-        else {
-            source.value = rawValue
-        }
-    }
-    catch (e) {
-        onError(e)
+    } catch (e) {
+        onError(e);
     }
 
     async function write(data: T) {
         try {
             if (data == null) {
-                await del(key)
-            }
-            else {
+                await del(key);
+            } else {
                 // IndexedDB does not support saving proxies, convert from proxy before saving
-                await update(key, () => toRaw(data))
+                await update(key, () => toRaw(data));
             }
-        }
-        catch (e) {
-            onError(e)
+        } catch (e) {
+            onError(e);
         }
     }
 
-    const { pause: pauseWatch, resume: resumeWatch } = watchPausable(source, data => write(data), { flush, deep })
+    const { pause: pauseWatch, resume: resumeWatch } = watchPausable(source, (data) => write(data), { flush, deep });
 
     async function setData(value: T): Promise<void> {
-        pauseWatch()
+        pauseWatch();
         try {
-            await write(value)
-            source.value = value
-        }
-        finally {
-            resumeWatch()
+            await write(value);
+            source.value = value;
+        } finally {
+            resumeWatch();
         }
     }
 
-    return { set: setData, readIDB: () => get<T>(key) }
+    return { set: setData, readIDB: () => get<T>(key) };
 }

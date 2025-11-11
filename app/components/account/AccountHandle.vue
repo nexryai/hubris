@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const { account } = defineProps<{
-    account: mastodon.v1.Account
-}>()
+    account: mastodon.v1.Account;
+}>();
 
-const serverName = computed(() => getServerName(account))
+const serverName = computed(() => getServerName(account));
 </script>
 
 <template>

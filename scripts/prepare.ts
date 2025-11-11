@@ -1,17 +1,17 @@
-import process from 'node:process'
-import fs from 'fs-extra'
-import { emojiPrefix, iconifyEmojiPackage } from '../config/emojis.ts'
-import { colorsMap } from './generate-themes.ts'
+import process from "node:process";
+import fs from "fs-extra";
+import { emojiPrefix, iconifyEmojiPackage } from "../config/emojis.ts";
+import { colorsMap } from "./generate-themes.ts";
 
-const dereference = process.platform === 'win32' ? true : undefined
+const dereference = process.platform === "win32" ? true : undefined;
 
-await fs.copy(`node_modules/${iconifyEmojiPackage}/icons`, `public/emojis/${emojiPrefix}`, { overwrite: true, dereference })
+await fs.copy(`node_modules/${iconifyEmojiPackage}/icons`, `public/emojis/${emojiPrefix}`, { overwrite: true, dereference });
 
-await fs.writeJSON('app/constants/themes.json', colorsMap, { spaces: 2, EOL: '\n' })
+await fs.writeJSON("app/constants/themes.json", colorsMap, { spaces: 2, EOL: "\n" });
 await fs.writeFile(
-    'app/styles/default-theme.css',
+    "app/styles/default-theme.css",
     `:root {\n${Object.entries(colorsMap[0][1])
         .map(([k, v]) => `  ${k}: ${v};`)
-        .join('\n')}\n}\n`,
-    { encoding: 'utf-8' },
-)
+        .join("\n")}\n}\n`,
+    { encoding: "utf-8" },
+);

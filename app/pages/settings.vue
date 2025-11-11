@@ -1,17 +1,17 @@
 <script setup lang="ts">
 definePageMeta({
     wideLayout: true,
-})
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => t('nav.settings'),
-})
+    title: () => t("nav.settings"),
+});
 
-const route = useRoute()
+const route = useRoute();
 
-const isRootPath = computed(() => route.name === 'settings')
+const isRootPath = computed(() => route.name === "settings");
 </script>
 
 <template>

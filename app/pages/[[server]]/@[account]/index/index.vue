@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
-const params = useRoute().params
-const handle = computed(() => params.account as string)
+const params = useRoute().params;
+const handle = computed(() => params.account as string);
 
-definePageMeta({ name: 'account-index' })
+definePageMeta({ name: "account-index" });
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const account = await fetchAccountByHandle(handle.value)
+const account = await fetchAccountByHandle(handle.value);
 
 // we need to ensure `pinned === true` on status
 // because this prop is appeared only on current account's posts
 function applyPinned(statuses: mastodon.v1.Status[]) {
     return statuses.map((status) => {
-        status.pinned = true
-        return status
-    })
+        status.pinned = true;
+        return status;
+    });
 }
 
 function reorderAndFilter(items: mastodon.v1.Status[]) {
-    return reorderedTimeline(items, 'account')
+    return reorderedTimeline(items, "account");
 }
 
-const pinnedPaginator = useMastoClient().v1.accounts.$select(account.id).statuses.list({ pinned: true })
-const postPaginator = useMastoClient().v1.accounts.$select(account.id).statuses.list({ limit: 30, excludeReplies: true })
+const pinnedPaginator = useMastoClient().v1.accounts.$select(account.id).statuses.list({ pinned: true });
+const postPaginator = useMastoClient().v1.accounts.$select(account.id).statuses.list({ limit: 30, excludeReplies: true });
 
 if (account) {
     useHydratedHead({
-        title: () => `${t('nav.profile')} | ${getDisplayName(account)} (@${account.acct})`,
-    })
+        title: () => `${t("nav.profile")} | ${getDisplayName(account)} (@${account.acct})`,
+    });
 }
 </script>
 

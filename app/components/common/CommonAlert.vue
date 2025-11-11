@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-    (event: 'close'): void
-}>()
-const visible = defineModel<boolean>()
+    (event: "close"): void;
+}>();
+const visible = defineModel<boolean>();
 
 function close() {
-    emit('close')
-    visible.value = false
+    emit("close");
+    visible.value = false;
 }
 </script>
 

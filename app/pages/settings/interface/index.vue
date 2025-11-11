@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => `${t('settings.interface.label')} | ${t('nav.settings')}`,
-})
+    title: () => `${t("settings.interface.label")} | ${t("nav.settings")}`,
+});
 </script>
 
 <template>

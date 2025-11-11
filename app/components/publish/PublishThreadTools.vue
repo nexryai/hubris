@@ -1,27 +1,25 @@
 <script setup lang="ts">
 const { draftKey, draftItemIndex } = defineProps<{
-    draftKey: string
-    draftItemIndex: number
-}>()
+    draftKey: string;
+    draftItemIndex: number;
+}>();
 
-const { threadIsActive, addThreadItem, threadItems, removeThreadItem } = useThreadComposer(draftKey)
+const { threadIsActive, addThreadItem, threadItems, removeThreadItem } = useThreadComposer(draftKey);
 
-const isRemovableItem = computed(() => threadIsActive.value && draftItemIndex < threadItems.value.length - 1)
+const isRemovableItem = computed(() => threadIsActive.value && draftItemIndex < threadItems.value.length - 1);
 
 function addOrRemoveItem() {
-    if (isRemovableItem.value)
-        removeThreadItem(draftItemIndex)
-    else addThreadItem()
+    if (isRemovableItem.value) removeThreadItem(draftItemIndex);
+    else addThreadItem();
 }
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const label = computed(() => {
-    if (!isRemovableItem.value && draftItemIndex === 0)
-        return t('tooltip.start_thread')
+    if (!isRemovableItem.value && draftItemIndex === 0) return t("tooltip.start_thread");
 
-    return isRemovableItem.value ? t('tooltip.remove_thread_item') : t('tooltip.add_thread_item')
-})
+    return isRemovableItem.value ? t("tooltip.remove_thread_item") : t("tooltip.add_thread_item");
+});
 </script>
 
 <template>

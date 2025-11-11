@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE } from '~/constants'
+import { STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE } from "~/constants";
 
 defineProps<{
-    activeClass: string
-}>()
+    activeClass: string;
+}>();
 
-const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, '')
+const lastAccessedExploreRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_EXPLORE_ROUTE, "");
 </script>
 
 <template>

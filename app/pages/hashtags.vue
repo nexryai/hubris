@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 
 useHydratedHead({
-    title: () => t('nav.hashtags'),
-})
+    title: () => t("nav.hashtags"),
+});
 </script>
 
 <template>

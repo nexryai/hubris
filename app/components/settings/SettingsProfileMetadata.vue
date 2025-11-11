@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import type { mastodon } from 'masto'
+import type { mastodon } from "masto";
 
 const form = defineModel<{
-    fieldsAttributes: NonNullable<mastodon.rest.v1.UpdateCredentialsParams['fieldsAttributes']>
-}>({ required: true })
-const dropdown = ref<any>()
+    fieldsAttributes: NonNullable<mastodon.rest.v1.UpdateCredentialsParams["fieldsAttributes"]>;
+}>({ required: true });
+const dropdown = ref<any>();
 
-const fieldIcons = computed(() => Array.from({ length: maxAccountFieldCount.value }, (_, i) => getAccountFieldIcon(form.value.fieldsAttributes[i].name)))
+const fieldIcons = computed(() => Array.from({ length: maxAccountFieldCount.value }, (_, i) => getAccountFieldIcon(form.value.fieldsAttributes[i].name)));
 
 const fieldCount = computed(() => {
     // find last non-empty field
-    const idx = [...form.value.fieldsAttributes].reverse().findIndex(f => f.name || f.value)
-    if (idx === -1)
-        return 1
-    return Math.min(form.value.fieldsAttributes.length - idx + 1, maxAccountFieldCount.value)
-})
+    const idx = [...form.value.fieldsAttributes].reverse().findIndex((f) => f.name || f.value);
+    if (idx === -1) return 1;
+    return Math.min(form.value.fieldsAttributes.length - idx + 1, maxAccountFieldCount.value);
+});
 
 function chooseIcon(i: number, text: string) {
-    form.value.fieldsAttributes[i].name = text
-    dropdown.value[i]?.hide()
+    form.value.fieldsAttributes[i].name = text;
+    dropdown.value[i]?.hide();
 }
 </script>
 

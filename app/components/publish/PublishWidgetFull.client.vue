@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import type { DraftItem } from '#shared/types'
-import { formatTimeAgo } from '@vueuse/core'
+import type { DraftItem } from "#shared/types";
+import { formatTimeAgo } from "@vueuse/core";
 
-const route = useRoute()
-const { formatNumber } = useHumanReadableNumber()
-const timeAgoOptions = useTimeAgoOptions()
+const route = useRoute();
+const { formatNumber } = useHumanReadableNumber();
+const timeAgoOptions = useTimeAgoOptions();
 
-const draftKey = ref('home')
+const draftKey = ref("home");
 
-const draftKeys = computed(() => Object.keys(currentUserDrafts.value))
-const nonEmptyDrafts = computed(() => draftKeys.value.filter(i => i !== draftKey.value && !isEmptyDraft(currentUserDrafts.value[i])).map(i => [i, currentUserDrafts.value[i]] as const))
+const draftKeys = computed(() => Object.keys(currentUserDrafts.value));
+const nonEmptyDrafts = computed(() => draftKeys.value.filter((i) => i !== draftKey.value && !isEmptyDraft(currentUserDrafts.value[i])).map((i) => [i, currentUserDrafts.value[i]] as const));
 
 watchEffect(() => {
-    draftKey.value = route.query.draft?.toString() || 'home'
-})
+    draftKey.value = route.query.draft?.toString() || "home";
+});
 
 onDeactivated(() => {
-    clearEmptyDrafts()
-})
+    clearEmptyDrafts();
+});
 
 function firstDraftItemOf(drafts: DraftItem | Array<DraftItem>): DraftItem {
-    if (Array.isArray(drafts))
-        return drafts[0]
-    return drafts
+    if (Array.isArray(drafts)) return drafts[0];
+    return drafts;
 }
 </script>
 

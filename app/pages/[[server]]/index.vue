@@ -1,10 +1,9 @@
 <script setup lang="ts">
-const instance = instanceStorage.value[currentServer.value]
+const instance = instanceStorage.value[currentServer.value];
 try {
-    clearError({ redirect: currentUser.value ? '/home' : `/${currentServer.value}/public/local` })
-}
-catch (err) {
-    console.error(err)
+    clearError({ redirect: currentUser.value ? "/home" : `/${currentServer.value}/public/local` });
+} catch (err) {
+    console.error(err);
 }
 </script>
 

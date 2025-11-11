@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE } from '~/constants'
+import { STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE } from "~/constants";
 
 defineProps<{
-    activeClass: string
-}>()
+    activeClass: string;
+}>();
 
-const { notifications } = useNotifications()
-const lastAccessedNotificationRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE, '')
+const { notifications } = useNotifications();
+const lastAccessedNotificationRoute = useLocalStorage(STORAGE_KEY_LAST_ACCESSED_NOTIFICATION_ROUTE, "");
 </script>
 
 <template>

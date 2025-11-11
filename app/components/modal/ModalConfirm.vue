@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { ConfirmDialogChoice, ConfirmDialogOptions } from '#shared/types'
+import type { ConfirmDialogChoice, ConfirmDialogOptions } from "#shared/types";
 
-const { extraOptionType } = defineProps<ConfirmDialogOptions>()
+const { extraOptionType } = defineProps<ConfirmDialogOptions>();
 
 const emit = defineEmits<{
-    (evt: 'choice', choice: ConfirmDialogChoice): void
-}>()
+    (evt: "choice", choice: ConfirmDialogChoice): void;
+}>();
 
-const hasDuration = ref(false)
-const isValidDuration = ref(true)
-const duration = ref(60 * 60) // default to 1 hour
-const shouldMuteNotifications = ref(true)
-const isMute = computed(() => extraOptionType === 'mute')
+const hasDuration = ref(false);
+const isValidDuration = ref(true);
+const duration = ref(60 * 60); // default to 1 hour
+const shouldMuteNotifications = ref(true);
+const isMute = computed(() => extraOptionType === "mute");
 
-function handleChoice(choice: ConfirmDialogChoice['choice']) {
+function handleChoice(choice: ConfirmDialogChoice["choice"]) {
     const dialogChoice = {
         choice,
         ...(isMute.value && {
@@ -24,9 +24,9 @@ function handleChoice(choice: ConfirmDialogChoice['choice']) {
                 },
             },
         }),
-    }
+    };
 
-    emit('choice', dialogChoice)
+    emit("choice", dialogChoice);
 }
 </script>
 
