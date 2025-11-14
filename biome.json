@@ -37,7 +37,7 @@
                 "organizeImports": {
                     "level": "on",
                     "options": {
-                        "groups": [["react*", "react/**", "next", "next/**"], ":BLANK_LINE:", ":PACKAGE:", ":BLANK_LINE:", ":ALIAS:", ":PATH:", ":BLANK_LINE:"]
+                        "groups": [["vue", "vue/**"], ["nuxt", "nuxt/**"], ["masto"], ":BLANK_LINE:", ":PACKAGE:", ":BLANK_LINE:", ":ALIAS:", ":PATH:", ":BLANK_LINE:"]
                     }
                 }
             }
