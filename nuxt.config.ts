@@ -129,7 +129,7 @@ export default defineNuxtConfig({
         adminKey: "",
         redis: {
             host: "",
-            tls: false,
+            tls: true,
             port: 6379,
             password: "",
         },
