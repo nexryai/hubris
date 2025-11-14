@@ -127,6 +127,12 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         adminKey: "",
+        redis: {
+            host: "",
+            tls: false,
+            port: 6379,
+            password: "",
+        },
         cloudflare: {
             accountId: "",
             namespaceId: "",

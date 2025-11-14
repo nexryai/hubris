@@ -5,12 +5,10 @@ import { env } from "#build-info";
 import { driver } from "#storage-config";
 import { $fetch } from "ofetch";
 
+import redis from "unstorage/drivers/redis";
 import kv from "unstorage/drivers/cloudflare-kv-http";
-
 import fs from "unstorage/drivers/fs";
-
 import memory from "unstorage/drivers/memory";
-
 import vercelKVDriver from "unstorage/drivers/vercel-kv";
 
 import { version } from "~~/config/env";
@@ -22,6 +20,19 @@ const storage = useStorage<AppInfo>();
 if (driver === "fs") {
     const config = useRuntimeConfig();
     storage.mount("servers", fs({ base: config.storage.fsBase }));
+} else if (driver === "redis") {
+    const config = useRuntimeConfig();
+    storage.mount(
+        "servers",
+        cached(
+            redis({
+                host: config.redis.host,
+                tls: config.redis.tls,
+                port: config.redis.port,
+                password: config.redis.password,
+            })
+        ),
+    );
 } else if (driver === "cloudflare") {
     const config = useRuntimeConfig();
     storage.mount(
